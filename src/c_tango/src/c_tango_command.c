@@ -263,8 +263,8 @@ bool tango_command_inout (void *proxy, char *cmd_name, CommandData *argin,
 				
 			case DEVVAR_LONGSTRINGARRAY:
 				{
-				vector<Tango::DevLong> long_arr(argin->cmd_data.long_arr.length);
-				vector<string>         string_arr(argin->cmd_data.string_arr.length);
+				vector<Tango::DevLong> long_arr(argin->cmd_data.long_string_arr.long_length);
+				vector<string>         string_arr(argin->cmd_data.long_string_arr.string_length);
 				
 				/* copy the long array */
 				for (int i=0; i<argin->cmd_data.long_string_arr.long_length; i++)
@@ -284,8 +284,8 @@ bool tango_command_inout (void *proxy, char *cmd_name, CommandData *argin,
 				
 			case DEVVAR_DOUBLESTRINGARRAY:
 				{
-				vector<double> double_arr(argin->cmd_data.double_arr.length);
-				vector<string> string_arr(argin->cmd_data.string_arr.length);
+				vector<double> double_arr(argin->cmd_data.double_string_arr.double_length);
+				vector<string> string_arr(argin->cmd_data.double_string_arr.string_length);
 				
 				/* copy the double array */
 				for (int i=0; i<argin->cmd_data.double_string_arr.double_length; i++)

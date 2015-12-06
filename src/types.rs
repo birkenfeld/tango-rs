@@ -11,6 +11,18 @@ pub unsafe fn string_from(ptr: *const i8) -> String {
     CStr::from_ptr(ptr).to_string_lossy().into_owned()
 }
 
+pub fn cstring_from<I: Into<Vec<u8>>>(v: I) -> CString {
+    match CString::new(v) {
+        Ok(s) => s,
+        Err(err) => {
+            let end = err.nul_position();
+            let v = err.into_vec();
+            CString::new(&v[..end]).unwrap()
+        }
+    }
+}
+
+
 #[allow(non_camel_case_types)]
 type voidptr = *mut libc::c_void;
 
@@ -275,7 +287,7 @@ impl CommandInfo {
 }
 
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum CommandData {
     Void,
 
@@ -291,7 +303,8 @@ pub enum CommandData {
     Double(f64),
 
     String(Vec<u8>),
-    ConstString(Vec<u8>),
+    State(TangoDevState),
+    Encoded(DevEncoded),
 
     BooleanArray(Vec<bool>),
     CharArray(Vec<u8>),
@@ -307,9 +320,6 @@ pub enum CommandData {
     StringArray(Vec<Vec<u8>>),
     LongStringArray(Vec<i32>, Vec<Vec<u8>>),
     DoubleStringArray(Vec<f64>, Vec<Vec<u8>>),
-
-    State(TangoDevState),
-    Encoded(DevEncoded),
 }
 
 impl CommandData {
@@ -371,7 +381,6 @@ impl CommandData {
     pub fn into_bytes(self) -> Option<Vec<u8>> {
         match self {
             CommandData::String(s) => Some(s),
-            CommandData::ConstString(s) => Some(s),
             CommandData::CharArray(s) => Some(s),
             _ => None,
         }
@@ -380,7 +389,6 @@ impl CommandData {
     pub fn into_string(self) -> Option<String> {
         match self {
             CommandData::String(s) => String::from_utf8(s).ok(),
-            CommandData::ConstString(s) => String::from_utf8(s).ok(),
             CommandData::CharArray(s) => String::from_utf8(s).ok(),
             _ => None,
         }
@@ -402,7 +410,7 @@ impl CommandData {
             TangoDataType::Long64 => CommandData::Long64(*data.long64_val()),
             TangoDataType::ULong64 => CommandData::ULong64(*data.ulong64_val()),
             TangoDataType::State => CommandData::State(TangoDevState::from_c(*data.state_val())),
-            // XXX: for all arrays this copies the data, instead of reusing the
+            // note: for all arrays this copies the data, instead of reusing the
             // existing allocation
             TangoDataType::String | TangoDataType::ConstString => CommandData::String({
                 let ptr = *data.string_val();
@@ -500,6 +508,22 @@ impl CommandData {
 
     pub unsafe fn into_c(self) -> c::CommandData {
         let mut content = c::TangoCommandData::default();
+
+        macro_rules! impl_array {
+            ($val:ident, $alt:ident, $arr:ident, $ctype:ty) => {
+                {
+                    let array = content.$arr();
+                    (*array).length = $val.len() as u32;
+                    (*array).sequence = libc::malloc(mem::size_of::<$ctype>() *
+                                                     $val.len()) as *mut $ctype;
+                    for (i, v) in $val.into_iter().enumerate() {
+                        *(*array).sequence.offset(i as isize) = v as $ctype;
+                    }
+                    TangoDataType::$alt
+                }
+            }
+        }
+
         let tag = match self {
             CommandData::Void => {
                 TangoDataType::Void
@@ -532,30 +556,138 @@ impl CommandData {
                 *content.ulong_val() = v;
                 TangoDataType::ULong
             }
+            CommandData::Long64(v) => {
+                *content.long64_val() = v;
+                TangoDataType::Long64
+            }
+            CommandData::ULong64(v) => {
+                *content.ulong64_val() = v;
+                TangoDataType::ULong64
+            }
             CommandData::String(v) => {
-                let cstr = CString::new(v).unwrap();  // XXX not null-free
+                let cstr = cstring_from(v);
                 *content.string_val() = cstr.into_raw();
                 TangoDataType::String
             }
-            _ => unimplemented!()  // XXX Array types, Encoded, etc.
+            CommandData::Encoded((format, data)) => {
+                let ptr = content.encoded_val();
+                (*ptr).encoded_format = cstring_from(format).into_raw();
+                (*ptr).encoded_length = data.len() as u32;
+                (*ptr).encoded_data = Box::into_raw(data.into_boxed_slice()) as *mut u8;
+                TangoDataType::Encoded
+            }
+            CommandData::BooleanArray(v) => impl_array!(v, BooleanArray, bool_arr, libc::c_uchar),
+            CommandData::CharArray(v) => impl_array!(v, CharArray, char_arr, u8),
+            CommandData::ShortArray(v) => impl_array!(v, ShortArray, short_arr, i16),
+            CommandData::UShortArray(v) => impl_array!(v, UShortArray, ushort_arr, u16),
+            CommandData::LongArray(v) => impl_array!(v, LongArray, long_arr, i32),
+            CommandData::ULongArray(v) => impl_array!(v, ULongArray, ulong_arr, u32),
+            CommandData::Long64Array(v) => impl_array!(v, Long64Array, long64_arr, i64),
+            CommandData::ULong64Array(v) => impl_array!(v, ULong64Array, ulong64_arr, u64),
+            CommandData::FloatArray(v) => impl_array!(v, FloatArray, float_arr, f32),
+            CommandData::DoubleArray(v) => impl_array!(v, DoubleArray, double_arr, f64),
+            CommandData::StringArray(v) => {
+                let array = content.string_arr();
+                (*array).length = v.len() as u32;
+                (*array).sequence = libc::malloc(mem::size_of::<*mut i8>() *
+                                                 v.len()) as *mut *mut i8;
+                for (i, s) in v.into_iter().enumerate() {
+                    *(*array).sequence.offset(i as isize) = cstring_from(s).into_raw();
+                }
+                TangoDataType::StringArray
+            },
+            CommandData::LongStringArray(vl, vs) => {
+                let array = content.long_string_arr();
+                (*array).long_length = vl.len() as u32;
+                (*array).long_sequence = libc::malloc(mem::size_of::<i32>() *
+                                                      vl.len()) as *mut i32;
+                (*array).string_length = vs.len() as u32;
+                (*array).string_sequence = libc::malloc(mem::size_of::<*mut i8>() *
+                                                        vs.len()) as *mut *mut i8;
+                for (i, l) in vl.into_iter().enumerate() {
+                    *(*array).long_sequence.offset(i as isize) = l;
+                }
+                for (i, s) in vs.into_iter().enumerate() {
+                    *(*array).string_sequence.offset(i as isize) = cstring_from(s).into_raw();
+                }
+                TangoDataType::LongStringArray
+            },
+            CommandData::DoubleStringArray(vd, vs) => {
+                let array = content.double_string_arr();
+                (*array).double_length = vd.len() as u32;
+                (*array).double_sequence = libc::malloc(mem::size_of::<f64>() *
+                                                        vd.len()) as *mut f64;
+                (*array).string_length = vs.len() as u32;
+                (*array).string_sequence = libc::malloc(mem::size_of::<*mut i8>() *
+                                                        vs.len()) as *mut *mut i8;
+                for (i, d) in vd.into_iter().enumerate() {
+                    *(*array).double_sequence.offset(i as isize) = d;
+                }
+                for (i, s) in vs.into_iter().enumerate() {
+                    *(*array).string_sequence.offset(i as isize) = cstring_from(s).into_raw();
+                }
+                TangoDataType::DoubleStringArray
+            },
+            CommandData::State(_) => panic!("Cannot send input argument of type State")
         };
         c::CommandData { arg_type: tag as u32, cmd_data: content }
     }
 
-    pub unsafe fn free_c_data(mut data: c::CommandData) {
-        match TangoDataType::from_c(data.arg_type) {
+    pub unsafe fn free_c_data(cmd_data: c::CommandData) {
+        let mut data = cmd_data.cmd_data;
+        match TangoDataType::from_c(cmd_data.arg_type) {
             TangoDataType::Void |
             TangoDataType::Boolean |
+            TangoDataType::UChar |
             TangoDataType::Short |
             TangoDataType::Long |
+            TangoDataType::Int |
             TangoDataType::Float |
             TangoDataType::Double |
             TangoDataType::UShort |
-            TangoDataType::ULong => {}
-            TangoDataType::String => {
-                drop(CString::from_raw(*data.cmd_data.string_val()));
+            TangoDataType::ULong |
+            TangoDataType::Long64 |
+            TangoDataType::ULong64 |
+            TangoDataType::State => {}
+            TangoDataType::String | TangoDataType::ConstString => {
+                drop(CString::from_raw(*data.string_val()));
             }
-            _ => unimplemented!()  // XXX Array types, Encoded, etc.
+            TangoDataType::Encoded => {
+                drop(CString::from_raw((*data.encoded_val()).encoded_format));
+                drop(Box::from_raw((*data.encoded_val()).encoded_data));
+            }
+            TangoDataType::BooleanArray => libc::free((*data.bool_arr()).sequence as voidptr),
+            TangoDataType::CharArray => libc::free((*data.char_arr()).sequence as voidptr),
+            TangoDataType::ShortArray => libc::free((*data.short_arr()).sequence as voidptr),
+            TangoDataType::UShortArray => libc::free((*data.ushort_arr()).sequence as voidptr),
+            TangoDataType::LongArray => libc::free((*data.long_arr()).sequence as voidptr),
+            TangoDataType::ULongArray => libc::free((*data.ulong_arr()).sequence as voidptr),
+            TangoDataType::Long64Array => libc::free((*data.long64_arr()).sequence as voidptr),
+            TangoDataType::ULong64Array => libc::free((*data.ulong64_arr()).sequence as voidptr),
+            TangoDataType::FloatArray => libc::free((*data.float_arr()).sequence as voidptr),
+            TangoDataType::DoubleArray => libc::free((*data.double_arr()).sequence as voidptr),
+            TangoDataType::StringArray => {
+                for i in 0..(*data.string_arr()).length {
+                    drop(CString::from_raw((*data.string_arr()).sequence.offset(i as isize) as *mut i8));
+                }
+                libc::free((*data.string_arr()).sequence as voidptr);
+            }
+            TangoDataType::LongStringArray => {
+                for i in 0..(*data.long_string_arr()).string_length {
+                    drop(CString::from_raw((*data.long_string_arr())
+                                           .string_sequence.offset(i as isize) as *mut i8));
+                }
+                libc::free((*data.long_string_arr()).string_sequence as voidptr);
+                libc::free((*data.long_string_arr()).long_sequence as voidptr);
+            }
+            TangoDataType::DoubleStringArray => {
+                for i in 0..(*data.double_string_arr()).string_length {
+                    drop(CString::from_raw((*data.double_string_arr())
+                                           .string_sequence.offset(i as isize) as *mut i8));
+                }
+                libc::free((*data.double_string_arr()).string_sequence as voidptr);
+                libc::free((*data.double_string_arr()).double_sequence as voidptr);
+            }
         }
     }
 }
@@ -747,6 +879,22 @@ impl AttributeData {
             }
         }
 
+        macro_rules! impl_array {
+            ($val:ident, $alt:ident, $arr:ident, $ctype:ty) => {
+                {
+                    let array = content.$arr();
+                    (*array).length = $val.len() as u32;
+                    (*array).sequence = libc::malloc(mem::size_of::<$ctype>() *
+                                                     $val.len()) as *mut $ctype;
+                    *(*array).sequence = $val.len() as $ctype;
+                    for (i, v) in $val.into_iter().enumerate() {
+                        *(*array).sequence.offset(i as isize) = v as $ctype;
+                    }
+                    TangoDataType::$alt
+                }
+            }
+        }
+
         let tag = match self.data {
             AttrValue::Boolean(v) => impl_simple!(v, Boolean, bool_arr, libc::c_uchar),
             AttrValue::Char(v) => impl_simple!(v, UChar, char_arr, u8),
@@ -763,22 +911,55 @@ impl AttributeData {
                 let array = content.string_arr();
                 (*array).length = 1;
                 (*array).sequence = libc::malloc(mem::size_of::<*mut i8>()) as *mut *mut i8;
-                *(*array).sequence = CString::new(v).unwrap().into_raw();  // XXX not null-free
+                *(*array).sequence = cstring_from(v).into_raw();
                 TangoDataType::String
             }
             AttrValue::Encoded((format, data)) => {
                 let mut array = content.encoded_arr();
                 (*array).length = 1;
                 (*array).sequence = libc::malloc(mem::size_of::<c::TangoDevEncoded>()) as *mut c::TangoDevEncoded;
-                (*(*array).sequence).encoded_format = CString::new(format).unwrap().into_raw();
+                (*(*array).sequence).encoded_format = cstring_from(format).into_raw();
                 (*(*array).sequence).encoded_length = data.len() as u32;
                 (*(*array).sequence).encoded_data = Box::into_raw(data.into_boxed_slice()) as *mut u8;
                 TangoDataType::Encoded
             }
-            _ => unimplemented!()  // XXX: implement array values
+            AttrValue::BooleanArray(v) => impl_array!(v, Boolean, bool_arr, libc::c_uchar),
+            AttrValue::CharArray(v) => impl_array!(v, UChar, char_arr, u8),
+            AttrValue::ShortArray(v) => impl_array!(v, Short, short_arr, i16),
+            AttrValue::UShortArray(v) => impl_array!(v, UShort, ushort_arr, u16),
+            AttrValue::LongArray(v) => impl_array!(v, Long, long_arr, i32),
+            AttrValue::ULongArray(v) => impl_array!(v, ULong, ulong_arr, u32),
+            AttrValue::Long64Array(v) => impl_array!(v, Long64, long64_arr, i64),
+            AttrValue::ULong64Array(v) => impl_array!(v, ULong64, ulong64_arr, u64),
+            AttrValue::FloatArray(v) => impl_array!(v, Float, float_arr, f32),
+            AttrValue::DoubleArray(v) => impl_array!(v, Double, double_arr, f64),
+            AttrValue::StateArray(v) => impl_array!(v, State, state_arr, u32),
+            AttrValue::StringArray(v) => {
+                let array = content.string_arr();
+                (*array).length = v.len() as u32;
+                (*array).sequence = libc::malloc(mem::size_of::<*mut i8>() *
+                                                 v.len()) as *mut *mut i8;
+                for (i, s) in v.into_iter().enumerate() {
+                    *(*array).sequence.offset(i as isize) = cstring_from(s).into_raw();
+                }
+                TangoDataType::String
+            }
+            AttrValue::EncodedArray(v) => {
+                let array = content.encoded_arr();
+                (*array).length = v.len() as u32;
+                (*array).sequence = libc::malloc(mem::size_of::<c::TangoDevEncoded>() *
+                                                 v.len()) as *mut c::TangoDevEncoded;
+                for (i, (format, data)) in v.into_iter().enumerate() {
+                    let ptr = (*array).sequence.offset(i as isize);
+                    (*ptr).encoded_format = cstring_from(format).into_raw();
+                    (*ptr).encoded_length = data.len() as u32;
+                    (*ptr).encoded_data = Box::into_raw(data.into_boxed_slice()) as *mut u8;
+                }
+                TangoDataType::Encoded
+            }
         };
         c::AttributeData {
-            name: CString::new(self.name).unwrap().into_raw(),
+            name: cstring_from(self.name).into_raw(),
             data_type: tag as u32,
             data_format: self.format as u32,
             attr_data: content,
@@ -790,28 +971,34 @@ impl AttributeData {
         }
     }
 
-    pub unsafe fn free_c_data(mut data: c::AttributeData) {
-        match TangoDataType::from_c(data.data_type) {
-            TangoDataType::Boolean => libc::free((*data.attr_data.bool_arr()).sequence as voidptr),
-            TangoDataType::UChar => libc::free((*data.attr_data.char_arr()).sequence as voidptr),
-            TangoDataType::Short => libc::free((*data.attr_data.short_arr()).sequence as voidptr),
-            TangoDataType::UShort => libc::free((*data.attr_data.ushort_arr()).sequence as voidptr),
-            TangoDataType::Long => libc::free((*data.attr_data.long_arr()).sequence as voidptr),
-            TangoDataType::ULong => libc::free((*data.attr_data.ulong_arr()).sequence as voidptr),
-            TangoDataType::Long64 => libc::free((*data.attr_data.long64_arr()).sequence as voidptr),
-            TangoDataType::ULong64 => libc::free((*data.attr_data.ulong64_arr()).sequence as voidptr),
-            TangoDataType::Float => libc::free((*data.attr_data.float_arr()).sequence as voidptr),
-            TangoDataType::Double => libc::free((*data.attr_data.double_arr()).sequence as voidptr),
-            TangoDataType::State => libc::free((*data.attr_data.state_arr()).sequence as voidptr),
+    pub unsafe fn free_c_data(attr_data: c::AttributeData) {
+        let mut data = attr_data.attr_data;
+        drop(CString::from_raw(attr_data.name));
+        match TangoDataType::from_c(attr_data.data_type) {
+            TangoDataType::Boolean => libc::free((*data.bool_arr()).sequence as voidptr),
+            TangoDataType::UChar => libc::free((*data.char_arr()).sequence as voidptr),
+            TangoDataType::Short => libc::free((*data.short_arr()).sequence as voidptr),
+            TangoDataType::UShort => libc::free((*data.ushort_arr()).sequence as voidptr),
+            TangoDataType::Long => libc::free((*data.long_arr()).sequence as voidptr),
+            TangoDataType::ULong => libc::free((*data.ulong_arr()).sequence as voidptr),
+            TangoDataType::Long64 => libc::free((*data.long64_arr()).sequence as voidptr),
+            TangoDataType::ULong64 => libc::free((*data.ulong64_arr()).sequence as voidptr),
+            TangoDataType::Float => libc::free((*data.float_arr()).sequence as voidptr),
+            TangoDataType::Double => libc::free((*data.double_arr()).sequence as voidptr),
+            TangoDataType::State => libc::free((*data.state_arr()).sequence as voidptr),
             TangoDataType::String => {
-                drop(CString::from_raw((*data.attr_data.string_arr()).sequence as *mut i8));
-                libc::free((*data.attr_data.string_arr()).sequence as voidptr);
+                for i in 0..(*data.string_arr()).length {
+                    drop(CString::from_raw((*data.string_arr()).sequence.offset(i as isize) as *mut i8));
+                }
+                libc::free((*data.string_arr()).sequence as voidptr);
             }
             TangoDataType::Encoded => {
-                let ptr = (*data.attr_data.encoded_arr()).sequence as *mut c::TangoDevEncoded;
-                drop(CString::from_raw((*ptr).encoded_format as *mut i8));
-                drop(Box::from_raw((*ptr).encoded_data));
-                libc::free(ptr as voidptr);
+                for i in 0..(*data.encoded_arr()).length {
+                    let ptr = (*data.encoded_arr()).sequence.offset(i as isize) as *mut c::TangoDevEncoded;
+                    drop(CString::from_raw((*ptr).encoded_format as *mut i8));
+                    drop(Box::from_raw((*ptr).encoded_data));
+                }
+                libc::free((*data.encoded_arr()).sequence as voidptr);
             }
             val => panic!("invalid attribute data tag={:?}", val)
         }
