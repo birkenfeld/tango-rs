@@ -1,11 +1,11 @@
 [package]
-name = "tango"
+name = "c-tango"
 version = "0.1.0"
 authors = ["Georg Brandl <georg@python.org>"]
+build = "build.rs"
 
 [dependencies]
 libc = "0.2"
-time = "0.1"
 
-[dependencies.c-tango]
-path = "src/c_tango"
+[build-dependencies]
+gcc = "0.3"

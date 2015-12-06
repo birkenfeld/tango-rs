@@ -2,8 +2,8 @@ use std::ffi::CString;
 use std::ptr;
 
 use libc;
+use c_tango as c;
 
-use super::c;
 use super::error::{TangoResult, TangoError};
 use super::types::*;
 

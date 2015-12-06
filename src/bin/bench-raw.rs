@@ -1,7 +1,6 @@
 extern crate libc;
 extern crate tango;
-
-use tango::c;
+extern crate c_tango as c;
 
 use std::ffi::*;
 use std::ptr;

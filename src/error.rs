@@ -3,7 +3,8 @@ use std::ffi::CStr;
 use std::fmt;
 use std::ptr;
 
-use super::c;
+use c_tango as c;
+
 use super::types::ErrSeverity;
 
 pub type TangoResult<R> = Result<R, TangoError>;

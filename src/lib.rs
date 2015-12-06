@@ -1,7 +1,6 @@
 extern crate libc;
 extern crate time;
-
-pub mod c;
+extern crate c_tango;
 
 
 macro_rules! tango_call {

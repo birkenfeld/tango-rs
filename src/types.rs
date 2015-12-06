@@ -4,8 +4,8 @@ use std::slice;
 
 use libc;
 use time::{get_time, Timespec};
+use c_tango as c;
 
-use super::c;
 
 pub unsafe fn string_from(ptr: *const i8) -> String {
     CStr::from_ptr(ptr).to_string_lossy().into_owned()
