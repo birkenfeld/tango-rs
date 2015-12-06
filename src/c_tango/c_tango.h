@@ -576,6 +576,7 @@ typedef struct CommandData CommandData;
 struct AttributeData {
 				TangoDataType 	  data_type;	/**< Tango scalar data type */	
 				TangoAttributeData attr_data;	/**< Union for attribute data */
+				AttrDataFormat data_format;	/**< Data format (scalar, ...) */
 				AttrQuality 		quality;		/**< Data quality factor */
 				char 				    *name;		 /**< Attribute name */
 				int 					dim_x;		 /**< Data dimension X */

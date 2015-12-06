@@ -1,8 +1,5 @@
 extern crate libc;
-
-// use std::ffi::*;
-// use std::ptr;
-// use std::mem;
+extern crate time;
 
 pub mod c;
 
@@ -17,7 +14,7 @@ macro_rules! tango_call {
             if success == 0 {
                 Err(TangoError::from_stack(error))
             } else {
-                Ok(unsafe { $res })
+                Ok($res)
             }
         }
     }

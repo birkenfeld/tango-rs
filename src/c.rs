@@ -740,6 +740,7 @@ pub type CommandData = Struct_CommandData;
 pub struct Struct_AttributeData {
     pub data_type: TangoDataType,
     pub attr_data: TangoAttributeData,
+    pub data_format: AttrDataFormat,
     pub quality: AttrQuality,
     pub name: *mut ::libc::c_char,
     pub dim_x: ::libc::c_int,

@@ -83,7 +83,7 @@ impl DeviceProxy {
     pub fn locking_status(&self) -> TangoResult<String> {
         let mut resptr = ptr::null_mut();
         tango_call!(tango_locking_status,
-                    {
+                    unsafe {
                         let res = string_from(resptr);
                         libc::free(resptr as *mut libc::c_void);
                         res
@@ -95,22 +95,21 @@ impl DeviceProxy {
         let c_name = CString::new(cmd_name).unwrap().as_ptr() as *mut i8;
         let mut cmdinfo = c::CommandInfo::default();
         tango_call!(tango_command_query,
-                    CommandInfo::from_c(cmdinfo, true),
+                    unsafe { CommandInfo::from_c(cmdinfo, true) },
                     self.ptr, c_name, &mut cmdinfo)
     }
 
     pub fn command_list_query(&self) -> TangoResult<Vec<CommandInfo>> {
-        let mut cmdinfolist = c::CommandInfoList::default();
-        try!(tango_call!(tango_command_list_query,
-                         (),
-                         self.ptr, &mut cmdinfolist));
-        let mut res = Vec::with_capacity(cmdinfolist.length as usize);
+        let mut infolist = c::CommandInfoList::default();
+        try!(tango_call!(tango_command_list_query, (),
+                         self.ptr, &mut infolist));
+        let mut res = Vec::with_capacity(infolist.length as usize);
         unsafe {
-            for i in 0..cmdinfolist.length {
-                let cmd_ptr = ptr::read(cmdinfolist.sequence.offset(i as isize));
+            for i in 0..infolist.length {
+                let cmd_ptr = ptr::read(infolist.sequence.offset(i as isize));
                 res.push(CommandInfo::from_c(cmd_ptr, false));
             }
-            c::tango_free_CommandInfoList(&mut cmdinfolist);
+            c::tango_free_CommandInfoList(&mut infolist);
         }
         Ok(res)
     }
@@ -120,37 +119,123 @@ impl DeviceProxy {
         let mut argin = unsafe { argin.into_c() };
         let mut argout = c::CommandData::default();
         let res = tango_call!(tango_command_inout,
-                              CommandData::from_c(argout),
+                              unsafe { CommandData::from_c(argout) },
                               self.ptr, c_name, &mut argin, &mut argout);
         unsafe { CommandData::free_c_data(argin) };
         res
     }
 
     pub fn get_attribute_list(&self) -> TangoResult<Vec<String>> {
-        unimplemented!()
+        let mut namelist = c::VarStringArray::default();
+        try!(tango_call!(tango_get_attribute_list, (),
+                         self.ptr, &mut namelist));
+        let mut res = Vec::with_capacity(namelist.length as usize);
+        unsafe {
+            for i in 0..namelist.length {
+                let name = ptr::read(namelist.sequence.offset(i as isize));
+                res.push(string_from(name));
+            }
+            c::tango_free_VarStringArray(&mut namelist);
+        }
+        Ok(res)
     }
 
-    pub fn get_attribute_config(&self) -> TangoResult<Vec<(String, Vec<AttributeInfo>)>> {
-        unimplemented!()
+    pub fn get_attribute_config(&self, attr_names: &[&str]) -> TangoResult<Vec<AttributeInfo>> {
+        let mut namelist = c::VarStringArray::default();
+        let mut infolist = c::AttributeInfoList::default();
+        let mut ptr_vec = Vec::with_capacity(attr_names.len());
+        for name in attr_names {
+            ptr_vec.push(CString::new(*name).unwrap().into_raw());
+        }
+        namelist.length = attr_names.len() as u32;
+        namelist.sequence = ptr_vec.as_mut_ptr();
+        try!(tango_call!(tango_get_attribute_config, (),
+                         self.ptr, &mut namelist, &mut infolist));
+        let mut res = Vec::with_capacity(infolist.length as usize);
+        unsafe {
+            for i in 0..infolist.length {
+                let info = ptr::read(infolist.sequence.offset(i as isize));
+                res.push(AttributeInfo::from_c(info));
+            }
+            c::tango_free_AttributeInfoList(&mut infolist);
+            for ptr in ptr_vec {
+                drop(CString::from_raw(ptr));
+            }
+        }
+        Ok(res)
     }
 
-    pub fn attribute_list_query(&self) -> TangoResult<Vec<Vec<AttributeInfo>>> {
-        unimplemented!()
+    pub fn attribute_list_query(&self) -> TangoResult<Vec<AttributeInfo>> {
+        let mut infolist = c::AttributeInfoList::default();
+        try!(tango_call!(tango_attribute_list_query, (),
+                         self.ptr, &mut infolist));
+        let mut res = Vec::with_capacity(infolist.length as usize);
+        unsafe {
+            for i in 0..infolist.length {
+                let info = ptr::read(infolist.sequence.offset(i as isize));
+                res.push(AttributeInfo::from_c(info));
+            }
+            c::tango_free_AttributeInfoList(&mut infolist);
+        }
+        Ok(res)
     }
 
     pub fn read_attribute(&mut self, attr_name: &str) -> TangoResult<AttributeData> {
-        unimplemented!()
+        let c_name = CString::new(attr_name).unwrap().as_ptr() as *mut i8;
+        let mut data = c::AttributeData::default();
+        tango_call!(tango_read_attribute,
+                    unsafe { AttributeData::from_c(data, true) },
+                    self.ptr, c_name, &mut data)
     }
 
     pub fn write_attribute(&mut self, attr_data: AttributeData) -> TangoResult<()> {
-        unimplemented!()
+        let mut data = unsafe { attr_data.into_c() };
+        let res = tango_call!(tango_write_attribute, (),
+                              self.ptr, &mut data);
+        unsafe { AttributeData::free_c_data(data) };
+        res
     }
 
-    pub fn read_attributes(&mut self, attr_names: Vec<String>) -> TangoResult<Vec<AttributeData>> {
-        unimplemented!()
+    pub fn read_attributes(&mut self, attr_names: &[&str]) -> TangoResult<Vec<AttributeData>> {
+        let mut namelist = c::VarStringArray::default();
+        let mut datalist = c::AttributeDataList::default();
+        let mut ptr_vec = Vec::with_capacity(attr_names.len());
+        for name in attr_names {
+            ptr_vec.push(CString::new(*name).unwrap().into_raw());
+        }
+        namelist.length = attr_names.len() as u32;
+        namelist.sequence = ptr_vec.as_mut_ptr();
+        try!(tango_call!(tango_read_attributes, (),
+                         self.ptr, &mut namelist, &mut datalist));
+        let mut res = Vec::with_capacity(datalist.length as usize);
+        unsafe {
+            for i in 0..datalist.length {
+                let data = ptr::read(datalist.sequence.offset(i as isize));
+                res.push(AttributeData::from_c(data, false));
+            }
+            c::tango_free_AttributeDataList(&mut datalist);
+            for ptr in ptr_vec {
+                drop(CString::from_raw(ptr));
+            }
+        }
+        Ok(res)
     }
 
     pub fn write_attributes(&mut self, attr_data: Vec<AttributeData>) -> TangoResult<()> {
-        unimplemented!()
+        let mut datalist = c::AttributeDataList::default();
+        let mut ptr_vec = Vec::with_capacity(attr_data.len());
+        datalist.length = attr_data.len() as u32;
+        for data in attr_data {
+            ptr_vec.push(unsafe { data.into_c() });
+        }
+        datalist.sequence = ptr_vec.as_mut_ptr();
+        try!(tango_call!(tango_write_attributes, (),
+                         self.ptr, &mut datalist));
+        unsafe {
+            for ptr in ptr_vec {
+                AttributeData::free_c_data(ptr);
+            }
+        }
+        Ok(())
     }
 }

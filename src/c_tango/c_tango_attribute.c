@@ -205,14 +205,14 @@ bool tango_write_attribute (void *proxy, AttributeData *argin, ErrorStack *error
  */
 void tango_free_AttributeData (AttributeData *attribute_data)
 {
-	free (attribute_data->name);
+	delete[] (attribute_data->name);
 	attribute_data->name = NULL;
 	
 	switch (attribute_data->data_type)
 		{
 		case DEV_BOOLEAN:
 			if ( attribute_data->attr_data.bool_arr.sequence != NULL )
-				free (attribute_data->attr_data.bool_arr.sequence);
+				delete[] (attribute_data->attr_data.bool_arr.sequence);
 			
 			attribute_data->attr_data.bool_arr.sequence = NULL;
 			attribute_data->attr_data.bool_arr.length = 0;
@@ -220,7 +220,7 @@ void tango_free_AttributeData (AttributeData *attribute_data)
 		
 		case DEV_UCHAR:
 			if ( attribute_data->attr_data.char_arr.sequence != NULL )
-				free (attribute_data->attr_data.char_arr.sequence);
+				delete[] (attribute_data->attr_data.char_arr.sequence);
 			
 			attribute_data->attr_data.char_arr.sequence = NULL;
 			attribute_data->attr_data.char_arr.length = 0;
@@ -228,7 +228,7 @@ void tango_free_AttributeData (AttributeData *attribute_data)
 											
 		case DEV_SHORT:
 			if ( attribute_data->attr_data.short_arr.sequence != NULL )
-				free (attribute_data->attr_data.short_arr.sequence);
+				delete[] (attribute_data->attr_data.short_arr.sequence);
 			
 			attribute_data->attr_data.short_arr.sequence = NULL;
 			attribute_data->attr_data.short_arr.length = 0;
@@ -236,7 +236,7 @@ void tango_free_AttributeData (AttributeData *attribute_data)
 	
 		case DEV_USHORT:
 			if ( attribute_data->attr_data.ushort_arr.sequence != NULL )
-				free (attribute_data->attr_data.ushort_arr.sequence);
+				delete[] (attribute_data->attr_data.ushort_arr.sequence);
 			
 			attribute_data->attr_data.ushort_arr.sequence = NULL;
 			attribute_data->attr_data.ushort_arr.length = 0;
@@ -244,7 +244,7 @@ void tango_free_AttributeData (AttributeData *attribute_data)
 			
 		case DEV_LONG:
 			if ( attribute_data->attr_data.long_arr.sequence != NULL )
-				free (attribute_data->attr_data.long_arr.sequence);
+				delete[] (attribute_data->attr_data.long_arr.sequence);
 			
 			attribute_data->attr_data.long_arr.sequence = NULL;
 			attribute_data->attr_data.long_arr.length = 0;
@@ -252,7 +252,7 @@ void tango_free_AttributeData (AttributeData *attribute_data)
 	
 		case DEV_ULONG:
 			if ( attribute_data->attr_data.ulong_arr.sequence != NULL )
-				free (attribute_data->attr_data.ulong_arr.sequence);
+				delete[] (attribute_data->attr_data.ulong_arr.sequence);
 			
 			attribute_data->attr_data.ulong_arr.sequence = NULL;
 			attribute_data->attr_data.ulong_arr.length = 0;
@@ -260,7 +260,7 @@ void tango_free_AttributeData (AttributeData *attribute_data)
 
 		case DEV_LONG64:
 			if ( attribute_data->attr_data.long64_arr.sequence != NULL )
-				free (attribute_data->attr_data.long64_arr.sequence);
+				delete[] (attribute_data->attr_data.long64_arr.sequence);
 			
 			attribute_data->attr_data.long64_arr.sequence = NULL;
 			attribute_data->attr_data.long64_arr.length = 0;
@@ -268,7 +268,7 @@ void tango_free_AttributeData (AttributeData *attribute_data)
 	
 		case DEV_ULONG64:
 			if ( attribute_data->attr_data.ulong64_arr.sequence != NULL )
-				free (attribute_data->attr_data.ulong64_arr.sequence);
+				delete[] (attribute_data->attr_data.ulong64_arr.sequence);
 			
 			attribute_data->attr_data.ulong64_arr.sequence = NULL;
 			attribute_data->attr_data.ulong64_arr.length = 0;
@@ -276,7 +276,7 @@ void tango_free_AttributeData (AttributeData *attribute_data)
 	
 		case DEV_FLOAT:
 			if ( attribute_data->attr_data.float_arr.sequence != NULL )
-				free (attribute_data->attr_data.float_arr.sequence);
+				delete[] (attribute_data->attr_data.float_arr.sequence);
 			
 			attribute_data->attr_data.float_arr.sequence = NULL;
 			attribute_data->attr_data.float_arr.length = 0;
@@ -284,7 +284,7 @@ void tango_free_AttributeData (AttributeData *attribute_data)
 					
 		case DEV_DOUBLE:
 			if ( attribute_data->attr_data.double_arr.sequence != NULL )
-				free (attribute_data->attr_data.double_arr.sequence);
+				delete[] (attribute_data->attr_data.double_arr.sequence);
 			
 			attribute_data->attr_data.double_arr.sequence = NULL;
 			attribute_data->attr_data.double_arr.length = 0;
@@ -292,7 +292,7 @@ void tango_free_AttributeData (AttributeData *attribute_data)
 			
 		case DEV_STATE:
 			if ( attribute_data->attr_data.state_arr.sequence != NULL )
-				free (attribute_data->attr_data.state_arr.sequence);
+				delete[] (attribute_data->attr_data.state_arr.sequence);
 			
 			attribute_data->attr_data.state_arr.sequence = NULL;
 			attribute_data->attr_data.state_arr.length = 0;
@@ -301,7 +301,7 @@ void tango_free_AttributeData (AttributeData *attribute_data)
 		case DEV_STRING:
 			for (int i=0; i<attribute_data->attr_data.string_arr.length; i++ )
 				{
-				free (attribute_data->attr_data.string_arr.sequence[i]);
+				delete[] (attribute_data->attr_data.string_arr.sequence[i]);
 				}
 				
 			if ( attribute_data->attr_data.string_arr.sequence != NULL )
@@ -314,7 +314,7 @@ void tango_free_AttributeData (AttributeData *attribute_data)
 		case DEV_ENCODED:
 			for (int i=0; i<attribute_data->attr_data.encoded_arr.length; i++ )
 				{
-				free (attribute_data->attr_data.encoded_arr.sequence[i].encoded_format);
+				delete[] (attribute_data->attr_data.encoded_arr.sequence[i].encoded_format);
 				free (attribute_data->attr_data.encoded_arr.sequence[i].encoded_data);
 				}
 				
@@ -342,7 +342,7 @@ void tango_free_AttributeDataList (AttributeDataList *attribute_data_list)
 		tango_free_AttributeData ( &(attribute_data_list->sequence[i]) );
 		}	
 	
-	free (attribute_data_list->sequence);
+	delete[] (attribute_data_list->sequence);
 	attribute_data_list->sequence = NULL;
 	attribute_data_list->length   = 0;		
 }
@@ -373,10 +373,12 @@ bool tango_get_attribute_list (void *proxy, VarStringArray *attr_names, ErrorSta
 			attr_names->sequence[i] = new char[(*attr_list)[i].length() + 1];
 			sprintf (attr_names->sequence[i], "%s", (*attr_list)[i].c_str());
 			}			
+		delete (attr_list);
 		}
 	
 	catch (Tango::DevFailed &tango_exception)
 		{
+		delete (attr_list);
 		translate_exception (tango_exception, error);		
 		return false;
 		}
@@ -412,10 +414,12 @@ bool tango_get_attribute_config (void *proxy, VarStringArray *attr_names, Attrib
 			{
 			convert_attr_query ((*tango_attr_info_list)[i], &(attr_info_list->sequence[i]));
 			}
+		delete (tango_attr_info_list);
 		}
 	
 	catch (Tango::DevFailed &tango_exception)
 		{
+		delete (tango_attr_info_list);
 		translate_exception (tango_exception, error);		
 		return false;
 		}
@@ -444,10 +448,12 @@ bool tango_attribute_list_query (void *proxy, AttributeInfoList *attr_info_list,
 			{
 			convert_attr_query ((*tango_attr_info_list)[i], &(attr_info_list->sequence[i]));
 			}
+		delete (tango_attr_info_list);
 		}
 	
 	catch (Tango::DevFailed &tango_exception)
 		{
+		delete (tango_attr_info_list);
 		translate_exception (tango_exception, error);		
 		return false;
 		}
@@ -459,7 +465,7 @@ void tango_free_VarStringArray (VarStringArray *string_arr)
 {
 	for (int i=0; i<string_arr->length; i++)
 		{
-		free (string_arr->sequence[i]);
+		delete[] (string_arr->sequence[i]);
 		}	
 	
 	free (string_arr->sequence);
@@ -472,21 +478,21 @@ void tango_free_AttributeInfoList (AttributeInfoList 	*attribute_info_list)
 {
 	for (int i=0; i<attribute_info_list->length; i++)
 		{
-		 free (attribute_info_list->sequence[i].name);
-		 free (attribute_info_list->sequence[i].description);
-		 free (attribute_info_list->sequence[i].label);
-		 free (attribute_info_list->sequence[i].unit);
-		 free (attribute_info_list->sequence[i].standard_unit);
-		 free (attribute_info_list->sequence[i].display_unit);
-		 free (attribute_info_list->sequence[i].format);
-		 free (attribute_info_list->sequence[i].min_value);
-		 free (attribute_info_list->sequence[i].max_value);
-		 free (attribute_info_list->sequence[i].min_alarm);
-		 free (attribute_info_list->sequence[i].max_alarm);
-		 free (attribute_info_list->sequence[i].writable_attr_name);
+		 delete[] (attribute_info_list->sequence[i].name);
+		 delete[] (attribute_info_list->sequence[i].description);
+		 delete[] (attribute_info_list->sequence[i].label);
+		 delete[] (attribute_info_list->sequence[i].unit);
+		 delete[] (attribute_info_list->sequence[i].standard_unit);
+		 delete[] (attribute_info_list->sequence[i].display_unit);
+		 delete[] (attribute_info_list->sequence[i].format);
+		 delete[] (attribute_info_list->sequence[i].min_value);
+		 delete[] (attribute_info_list->sequence[i].max_value);
+		 delete[] (attribute_info_list->sequence[i].min_alarm);
+		 delete[] (attribute_info_list->sequence[i].max_alarm);
+		 delete[] (attribute_info_list->sequence[i].writable_attr_name);
 		}	
 	
-	free (attribute_info_list->sequence);
+	delete[] (attribute_info_list->sequence);
 	attribute_info_list->sequence = NULL;
 	attribute_info_list->length   = 0;
 }
@@ -515,6 +521,7 @@ void convert_attribute_reading (Tango::DeviceAttribute& devattr, AttributeData *
 	
 	/* get data type */
 	argout->data_type = (TangoDataType) devattr.get_type();
+	argout->data_format = (AttrDataFormat) devattr.data_format;
 	
 	switch (argout->data_type)
 		{
