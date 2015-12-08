@@ -256,12 +256,12 @@ void tango_free_ErrorStack (ErrorStack *error)
 {
 	for (int i=0; i<error->length; i++)
 		{
-		free(error->sequence[i].desc);
-		free(error->sequence[i].reason);
-		free(error->sequence[i].origin);
+		delete[] (error->sequence[i].desc);
+		delete[] (error->sequence[i].reason);
+		delete[] (error->sequence[i].origin);
 		}	
 	
-	free (error->sequence);
+	delete[] (error->sequence);
 	error->sequence = NULL;
 	error->length   = 0;
 }

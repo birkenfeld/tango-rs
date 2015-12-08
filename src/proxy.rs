@@ -92,11 +92,11 @@ impl DeviceProxy {
     }
 
     pub fn command_query(&self, cmd_name: &str) -> TangoResult<CommandInfo> {
-        let c_name = CString::new(cmd_name).unwrap().as_ptr() as *mut i8;
+        let c_name = CString::new(cmd_name).unwrap();
         let mut cmdinfo = c::CommandInfo::default();
         tango_call!(tango_command_query,
                     unsafe { CommandInfo::from_c(cmdinfo, true) },
-                    self.ptr, c_name, &mut cmdinfo)
+                    self.ptr, c_name.as_ptr() as *mut i8, &mut cmdinfo)
     }
 
     pub fn command_list_query(&self) -> TangoResult<Vec<CommandInfo>> {
@@ -115,12 +115,13 @@ impl DeviceProxy {
     }
 
     pub fn command_inout(&mut self, cmd_name: &str, argin: CommandData) -> TangoResult<CommandData> {
-        let c_name = CString::new(cmd_name).unwrap().as_ptr() as *mut i8;
+        let c_name = CString::new(cmd_name).unwrap();
         let mut argin = unsafe { argin.into_c() };
         let mut argout = c::CommandData::default();
         let res = tango_call!(tango_command_inout,
                               unsafe { CommandData::from_c(argout) },
-                              self.ptr, c_name, &mut argin, &mut argout);
+                              self.ptr, c_name.as_ptr() as *mut i8,
+                              &mut argin, &mut argout);
         unsafe { CommandData::free_c_data(argin) };
         res
     }
@@ -181,11 +182,11 @@ impl DeviceProxy {
     }
 
     pub fn read_attribute(&mut self, attr_name: &str) -> TangoResult<AttributeData> {
-        let c_name = CString::new(attr_name).unwrap().as_ptr() as *mut i8;
+        let c_name = CString::new(attr_name).unwrap();
         let mut data = c::AttributeData::default();
         tango_call!(tango_read_attribute,
                     unsafe { AttributeData::from_c(data, true) },
-                    self.ptr, c_name, &mut data)
+                    self.ptr, c_name.as_ptr() as *mut i8, &mut data)
     }
 
     pub fn write_attribute(&mut self, attr_data: AttributeData) -> TangoResult<()> {

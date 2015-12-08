@@ -69,9 +69,11 @@ bool tango_read_attributes (void *proxy, VarStringArray *attr_names, AttributeDa
 		
 		/* loop over all returned attributes and convert the data */
 		for (int i=0; i < devattr_list->size(); i++)
-			{
+		{
+			if ((*devattr_list)[i].has_failed())
+				throw Tango::DevFailed((*devattr_list)[i].get_err_stack());
 			convert_attribute_reading ((*devattr_list)[i], &(argout->sequence[i]));
-			}
+		}
 		
 		// The memory is copied, we can now free the returned data
 		delete devattr_list;
@@ -108,6 +110,8 @@ bool tango_read_attribute (void *proxy, char *attr_name, AttributeData *argout, 
 		{
 		dev = (Tango::DeviceProxy *) proxy;
 		devattr = dev->read_attribute(attr_name);
+		if (devattr.has_failed())
+			throw Tango::DevFailed(devattr.get_err_stack());
 		
 		convert_attribute_reading (devattr, argout);
 		}
@@ -116,7 +120,7 @@ bool tango_read_attribute (void *proxy, char *attr_name, AttributeData *argout, 
 		{
 		translate_exception (tango_exception, error);		
 		return false;
-		}	
+		}
 	
 	return true;
 }

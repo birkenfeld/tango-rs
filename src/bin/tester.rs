@@ -46,12 +46,15 @@ fn main() {
     drop(vals);
 
     test_commands(&mut dev);
+    test_attributes(&mut dev);
+
+    drop(dev);
 }
 
 fn test_commands(dev: &mut tango::DeviceProxy) {
     use tango::CommandData::*;
     // test all types
-    println!("\nTesting all data types:");
+    println!("\nTesting commands for all data types:");
     let tests = vec![
         ("DevVoid", Void),
         ("DevBoolean", Boolean(true)),
@@ -91,4 +94,61 @@ fn test_commands(dev: &mut tango::DeviceProxy) {
     let res = dev.command_inout("State", Void).unwrap();
     assert!(res == State(tango::TangoDevState::Running) ||
             res == State(tango::TangoDevState::Fault));
+    // test exceptions
+    println!("errors");
+    let res = dev.command_inout("NotPresent", Void).unwrap_err();
+    assert_eq!(res.failures[0].reason, "API_CommandNotFound");
+    let res = dev.command_inout("DevBoolean", Void).unwrap_err();
+    assert_eq!(res.failures[0].reason, "API_IncompatibleCmdArgumentType");
+}
+
+fn test_attributes(dev: &mut tango::DeviceProxy) {
+    use tango::AttrValue::*;
+    // test all attributes
+    println!("\nTesting attributes for all data types:");
+    let read_tests = vec![
+        "boolean_scalar",
+        "boolean_spectrum",
+        "uchar_scalar",
+        "uchar_spectrum",
+        "short_scalar",
+        "short_spectrum",
+        "ushort_scalar",
+        "ushort_spectrum",
+        "long_scalar",
+        "long_spectrum",
+        "ulong_scalar",
+        "ulong_spectrum_ro",
+        "long64_scalar",
+        "long64_spectrum_ro",
+        "ulong64_scalar",
+        "ulong64_spectrum_ro",
+        "float_scalar",
+        "float_spectrum",
+        "double_scalar",
+        "double_spectrum",
+        "string_scalar",
+        "string_spectrum",
+        ];
+    println!("read all");
+    for attr in read_tests {
+        println!("{}", attr);
+        dev.read_attribute(attr).unwrap();
+    }
+    // dev.read_attributes(&read_tests).unwrap();
+    let write_tests = vec![
+        ("boolean_scalar", Boolean(false)),
+        ("boolean_spectrum", BooleanArray(vec![true, false])),
+        ("uchar_scalar", UChar(152)),
+        ("uchar_spectrum", UCharArray(vec![111, 152, 255])),
+        ("short_scalar", Short(-1000)),
+        ("short_spectrum", ShortArray(vec![-1000, 1000])),
+        ];
+    for (attr, data) in write_tests {
+        println!("write {}", attr);
+        dev.write_attribute(tango::AttributeData::simple(attr, data.clone())).unwrap();
+    }
+    println!("errors");
+    let res = dev.read_attribute("not_present").unwrap_err();
+    assert_eq!(res.failures[0].reason, "API_AttrNotFound");
 }
