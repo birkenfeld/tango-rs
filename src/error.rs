@@ -1,11 +1,10 @@
 use std::error;
-use std::ffi::CStr;
 use std::fmt;
 use std::ptr;
 
 use c_tango as c;
 
-use super::types::ErrSeverity;
+use super::types::{ErrSeverity, string_from};
 
 pub type TangoResult<R> = Result<R, TangoError>;
 
@@ -48,21 +47,22 @@ impl error::Error for TangoError {
 }
 
 impl TangoError {
-    pub fn from_stack(mut stack: c::ErrorStack) -> TangoError {
+    pub fn from_stack(stackptr: *mut c::ErrorStack) -> TangoError {
+        let stack = unsafe  { *stackptr };
         let mut seq = Vec::with_capacity(stack.length as usize);
         for i in 0..stack.length {
             unsafe {
                 let df = ptr::read(stack.sequence.offset(i as isize));
                 let fail = TangoFailure {
-                    desc: CStr::from_ptr(df.desc).to_string_lossy().into_owned(),
-                    reason: CStr::from_ptr(df.reason).to_string_lossy().into_owned(),
-                    origin: CStr::from_ptr(df.origin).to_string_lossy().into_owned(),
+                    desc: string_from(df.desc),
+                    reason: string_from(df.reason),
+                    origin: string_from(df.origin),
                     severity: ErrSeverity::from_c(df.severity)
                 };
                 seq.push(fail);
             }
         }
-        unsafe { c::tango_free_ErrorStack(&mut stack); }
+        unsafe { c::tango_free_ErrorStack(stackptr); }
         TangoError { failures: seq }
     }
 }

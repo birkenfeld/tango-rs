@@ -14,11 +14,10 @@ pub struct DeviceProxy {
 
 impl Drop for DeviceProxy {
     fn drop(&mut self) {
-        let mut error = c::ErrorStack::default();
-        let success = unsafe { c::tango_delete_device_proxy(&mut self.ptr, &mut error) };
-        if success == 0 {
+        let error_stack = unsafe { c::tango_delete_device_proxy(self.ptr) };
+        if !error_stack.is_null() {
             // we need to construct the error to deallocate the stack
-            drop(TangoError::from_stack(error));
+            drop(TangoError::from_stack(error_stack));
         }
     }
 }

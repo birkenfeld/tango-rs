@@ -147,7 +147,11 @@ impl ::std::default::Default for Struct_itimerval {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
 pub type __itimer_which_t = ::libc::c_int;
-pub type Enum_TangoDataType = ::libc::c_uint;
+pub type TangoDevLong = ::libc::c_int;
+pub type TangoDevULong = ::libc::c_uint;
+pub type TangoDevLong64 = ::libc::c_long;
+pub type TangoDevULong64 = ::libc::c_ulong;
+pub type Enum_Unnamed4 = ::libc::c_uint;
 pub const DEV_VOID: ::libc::c_uint = 0;
 pub const DEV_BOOLEAN: ::libc::c_uint = 1;
 pub const DEV_SHORT: ::libc::c_uint = 2;
@@ -177,7 +181,8 @@ pub const DEVVAR_LONG64ARRAY: ::libc::c_uint = 25;
 pub const DEVVAR_ULONG64ARRAY: ::libc::c_uint = 26;
 pub const DEV_INT: ::libc::c_uint = 27;
 pub const DEV_ENCODED: ::libc::c_uint = 28;
-pub type Enum_TangoDevState = ::libc::c_uint;
+pub type TangoDataType = Enum_Unnamed4;
+pub type Enum_Unnamed5 = ::libc::c_uint;
 pub const ON: ::libc::c_uint = 0;
 pub const OFF: ::libc::c_uint = 1;
 pub const CLOSE: ::libc::c_uint = 2;
@@ -192,263 +197,258 @@ pub const RUNNING: ::libc::c_uint = 10;
 pub const ALARM: ::libc::c_uint = 11;
 pub const DISABLE: ::libc::c_uint = 12;
 pub const UNKNOWN: ::libc::c_uint = 13;
-pub type Enum_AttrQuality = ::libc::c_uint;
+pub type TangoDevState = Enum_Unnamed5;
+pub type Enum_Unnamed6 = ::libc::c_uint;
 pub const ATTR_VALID: ::libc::c_uint = 0;
 pub const ATTR_INVALID: ::libc::c_uint = 1;
 pub const ATTR_ALARM: ::libc::c_uint = 2;
 pub const ATTR_CHANGING: ::libc::c_uint = 3;
 pub const ATTR_WARNING: ::libc::c_uint = 4;
-pub type Enum_AttrWriteType = ::libc::c_uint;
+pub type AttrQuality = Enum_Unnamed6;
+pub type Enum_Unnamed7 = ::libc::c_uint;
 pub const READ: ::libc::c_uint = 0;
 pub const READ_WITH_WRITE: ::libc::c_uint = 1;
 pub const WRITE: ::libc::c_uint = 2;
 pub const READ_WRITE: ::libc::c_uint = 3;
-pub type Enum_AttrDataFormat = ::libc::c_uint;
+pub type AttrWriteType = Enum_Unnamed7;
+pub type Enum_Unnamed8 = ::libc::c_uint;
 pub const SCALAR: ::libc::c_uint = 0;
 pub const SPECTRUM: ::libc::c_uint = 1;
 pub const IMAGE: ::libc::c_uint = 2;
-pub type Enum_DispLevel = ::libc::c_uint;
+pub type AttrDataFormat = Enum_Unnamed8;
+pub type Enum_Unnamed9 = ::libc::c_uint;
 pub const OPERATOR: ::libc::c_uint = 0;
 pub const EXPERT: ::libc::c_uint = 1;
-pub type Enum_ErrSeverity = ::libc::c_uint;
+pub type DispLevel = Enum_Unnamed9;
+pub type Enum_Unnamed10 = ::libc::c_uint;
 pub const WARN: ::libc::c_uint = 0;
 pub const ERR: ::libc::c_uint = 1;
 pub const PANIC: ::libc::c_uint = 2;
-pub type Enum_DevSource = ::libc::c_uint;
+pub type ErrSeverity = Enum_Unnamed10;
+pub type Enum_Unnamed11 = ::libc::c_uint;
 pub const DEV: ::libc::c_uint = 0;
 pub const CACHE: ::libc::c_uint = 1;
 pub const CACHE_DEV: ::libc::c_uint = 2;
-pub type TangoDevState = Enum_TangoDevState;
-pub type TangoDataType = Enum_TangoDataType;
-pub type AttrQuality = Enum_AttrQuality;
-pub type AttrWriteType = Enum_AttrWriteType;
-pub type AttrDataFormat = Enum_AttrDataFormat;
-pub type DispLevel = Enum_DispLevel;
-pub type ErrSeverity = Enum_ErrSeverity;
-pub type DevSource = Enum_DevSource;
-pub type TangoDevLong = ::libc::c_int;
-pub type TangoDevULong = ::libc::c_uint;
-pub type TangoDevLong64 = ::libc::c_long;
-pub type TangoDevULong64 = ::libc::c_ulong;
+pub type DevSource = Enum_Unnamed11;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_TangoDevEncoded {
+pub struct Struct_Unnamed12 {
     pub encoded_format: *mut ::libc::c_char,
     pub encoded_length: ::libc::c_uint,
     pub encoded_data: *mut ::libc::c_uchar,
 }
-impl ::std::clone::Clone for Struct_TangoDevEncoded {
+impl ::std::clone::Clone for Struct_Unnamed12 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_TangoDevEncoded {
+impl ::std::default::Default for Struct_Unnamed12 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type TangoDevEncoded = Struct_TangoDevEncoded;
+pub type TangoDevEncoded = Struct_Unnamed12;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarBoolArray {
+pub struct Struct_Unnamed13 {
     pub length: ::libc::c_uint,
     pub sequence: *mut u8,
 }
-impl ::std::clone::Clone for Struct_VarBoolArray {
+impl ::std::clone::Clone for Struct_Unnamed13 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarBoolArray {
+impl ::std::default::Default for Struct_Unnamed13 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarBoolArray = Struct_VarBoolArray;
+pub type VarBoolArray = Struct_Unnamed13;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarCharArray {
+pub struct Struct_Unnamed14 {
     pub length: ::libc::c_uint,
     pub sequence: *mut ::libc::c_uchar,
 }
-impl ::std::clone::Clone for Struct_VarCharArray {
+impl ::std::clone::Clone for Struct_Unnamed14 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarCharArray {
+impl ::std::default::Default for Struct_Unnamed14 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarCharArray = Struct_VarCharArray;
+pub type VarCharArray = Struct_Unnamed14;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarShortArray {
+pub struct Struct_Unnamed15 {
     pub length: ::libc::c_uint,
     pub sequence: *mut ::libc::c_short,
 }
-impl ::std::clone::Clone for Struct_VarShortArray {
+impl ::std::clone::Clone for Struct_Unnamed15 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarShortArray {
+impl ::std::default::Default for Struct_Unnamed15 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarShortArray = Struct_VarShortArray;
+pub type VarShortArray = Struct_Unnamed15;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarUShortArray {
+pub struct Struct_Unnamed16 {
     pub length: ::libc::c_uint,
     pub sequence: *mut ::libc::c_ushort,
 }
-impl ::std::clone::Clone for Struct_VarUShortArray {
+impl ::std::clone::Clone for Struct_Unnamed16 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarUShortArray {
+impl ::std::default::Default for Struct_Unnamed16 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarUShortArray = Struct_VarUShortArray;
+pub type VarUShortArray = Struct_Unnamed16;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarLongArray {
+pub struct Struct_Unnamed17 {
     pub length: ::libc::c_uint,
     pub sequence: *mut TangoDevLong,
 }
-impl ::std::clone::Clone for Struct_VarLongArray {
+impl ::std::clone::Clone for Struct_Unnamed17 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarLongArray {
+impl ::std::default::Default for Struct_Unnamed17 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarLongArray = Struct_VarLongArray;
+pub type VarLongArray = Struct_Unnamed17;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarULongArray {
+pub struct Struct_Unnamed18 {
     pub length: ::libc::c_uint,
     pub sequence: *mut TangoDevULong,
 }
-impl ::std::clone::Clone for Struct_VarULongArray {
+impl ::std::clone::Clone for Struct_Unnamed18 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarULongArray {
+impl ::std::default::Default for Struct_Unnamed18 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarULongArray = Struct_VarULongArray;
+pub type VarULongArray = Struct_Unnamed18;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarLong64Array {
+pub struct Struct_Unnamed19 {
     pub length: ::libc::c_uint,
     pub sequence: *mut TangoDevLong64,
 }
-impl ::std::clone::Clone for Struct_VarLong64Array {
+impl ::std::clone::Clone for Struct_Unnamed19 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarLong64Array {
+impl ::std::default::Default for Struct_Unnamed19 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarLong64Array = Struct_VarLong64Array;
+pub type VarLong64Array = Struct_Unnamed19;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarULong64Array {
+pub struct Struct_Unnamed20 {
     pub length: ::libc::c_uint,
     pub sequence: *mut TangoDevULong64,
 }
-impl ::std::clone::Clone for Struct_VarULong64Array {
+impl ::std::clone::Clone for Struct_Unnamed20 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarULong64Array {
+impl ::std::default::Default for Struct_Unnamed20 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarULong64Array = Struct_VarULong64Array;
+pub type VarULong64Array = Struct_Unnamed20;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarFloatArray {
+pub struct Struct_Unnamed21 {
     pub length: ::libc::c_uint,
     pub sequence: *mut ::libc::c_float,
 }
-impl ::std::clone::Clone for Struct_VarFloatArray {
+impl ::std::clone::Clone for Struct_Unnamed21 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarFloatArray {
+impl ::std::default::Default for Struct_Unnamed21 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarFloatArray = Struct_VarFloatArray;
+pub type VarFloatArray = Struct_Unnamed21;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarDoubleArray {
+pub struct Struct_Unnamed22 {
     pub length: ::libc::c_uint,
     pub sequence: *mut ::libc::c_double,
 }
-impl ::std::clone::Clone for Struct_VarDoubleArray {
+impl ::std::clone::Clone for Struct_Unnamed22 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarDoubleArray {
+impl ::std::default::Default for Struct_Unnamed22 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarDoubleArray = Struct_VarDoubleArray;
+pub type VarDoubleArray = Struct_Unnamed22;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarStringArray {
+pub struct Struct_Unnamed23 {
     pub length: ::libc::c_uint,
     pub sequence: *mut *mut ::libc::c_char,
 }
-impl ::std::clone::Clone for Struct_VarStringArray {
+impl ::std::clone::Clone for Struct_Unnamed23 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarStringArray {
+impl ::std::default::Default for Struct_Unnamed23 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarStringArray = Struct_VarStringArray;
+pub type VarStringArray = Struct_Unnamed23;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarStateArray {
+pub struct Struct_Unnamed24 {
     pub length: ::libc::c_uint,
     pub sequence: *mut TangoDevState,
 }
-impl ::std::clone::Clone for Struct_VarStateArray {
+impl ::std::clone::Clone for Struct_Unnamed24 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarStateArray {
+impl ::std::default::Default for Struct_Unnamed24 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarStateArray = Struct_VarStateArray;
+pub type VarStateArray = Struct_Unnamed24;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarEncodedArray {
+pub struct Struct_Unnamed25 {
     pub length: ::libc::c_uint,
     pub sequence: *mut TangoDevEncoded,
 }
-impl ::std::clone::Clone for Struct_VarEncodedArray {
+impl ::std::clone::Clone for Struct_Unnamed25 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarEncodedArray {
+impl ::std::default::Default for Struct_Unnamed25 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarEncodedArray = Struct_VarEncodedArray;
+pub type VarEncodedArray = Struct_Unnamed25;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarLongStringArray {
+pub struct Struct_Unnamed26 {
     pub long_length: ::libc::c_uint,
     pub long_sequence: *mut TangoDevLong,
     pub string_length: ::libc::c_uint,
     pub string_sequence: *mut *mut ::libc::c_char,
 }
-impl ::std::clone::Clone for Struct_VarLongStringArray {
+impl ::std::clone::Clone for Struct_Unnamed26 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarLongStringArray {
+impl ::std::default::Default for Struct_Unnamed26 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarLongStringArray = Struct_VarLongStringArray;
+pub type VarLongStringArray = Struct_Unnamed26;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_VarDoubleStringArray {
+pub struct Struct_Unnamed27 {
     pub double_length: ::libc::c_uint,
     pub double_sequence: *mut ::libc::c_double,
     pub string_length: ::libc::c_uint,
     pub string_sequence: *mut *mut ::libc::c_char,
 }
-impl ::std::clone::Clone for Struct_VarDoubleStringArray {
+impl ::std::clone::Clone for Struct_Unnamed27 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_VarDoubleStringArray {
+impl ::std::default::Default for Struct_Unnamed27 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type VarDoubleStringArray = Struct_VarDoubleStringArray;
+pub type VarDoubleStringArray = Struct_Unnamed27;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Union_TangoAttributeData {
+pub struct Union_Unnamed28 {
     pub _bindgen_data_: [u64; 2usize],
 }
-impl Union_TangoAttributeData {
+impl Union_Unnamed28 {
     pub unsafe fn bool_arr(&mut self) -> *mut VarBoolArray {
         let raw: *mut u8 = ::std::mem::transmute(&self._bindgen_data_);
         ::std::mem::transmute(raw.offset(0))
@@ -502,19 +502,19 @@ impl Union_TangoAttributeData {
         ::std::mem::transmute(raw.offset(0))
     }
 }
-impl ::std::clone::Clone for Union_TangoAttributeData {
+impl ::std::clone::Clone for Union_Unnamed28 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Union_TangoAttributeData {
+impl ::std::default::Default for Union_Unnamed28 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type TangoAttributeData = Union_TangoAttributeData;
+pub type TangoAttributeData = Union_Unnamed28;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Union_TangoCommandData {
+pub struct Union_Unnamed29 {
     pub _bindgen_data_: [u64; 4usize],
 }
-impl Union_TangoCommandData {
+impl Union_Unnamed29 {
     pub unsafe fn bool_val(&mut self) -> *mut u8 {
         let raw: *mut u8 = ::std::mem::transmute(&self._bindgen_data_);
         ::std::mem::transmute(raw.offset(0))
@@ -620,19 +620,19 @@ impl Union_TangoCommandData {
         ::std::mem::transmute(raw.offset(0))
     }
 }
-impl ::std::clone::Clone for Union_TangoCommandData {
+impl ::std::clone::Clone for Union_Unnamed29 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Union_TangoCommandData {
+impl ::std::default::Default for Union_Unnamed29 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type TangoCommandData = Union_TangoCommandData;
+pub type TangoCommandData = Union_Unnamed29;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Union_TangoPropertyData {
+pub struct Union_Unnamed30 {
     pub _bindgen_data_: [u64; 2usize],
 }
-impl Union_TangoPropertyData {
+impl Union_Unnamed30 {
     pub unsafe fn bool_val(&mut self) -> *mut u8 {
         let raw: *mut u8 = ::std::mem::transmute(&self._bindgen_data_);
         ::std::mem::transmute(raw.offset(0))
@@ -714,29 +714,29 @@ impl Union_TangoPropertyData {
         ::std::mem::transmute(raw.offset(0))
     }
 }
-impl ::std::clone::Clone for Union_TangoPropertyData {
+impl ::std::clone::Clone for Union_Unnamed30 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Union_TangoPropertyData {
+impl ::std::default::Default for Union_Unnamed30 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type TangoPropertyData = Union_TangoPropertyData;
+pub type TangoPropertyData = Union_Unnamed30;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_CommandData {
+pub struct Struct_Unnamed31 {
     pub arg_type: TangoDataType,
     pub cmd_data: TangoCommandData,
 }
-impl ::std::clone::Clone for Struct_CommandData {
+impl ::std::clone::Clone for Struct_Unnamed31 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_CommandData {
+impl ::std::default::Default for Struct_Unnamed31 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type CommandData = Struct_CommandData;
+pub type CommandData = Struct_Unnamed31;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_AttributeData {
+pub struct Struct_Unnamed32 {
     pub data_type: TangoDataType,
     pub attr_data: TangoAttributeData,
     pub data_format: AttrDataFormat,
@@ -747,57 +747,57 @@ pub struct Struct_AttributeData {
     pub dim_y: ::libc::c_int,
     pub time_stamp: Struct_timeval,
 }
-impl ::std::clone::Clone for Struct_AttributeData {
+impl ::std::clone::Clone for Struct_Unnamed32 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_AttributeData {
+impl ::std::default::Default for Struct_Unnamed32 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type AttributeData = Struct_AttributeData;
+pub type AttributeData = Struct_Unnamed32;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_AttributeDataList {
+pub struct Struct_Unnamed33 {
     pub length: ::libc::c_uint,
     pub sequence: *mut AttributeData,
 }
-impl ::std::clone::Clone for Struct_AttributeDataList {
+impl ::std::clone::Clone for Struct_Unnamed33 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_AttributeDataList {
+impl ::std::default::Default for Struct_Unnamed33 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type AttributeDataList = Struct_AttributeDataList;
+pub type AttributeDataList = Struct_Unnamed33;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_DevFailed {
+pub struct Struct_Unnamed34 {
     pub desc: *mut ::libc::c_char,
     pub reason: *mut ::libc::c_char,
     pub origin: *mut ::libc::c_char,
     pub severity: ErrSeverity,
 }
-impl ::std::clone::Clone for Struct_DevFailed {
+impl ::std::clone::Clone for Struct_Unnamed34 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_DevFailed {
+impl ::std::default::Default for Struct_Unnamed34 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type DevFailed = Struct_DevFailed;
+pub type DevFailed = Struct_Unnamed34;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_ErrorStack {
+pub struct Struct_Unnamed35 {
     pub length: ::libc::c_uint,
     pub sequence: *mut DevFailed,
 }
-impl ::std::clone::Clone for Struct_ErrorStack {
+impl ::std::clone::Clone for Struct_Unnamed35 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_ErrorStack {
+impl ::std::default::Default for Struct_Unnamed35 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type ErrorStack = Struct_ErrorStack;
+pub type ErrorStack = Struct_Unnamed35;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_CommandInfo {
+pub struct Struct_Unnamed36 {
     pub cmd_name: *mut ::libc::c_char,
     pub cmd_tag: ::libc::c_int,
     pub in_type: ::libc::c_int,
@@ -806,29 +806,29 @@ pub struct Struct_CommandInfo {
     pub out_type_desc: *mut ::libc::c_char,
     pub disp_level: DispLevel,
 }
-impl ::std::clone::Clone for Struct_CommandInfo {
+impl ::std::clone::Clone for Struct_Unnamed36 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_CommandInfo {
+impl ::std::default::Default for Struct_Unnamed36 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type CommandInfo = Struct_CommandInfo;
+pub type CommandInfo = Struct_Unnamed36;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_CommandInfoList {
+pub struct Struct_Unnamed37 {
     pub length: ::libc::c_uint,
     pub sequence: *mut CommandInfo,
 }
-impl ::std::clone::Clone for Struct_CommandInfoList {
+impl ::std::clone::Clone for Struct_Unnamed37 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_CommandInfoList {
+impl ::std::default::Default for Struct_Unnamed37 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type CommandInfoList = Struct_CommandInfoList;
+pub type CommandInfoList = Struct_Unnamed37;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_AttributeInfo {
+pub struct Struct_Unnamed38 {
     pub name: *mut ::libc::c_char,
     pub writable: AttrWriteType,
     pub data_format: AttrDataFormat,
@@ -848,55 +848,55 @@ pub struct Struct_AttributeInfo {
     pub writable_attr_name: *mut ::libc::c_char,
     pub disp_level: DispLevel,
 }
-impl ::std::clone::Clone for Struct_AttributeInfo {
+impl ::std::clone::Clone for Struct_Unnamed38 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_AttributeInfo {
+impl ::std::default::Default for Struct_Unnamed38 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type AttributeInfo = Struct_AttributeInfo;
+pub type AttributeInfo = Struct_Unnamed38;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_AttributeInfoList {
+pub struct Struct_Unnamed39 {
     pub length: ::libc::c_uint,
     pub sequence: *mut AttributeInfo,
 }
-impl ::std::clone::Clone for Struct_AttributeInfoList {
+impl ::std::clone::Clone for Struct_Unnamed39 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_AttributeInfoList {
+impl ::std::default::Default for Struct_Unnamed39 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type AttributeInfoList = Struct_AttributeInfoList;
+pub type AttributeInfoList = Struct_Unnamed39;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_DbDatum {
+pub struct Struct_Unnamed40 {
     pub property_name: *mut ::libc::c_char,
     pub data_type: TangoDataType,
     pub prop_data: TangoPropertyData,
     pub is_empty: u8,
     pub wrong_data_type: u8,
 }
-impl ::std::clone::Clone for Struct_DbDatum {
+impl ::std::clone::Clone for Struct_Unnamed40 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_DbDatum {
+impl ::std::default::Default for Struct_Unnamed40 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type DbDatum = Struct_DbDatum;
+pub type DbDatum = Struct_Unnamed40;
 #[repr(C)]
 #[derive(Copy)]
-pub struct Struct_DbData {
+pub struct Struct_Unnamed41 {
     pub length: ::libc::c_uint,
     pub sequence: *mut DbDatum,
 }
-impl ::std::clone::Clone for Struct_DbData {
+impl ::std::clone::Clone for Struct_Unnamed41 {
     fn clone(&self) -> Self { *self }
 }
-impl ::std::default::Default for Struct_DbData {
+impl ::std::default::Default for Struct_Unnamed41 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
-pub type DbData = Struct_DbData;
+pub type DbData = Struct_Unnamed41;
 #[link(name = "c_tango")]
 #[link(name = "tango")]
 #[link(name = "omniORB4")]
@@ -937,124 +937,112 @@ extern "C" {
     pub fn futimes(__fd: ::libc::c_int, __tvp: *mut Struct_timeval)
      -> ::libc::c_int;
     pub fn tango_create_device_proxy(dev_name: *mut ::libc::c_char,
-                                     proxy: *mut *mut ::libc::c_void,
-                                     error: *mut ErrorStack) -> u8;
-    pub fn tango_delete_device_proxy(proxy: *mut *mut ::libc::c_void,
-                                     error: *mut ErrorStack) -> u8;
+                                     proxy: *mut *mut ::libc::c_void)
+     -> *mut ErrorStack;
+    pub fn tango_delete_device_proxy(proxy: *mut ::libc::c_void)
+     -> *mut ErrorStack;
     pub fn tango_set_timeout_millis(proxy: *mut ::libc::c_void,
-                                    millis: ::libc::c_int,
-                                    error: *mut ErrorStack) -> u8;
+                                    millis: ::libc::c_int) -> *mut ErrorStack;
     pub fn tango_get_timeout_millis(proxy: *mut ::libc::c_void,
-                                    millis: *mut ::libc::c_int,
-                                    error: *mut ErrorStack) -> u8;
-    pub fn tango_set_source(proxy: *mut ::libc::c_void, source: DevSource,
-                            error: *mut ErrorStack) -> u8;
+                                    millis: *mut ::libc::c_int)
+     -> *mut ErrorStack;
+    pub fn tango_set_source(proxy: *mut ::libc::c_void, source: DevSource)
+     -> *mut ErrorStack;
     pub fn tango_get_source(proxy: *mut ::libc::c_void,
-                            source: *mut DevSource, error: *mut ErrorStack)
-     -> u8;
-    pub fn tango_lock(proxy: *mut ::libc::c_void, error: *mut ErrorStack)
-     -> u8;
-    pub fn tango_unlock(proxy: *mut ::libc::c_void, error: *mut ErrorStack)
-     -> u8;
-    pub fn tango_is_locked(proxy: *mut ::libc::c_void, is_locked: *mut u8,
-                           error: *mut ErrorStack) -> u8;
+                            source: *mut DevSource) -> *mut ErrorStack;
+    pub fn tango_lock(proxy: *mut ::libc::c_void) -> *mut ErrorStack;
+    pub fn tango_unlock(proxy: *mut ::libc::c_void) -> *mut ErrorStack;
+    pub fn tango_is_locked(proxy: *mut ::libc::c_void, is_locked: *mut u8)
+     -> *mut ErrorStack;
     pub fn tango_is_locked_by_me(proxy: *mut ::libc::c_void,
-                                 is_locked_by_me: *mut u8,
-                                 error: *mut ErrorStack) -> u8;
+                                 is_locked_by_me: *mut u8) -> *mut ErrorStack;
     pub fn tango_locking_status(proxy: *mut ::libc::c_void,
-                                lock_status: *mut *mut ::libc::c_char,
-                                error: *mut ErrorStack) -> u8;
+                                lock_status: *mut *mut ::libc::c_char)
+     -> *mut ErrorStack;
     pub fn tango_command_query(proxy: *mut ::libc::c_void,
                                cmd_name: *mut ::libc::c_char,
-                               cmd_info: *mut CommandInfo,
-                               error: *mut ErrorStack) -> u8;
+                               cmd_info: *mut CommandInfo) -> *mut ErrorStack;
     pub fn tango_command_list_query(proxy: *mut ::libc::c_void,
-                                    cmd_info_list: *mut CommandInfoList,
-                                    error: *mut ErrorStack) -> u8;
+                                    cmd_info_list: *mut CommandInfoList)
+     -> *mut ErrorStack;
     pub fn tango_command_inout(proxy: *mut ::libc::c_void,
                                cmd_name: *mut ::libc::c_char,
                                argin: *mut CommandData,
-                               argout: *mut CommandData,
-                               error: *mut ErrorStack) -> u8;
+                               argout: *mut CommandData) -> *mut ErrorStack;
     pub fn tango_free_CommandData(command_data: *mut CommandData) -> ();
     pub fn tango_free_CommandInfo(command_info: *mut CommandInfo) -> ();
     pub fn tango_free_CommandInfoList(command_info_list: *mut CommandInfoList)
      -> ();
     pub fn tango_get_attribute_list(proxy: *mut ::libc::c_void,
-                                    attr_names: *mut VarStringArray,
-                                    error: *mut ErrorStack) -> u8;
+                                    attr_names: *mut VarStringArray)
+     -> *mut ErrorStack;
     pub fn tango_get_attribute_config(proxy: *mut ::libc::c_void,
                                       attr_names: *mut VarStringArray,
-                                      attr_info_list: *mut AttributeInfoList,
-                                      error: *mut ErrorStack) -> u8;
+                                      attr_info_list: *mut AttributeInfoList)
+     -> *mut ErrorStack;
     pub fn tango_attribute_list_query(proxy: *mut ::libc::c_void,
-                                      attr_info_list: *mut AttributeInfoList,
-                                      error: *mut ErrorStack) -> u8;
+                                      attr_info_list: *mut AttributeInfoList)
+     -> *mut ErrorStack;
     pub fn tango_read_attribute(proxy: *mut ::libc::c_void,
                                 attr_name: *mut ::libc::c_char,
-                                argout: *mut AttributeData,
-                                error: *mut ErrorStack) -> u8;
+                                argout: *mut AttributeData)
+     -> *mut ErrorStack;
     pub fn tango_write_attribute(proxy: *mut ::libc::c_void,
-                                 argin: *mut AttributeData,
-                                 error: *mut ErrorStack) -> u8;
+                                 argin: *mut AttributeData)
+     -> *mut ErrorStack;
     pub fn tango_read_attributes(proxy: *mut ::libc::c_void,
                                  attr_names: *mut VarStringArray,
-                                 argout: *mut AttributeDataList,
-                                 error: *mut ErrorStack) -> u8;
+                                 argout: *mut AttributeDataList)
+     -> *mut ErrorStack;
     pub fn tango_write_attributes(proxy: *mut ::libc::c_void,
-                                  argin: *mut AttributeDataList,
-                                  error: *mut ErrorStack) -> u8;
+                                  argin: *mut AttributeDataList)
+     -> *mut ErrorStack;
     pub fn tango_free_AttributeData(attribute_data: *mut AttributeData) -> ();
     pub fn tango_free_AttributeDataList(attribute_data_list:
                                             *mut AttributeDataList) -> ();
     pub fn tango_free_VarStringArray(string_arr: *mut VarStringArray) -> ();
     pub fn tango_free_AttributeInfoList(attribute_info_list:
                                             *mut AttributeInfoList) -> ();
-    pub fn tango_print_ErrorStack(error_stack: *mut ErrorStack) -> ();
     pub fn tango_free_ErrorStack(error_stack: *mut ErrorStack) -> ();
-    pub fn tango_create_database_proxy(db_proxy: *mut *mut ::libc::c_void,
-                                       error: *mut ErrorStack) -> u8;
-    pub fn tango_delete_database_proxy(db_proxy: *mut *mut ::libc::c_void,
-                                       error: *mut ErrorStack) -> u8;
+    pub fn tango_create_database_proxy(db_proxy: *mut *mut ::libc::c_void)
+     -> *mut ErrorStack;
+    pub fn tango_delete_database_proxy(db_proxy: *mut ::libc::c_void)
+     -> *mut ErrorStack;
     pub fn tango_get_device_exported(db_proxy: *mut ::libc::c_void,
                                      name_filter: *mut ::libc::c_char,
-                                     dev_list: *mut DbDatum,
-                                     error: *mut ErrorStack) -> u8;
+                                     dev_list: *mut DbDatum)
+     -> *mut ErrorStack;
     pub fn tango_get_device_exported_for_class(db_proxy: *mut ::libc::c_void,
                                                class_name:
                                                    *mut ::libc::c_char,
-                                               dev_list: *mut DbDatum,
-                                               error: *mut ErrorStack) -> u8;
+                                               dev_list: *mut DbDatum)
+     -> *mut ErrorStack;
     pub fn tango_get_object_list(db_proxy: *mut ::libc::c_void,
                                  name_filter: *mut ::libc::c_char,
-                                 obj_list: *mut DbDatum,
-                                 error: *mut ErrorStack) -> u8;
+                                 obj_list: *mut DbDatum) -> *mut ErrorStack;
     pub fn tango_get_object_property_list(db_proxy: *mut ::libc::c_void,
                                           obj_name: *mut ::libc::c_char,
                                           name_filter: *mut ::libc::c_char,
-                                          prop_list: *mut DbDatum,
-                                          error: *mut ErrorStack) -> u8;
+                                          prop_list: *mut DbDatum)
+     -> *mut ErrorStack;
     pub fn tango_get_property(db_proxy: *mut ::libc::c_void,
                               obj_name: *mut ::libc::c_char,
-                              prop_list: *mut DbData, error: *mut ErrorStack)
-     -> u8;
+                              prop_list: *mut DbData) -> *mut ErrorStack;
     pub fn tango_put_property(db_proxy: *mut ::libc::c_void,
                               obj_name: *mut ::libc::c_char,
-                              prop_list: *mut DbData, error: *mut ErrorStack)
-     -> u8;
+                              prop_list: *mut DbData) -> *mut ErrorStack;
     pub fn tango_delete_property(db_proxy: *mut ::libc::c_void,
                                  obj_name: *mut ::libc::c_char,
-                                 prop_list: *mut DbData,
-                                 error: *mut ErrorStack) -> u8;
+                                 prop_list: *mut DbData) -> *mut ErrorStack;
     pub fn tango_get_device_property(dev_proxy: *mut ::libc::c_void,
-                                     prop_list: *mut DbData,
-                                     error: *mut ErrorStack) -> u8;
+                                     prop_list: *mut DbData)
+     -> *mut ErrorStack;
     pub fn tango_put_device_property(dev_proxy: *mut ::libc::c_void,
-                                     prop_list: *mut DbData,
-                                     error: *mut ErrorStack) -> u8;
+                                     prop_list: *mut DbData)
+     -> *mut ErrorStack;
     pub fn tango_delete_device_property(dev_proxy: *mut ::libc::c_void,
-                                        prop_list: *mut DbData,
-                                        error: *mut ErrorStack) -> u8;
+                                        prop_list: *mut DbData)
+     -> *mut ErrorStack;
     pub fn tango_free_DbDatum(db_datum: *mut DbDatum) -> ();
     pub fn tango_free_DbData(db_data: *mut DbData) -> ();
 }
