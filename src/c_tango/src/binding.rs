@@ -741,6 +741,7 @@ pub struct Struct_AttributeData {
     pub attr_data: TangoAttributeData,
     pub data_format: AttrDataFormat,
     pub quality: AttrQuality,
+    pub nb_read: ::libc::c_long,
     pub name: *mut ::libc::c_char,
     pub dim_x: ::libc::c_int,
     pub dim_y: ::libc::c_int,

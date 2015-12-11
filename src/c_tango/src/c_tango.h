@@ -577,7 +577,8 @@ struct AttributeData {
 				TangoDataType 	  data_type;	/**< Tango scalar data type */	
 				TangoAttributeData attr_data;	/**< Union for attribute data */
 				AttrDataFormat data_format;	/**< Data format (scalar, ...) */
-				AttrQuality 		quality;		/**< Data quality factor */
+				AttrQuality			quality;		/**< Data quality factor */
+				long 				nb_read;		/**< Number of read items */
 				char 				    *name;		 /**< Attribute name */
 				int 					dim_x;		 /**< Data dimension X */
 				int 					dim_y; 		 /**< Data dimension Y */

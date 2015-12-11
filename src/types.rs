@@ -725,6 +725,7 @@ impl AttributeInfo {
 #[derive(Debug, Clone, PartialEq)]
 pub struct AttributeData {
     pub data: AttrValue,
+    pub written_data: Option<AttrValue>,
     pub format: AttrDataFormat,
     pub quality: AttrQuality,
     pub name: String,
@@ -735,10 +736,12 @@ pub struct AttributeData {
 
 impl AttributeData {
     pub fn simple(name: &str, data: AttrValue) -> AttributeData {
+        println!("{:?}", data);
         AttributeData {
             dim_x: data.len(),
             dim_y: 0,
             data: data,
+            written_data: None,              // doesn't actually matter for writing
             format: AttrDataFormat::Scalar,  // doesn't actually matter for writing
             quality: AttrQuality::Valid,
             name: name.into(),
@@ -747,52 +750,72 @@ impl AttributeData {
     }
 
     pub unsafe fn from_c(mut attr_data: c::AttributeData, free: bool) -> AttributeData {
+        use AttrValue::*;
+
         let tag = TangoDataType::from_c(attr_data.data_type);
         let mut data = attr_data.attr_data;
-        let res = if AttrDataFormat::from_c(attr_data.data_format) == AttrDataFormat::Scalar {
+        let is_scalar = AttrDataFormat::from_c(attr_data.data_format) == AttrDataFormat::Scalar;
+        let (res_read, res_written) = if is_scalar {
+            macro_rules! impl_simple {
+                ($alt:ident, $arr:ident) => {
+                    {
+                        let ptr = *data.$arr();
+                        ($alt(*ptr.sequence), $alt(*ptr.sequence.offset(1)))
+                    }
+                }
+            }
+
             match tag {
-                TangoDataType::Boolean => AttrValue::Boolean(*(*data.bool_arr()).sequence != 0),
-                TangoDataType::UChar => AttrValue::UChar(*(*data.char_arr()).sequence),
-                TangoDataType::Short => AttrValue::Short(*(*data.short_arr()).sequence),
-                TangoDataType::UShort => AttrValue::UShort(*(*data.ushort_arr()).sequence),
-                TangoDataType::Long => AttrValue::Long(*(*data.long_arr()).sequence),
-                TangoDataType::ULong => AttrValue::ULong(*(*data.ulong_arr()).sequence),
-                TangoDataType::Long64 => AttrValue::Long64(*(*data.long64_arr()).sequence),
-                TangoDataType::ULong64 => AttrValue::ULong64(*(*data.ulong64_arr()).sequence),
-                TangoDataType::Float => AttrValue::Float(*(*data.float_arr()).sequence),
-                TangoDataType::Double => AttrValue::Double(*(*data.double_arr()).sequence),
+                TangoDataType::UChar => impl_simple!(UChar, char_arr),
+                TangoDataType::Short => impl_simple!(Short, short_arr),
+                TangoDataType::UShort => impl_simple!(UShort, ushort_arr),
+                TangoDataType::Long => impl_simple!(Long, long_arr),
+                TangoDataType::ULong => impl_simple!(ULong, ulong_arr),
+                TangoDataType::Long64 => impl_simple!(Long64, long64_arr),
+                TangoDataType::ULong64 => impl_simple!(ULong64, ulong64_arr),
+                TangoDataType::Float => impl_simple!(Float, float_arr),
+                TangoDataType::Double => impl_simple!(Double, double_arr),
+                TangoDataType::Boolean =>
+                    (Boolean(*(*data.bool_arr()).sequence != 0),
+                     Boolean(*(*data.bool_arr()).sequence.offset(1) != 0)),
                 TangoDataType::State =>
-                    AttrValue::State(TangoDevState::from_c(*(*data.state_arr()).sequence)),
+                    (State(TangoDevState::from_c(*(*data.state_arr()).sequence)),
+                     State(TangoDevState::from_c(*(*data.state_arr()).sequence.offset(1)))),
                 TangoDataType::String => {
-                    let raw = *(*data.string_arr()).sequence;
-                    let len = libc::strlen(raw);
-                    AttrValue::String(Vec::from(slice::from_raw_parts(raw as *mut u8, len)))
+                    let rawr = *(*data.string_arr()).sequence;
+                    let lenr = libc::strlen(rawr);
+                    let raww = *(*data.string_arr()).sequence.offset(1);
+                    let lenw = libc::strlen(raww);
+                    (String(Vec::from(slice::from_raw_parts(rawr as *mut u8, lenr))),
+                     String(Vec::from(slice::from_raw_parts(raww as *mut u8, lenw))))
                 },
                 TangoDataType::Encoded => {
-                    let raw = *(*data.encoded_arr()).sequence;
-                    AttrValue::Encoded(
-                        (string_from(raw.encoded_format),
-                         Vec::from(slice::from_raw_parts(raw.encoded_data as *mut u8,
-                                                         raw.encoded_length as usize))))
+                    let rawr = *(*data.encoded_arr()).sequence;
+                    let raww = *(*data.encoded_arr()).sequence.offset(1);
+                    (Encoded(
+                        (string_from(rawr.encoded_format),
+                         Vec::from(slice::from_raw_parts(rawr.encoded_data as *mut u8,
+                                                         rawr.encoded_length as usize)))),
+                     Encoded(
+                        (string_from(raww.encoded_format),
+                         Vec::from(slice::from_raw_parts(raww.encoded_data as *mut u8,
+                                                         raww.encoded_length as usize)))))
                 },
                 _ => panic!("data type {:?} not allowed for attributes", tag)
             }
         } else {
             macro_rules! impl_simple {
                 ($alt:ident, $arr:ident) => {
-                    AttrValue::$alt({
+                    {
                         let ptr = *data.$arr();
-                        Vec::from(slice::from_raw_parts(ptr.sequence, ptr.length as usize))
-                    })
+                        let slice = slice::from_raw_parts(ptr.sequence, ptr.length as usize);
+                        let (p1, p2) = slice.split_at(attr_data.nb_read as usize);
+                        ($alt(Vec::from(p1)), $alt(Vec::from(p2)))
+                    }
                 }
             }
 
             match tag {
-                TangoDataType::Boolean => AttrValue::BooleanArray({
-                    let ptr = *data.bool_arr();
-                    slice::from_raw_parts(ptr.sequence, ptr.length as usize)
-                        .iter().map(|&v| v != 0).collect()
-                }),
                 TangoDataType::UChar => impl_simple!(UCharArray, char_arr),
                 TangoDataType::Short => impl_simple!(ShortArray, short_arr),
                 TangoDataType::UShort => impl_simple!(UShortArray, ushort_arr),
@@ -802,12 +825,21 @@ impl AttributeData {
                 TangoDataType::ULong64 => impl_simple!(ULong64Array, ulong64_arr),
                 TangoDataType::Float => impl_simple!(FloatArray, float_arr),
                 TangoDataType::Double => impl_simple!(DoubleArray, double_arr),
-                TangoDataType::State => AttrValue::StateArray({
+                TangoDataType::Boolean => {
+                    let ptr = *data.bool_arr();
+                    let slice = slice::from_raw_parts(ptr.sequence, ptr.length as usize);
+                    let (p1, p2) = slice.split_at(attr_data.nb_read as usize);
+                    (BooleanArray(p1.iter().map(|&v| v != 0).collect()),
+                     BooleanArray(p2.iter().map(|&v| v != 0).collect()))
+                },
+                TangoDataType::State => {
                     let ptr = *data.state_arr();
-                    slice::from_raw_parts(ptr.sequence, ptr.length as usize)
-                        .iter().map(|&v| TangoDevState::from_c(v)).collect()
-                }),
-                TangoDataType::String => AttrValue::StringArray({
+                    let slice = slice::from_raw_parts(ptr.sequence, ptr.length as usize);
+                    let (p1, p2) = slice.split_at(attr_data.nb_read as usize);
+                    (StateArray(p1.iter().map(|&v| TangoDevState::from_c(v)).collect()),
+                     StateArray(p2.iter().map(|&v| TangoDevState::from_c(v)).collect()))
+                },
+                TangoDataType::String => {
                     let ptr = *data.string_arr();
                     let mut res = Vec::with_capacity(ptr.length as usize);
                     for i in 0..ptr.length {
@@ -815,9 +847,10 @@ impl AttributeData {
                         let len = libc::strlen(raw);
                         res.push(Vec::from(slice::from_raw_parts(raw as *mut u8, len)));
                     }
-                    res
-                }),
-                TangoDataType::Encoded => AttrValue::EncodedArray({
+                    let res2 = res.split_off(attr_data.nb_read as usize);
+                    (StringArray(res), StringArray(res2))
+                },
+                TangoDataType::Encoded => {
                     let ptr = *data.encoded_arr();
                     let mut res = Vec::with_capacity(ptr.length as usize);
                     for i in 0..ptr.length {
@@ -826,13 +859,15 @@ impl AttributeData {
                                   Vec::from(slice::from_raw_parts(raw.encoded_data as *mut u8,
                                                                   raw.encoded_length as usize))));
                     }
-                    res
-                }),
+                    let res2 = res.split_off(attr_data.nb_read as usize);
+                    (EncodedArray(res), EncodedArray(res2))
+                },
                 _ => panic!("data type {:?} not allowed for attributes", tag)
             }
         };
         let res = AttributeData {
-            data: res,
+            data: res_read,
+            written_data: Some(res_written),
             format: AttrDataFormat::from_c(attr_data.data_format),
             quality: AttrQuality::from_c(attr_data.quality),
             name: string_from(attr_data.name),
@@ -917,10 +952,12 @@ impl AttributeData {
             AttrValue::DoubleArray(v) => impl_array!(v, Double, double_arr, f64),
             AttrValue::StateArray(v) => impl_array!(v, State, state_arr, u32),
             AttrValue::StringArray(v) => {
+                println!("-{:?}", v);
                 let array = content.string_arr();
                 let mut vec = Vec::with_capacity(v.len());
                 (*array).length = v.len() as u32;
                 for s in v.into_iter() {
+                    println!("'{:?}'", s);
                     vec.push(cstring_from(s).into_raw());
                 }
                 (*array).sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut i8;
@@ -947,6 +984,7 @@ impl AttributeData {
             data_type: tag as u32,
             data_format: self.format as u32,
             attr_data: content,
+            nb_read: 0,  // doesn't matter for writing
             quality: self.quality as u32,
             dim_x: self.dim_x as i32,
             dim_y: self.dim_y as i32,

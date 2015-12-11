@@ -526,6 +526,7 @@ void convert_attribute_reading (Tango::DeviceAttribute& devattr, AttributeData *
 	/* get data type */
 	argout->data_type = (TangoDataType) devattr.get_type();
 	argout->data_format = (AttrDataFormat) devattr.data_format;
+	argout->nb_read = devattr.get_nb_read();
 	
 	switch (argout->data_type)
 		{
@@ -932,15 +933,15 @@ void convert_attribute_writing (AttributeData *argin, Tango::DeviceAttribute& de
 			case DEV_LONG64:
 				{
 				/* copy the data into a long64 vector */				
-				vector<Tango::DevLong64> long_arr(argin->attr_data.long_arr.length);
+				vector<Tango::DevLong64> long64_arr(argin->attr_data.long64_arr.length);
 			
-				for (int i=0; i<argin->attr_data.long_arr.length; i++)
+				for (int i=0; i<argin->attr_data.long64_arr.length; i++)
 					{
-					long_arr[i] = (Tango::DevLong64) argin->attr_data.long_arr.sequence[i];
+					long64_arr[i] = (Tango::DevLong64) argin->attr_data.long64_arr.sequence[i];
 					}
 				
 				/* Inert into the DeviceAtrribute object */
-				devattr.insert (long_arr, argin->dim_x, argin->dim_y);
+				devattr.insert (long64_arr, argin->dim_x, argin->dim_y);
 				break;
 				}
 				
@@ -995,6 +996,7 @@ void convert_attribute_writing (AttributeData *argin, Tango::DeviceAttribute& de
 				for (int i=0; i<argin->attr_data.string_arr.length; i++)
 					{
 					string_arr[i] = argin->attr_data.string_arr.sequence[i];
+					printf("argin '%s'\n", argin->attr_data.string_arr.sequence[i]);
 					}
 				
 				/* Inert into the DeviceAtrribute object */

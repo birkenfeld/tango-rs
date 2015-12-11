@@ -131,24 +131,38 @@ fn test_attributes(dev: &mut tango::DeviceProxy) {
         "string_spectrum",
         ];
     println!("read all");
-    for attr in read_tests {
-        println!("{}", attr);
-        dev.read_attribute(attr).unwrap();
-    }
-    // dev.read_attributes(&read_tests).unwrap();
+    dev.read_attributes(&read_tests).unwrap();
     let write_tests = vec![
         ("boolean_scalar", Boolean(false)),
-        ("boolean_spectrum", BooleanArray(vec![true, false])),
+        ("boolean_spectrum", BooleanArray(vec![true, false, false])),
         ("uchar_scalar", UChar(152)),
         ("uchar_spectrum", UCharArray(vec![111, 152, 255])),
         ("short_scalar", Short(-1000)),
         ("short_spectrum", ShortArray(vec![-1000, 1000])),
+        ("ushort_scalar", UShort(10000)),
+        ("ushort_spectrum", UShortArray(vec![10000, 20000])),
+        ("long_scalar", Long(1 << 30)),
+        ("long_spectrum", LongArray(vec![1, 2])),
+        ("ulong_scalar", ULong(1 << 31)),
+        ("long64_scalar", Long64(1 << 32)),
+        ("ulong64_scalar", ULong64(1 << 62)),
+        ("float_scalar", Float(42.42)),
+        ("float_spectrum", FloatArray(vec![1.0, 2.0, 3.0])),
+        ("double_scalar", Double(42.424242)),
+        ("double_spectrum", DoubleArray(vec![4.0, 5.0, 6.0])),
+        ("string_scalar", String(b"0000000000000000".to_vec())),
+        ("string_spectrum", StringArray(vec![vec![b'a', b'b'],
+                                             vec![b'c'], vec![b'd']])),
         ];
     for (attr, data) in write_tests {
         println!("write {}", attr);
         dev.write_attribute(tango::AttributeData::simple(attr, data.clone())).unwrap();
+        let res = dev.read_attribute(attr).unwrap();
+        assert_eq!(res.written_data.unwrap(), data);
     }
     println!("errors");
     let res = dev.read_attribute("not_present").unwrap_err();
     assert_eq!(res.failures[0].reason, "API_AttrNotFound");
+    let res = dev.write_attribute(tango::AttributeData::simple("boolean_scalar", Short(10))).unwrap_err();
+    assert_eq!(res.failures[0].reason, "API_IncompatibleAttrDataType");
 }
