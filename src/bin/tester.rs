@@ -66,7 +66,7 @@ fn test_commands(dev: &mut tango::DeviceProxy) {
         ("DevULong", ULong(1 << 20)),
         ("DevLong64", Long64(-(1 << 60))),
         ("DevULong64", ULong64(1 << 60)),
-        ("DevString", tango::CommandData::from_str("str")),
+        ("DevString", tango::CommandData::from_str("some_str_ing")),
         ("DevVarCharArray", CharArray(vec![1, 5, 7])),
         ("DevVarShortArray", ShortArray(vec![-5, 1, 0])),
         ("DevVarUShortArray", UShortArray(vec![5, 1, 0])),
@@ -79,9 +79,9 @@ fn test_commands(dev: &mut tango::DeviceProxy) {
         ("DevVarStringArray", StringArray(vec![vec![b'a', b'b'],
                                                vec![b'c'], vec![b'd']])),
         ("DevVarLongStringArray", LongStringArray(vec![-5, 1, 0, 1],
-                                                  vec![vec![b'a', b'b']])),
+                                                  vec![vec![b'a', b'b'], vec![b'c']])),
         ("DevVarDoubleStringArray", DoubleStringArray(vec![-5.0, 1.0, 0.0],
-                                                      vec![vec![b'a', b'b']])),
+                                                     vec![vec![b'a', b'b'], vec![b'c']])),
         // no test methods for: DevEncoded, DevVarBooleanArray
         ];
     for (cmd, data) in tests {
@@ -150,7 +150,7 @@ fn test_attributes(dev: &mut tango::DeviceProxy) {
         ("float_spectrum", FloatArray(vec![1.0, 2.0, 3.0])),
         ("double_scalar", Double(42.424242)),
         ("double_spectrum", DoubleArray(vec![4.0, 5.0, 6.0])),
-        ("string_scalar", String(b"0000000000000000".to_vec())),
+        ("string_scalar", String(b"0102040800000000".to_vec())),
         ("string_spectrum", StringArray(vec![vec![b'a', b'b'],
                                              vec![b'c'], vec![b'd']])),
         ];

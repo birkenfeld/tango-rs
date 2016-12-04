@@ -651,13 +651,13 @@ impl CommandData {
             TangoDataType::DoubleArray => drop(Box::from_raw((*data.double_arr()).sequence)),
             TangoDataType::StringArray => {
                 for i in 0..(*data.string_arr()).length {
-                    drop(CString::from_raw((*data.string_arr()).sequence.offset(i as isize) as *mut i8));
+                    drop(CString::from_raw(*(*data.string_arr()).sequence.offset(i as isize) as *mut i8));
                 }
                 drop(Box::from_raw((*data.string_arr()).sequence));
             }
             TangoDataType::LongStringArray => {
                 for i in 0..(*data.long_string_arr()).string_length {
-                    drop(CString::from_raw((*data.long_string_arr())
+                    drop(CString::from_raw(*(*data.long_string_arr())
                                            .string_sequence.offset(i as isize) as *mut i8));
                 }
                 drop(Box::from_raw((*data.long_string_arr()).string_sequence));
@@ -665,7 +665,7 @@ impl CommandData {
             }
             TangoDataType::DoubleStringArray => {
                 for i in 0..(*data.double_string_arr()).string_length {
-                    drop(CString::from_raw((*data.double_string_arr())
+                    drop(CString::from_raw(*(*data.double_string_arr())
                                            .string_sequence.offset(i as isize) as *mut i8));
                 }
                 drop(Box::from_raw((*data.double_string_arr()).string_sequence));
@@ -736,7 +736,6 @@ pub struct AttributeData {
 
 impl AttributeData {
     pub fn simple(name: &str, data: AttrValue) -> AttributeData {
-        println!("{:?}", data);
         AttributeData {
             dim_x: data.len(),
             dim_y: 0,
@@ -952,12 +951,10 @@ impl AttributeData {
             AttrValue::DoubleArray(v) => impl_array!(v, Double, double_arr, f64),
             AttrValue::StateArray(v) => impl_array!(v, State, state_arr, u32),
             AttrValue::StringArray(v) => {
-                println!("-{:?}", v);
                 let array = content.string_arr();
                 let mut vec = Vec::with_capacity(v.len());
                 (*array).length = v.len() as u32;
                 for s in v.into_iter() {
-                    println!("'{:?}'", s);
                     vec.push(cstring_from(s).into_raw());
                 }
                 (*array).sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut i8;
@@ -1010,7 +1007,7 @@ impl AttributeData {
             TangoDataType::State => drop(Box::from_raw((*data.state_arr()).sequence)),
             TangoDataType::String => {
                 for i in 0..(*data.string_arr()).length {
-                    drop(CString::from_raw((*data.string_arr()).sequence.offset(i as isize) as *mut i8));
+                    drop(CString::from_raw(*(*data.string_arr()).sequence.offset(i as isize) as *mut i8));
                 }
                 drop(Box::from_raw((*data.string_arr()).sequence));
             }
