@@ -9,7 +9,6 @@ fn main() {
     let libdir = tango_root + "/lib";
     gcc::Config::new()
         .cpp(true)
-        .file("src/c_tango_const.c")
         .file("src/c_tango_proxy.c")
         .file("src/c_tango_command.c")
         .file("src/c_tango_attribute.c")

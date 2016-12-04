@@ -903,15 +903,6 @@ pub type DbData = Struct_Unnamed41;
 #[link(name = "omniDynamic4")]
 #[link(name = "omnithread")]
 extern "C" {
-    pub static mut TangoDataTypeName: *const *const ::libc::c_char;
-    pub static mut TangoDevStateName: *const *const ::libc::c_char;
-}
-#[link(name = "c_tango")]
-#[link(name = "tango")]
-#[link(name = "omniORB4")]
-#[link(name = "omniDynamic4")]
-#[link(name = "omnithread")]
-extern "C" {
     pub fn select(__nfds: ::libc::c_int, __readfds: *mut fd_set,
                   __writefds: *mut fd_set, __exceptfds: *mut fd_set,
                   __timeout: *mut Struct_timeval) -> ::libc::c_int;

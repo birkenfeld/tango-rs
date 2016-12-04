@@ -365,9 +365,6 @@ typedef struct {
 extern "C" {
 #endif
 
-extern const char* const TangoDataTypeName[];
-extern const char* const TangoDevStateName[];
-
 ErrorStack *tango_create_device_proxy(char *dev_name, void **proxy);
 ErrorStack *tango_delete_device_proxy(void *proxy);
 ErrorStack *tango_set_timeout_millis(void *proxy, int millis);
