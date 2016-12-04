@@ -20,9 +20,11 @@ macro_rules! tango_call {
 
 
 pub mod types;
-pub mod proxy;
 pub mod error;
+pub mod proxy;
+pub mod dbase;
 
 pub use types::*;
-pub use proxy::*;
 pub use error::*;
+pub use proxy::*;
+pub use dbase::*;

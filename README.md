@@ -16,3 +16,12 @@ Covered major API calls:
 * `write_attribute`
 * `read_attributes`
 * `write_attributes`
+* `get_device_property`
+* `put_device_property`
+* `delete_device_property`
+
+Database API calls:
+
+* `get_property`
+* `put_property`
+* `delete_property`

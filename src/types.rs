@@ -1089,3 +1089,298 @@ impl AttrValue {
         }
     }
 }
+
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DbDatum {
+    pub name: String,
+    pub data: PropertyValue,
+    pub wrong_data_type: bool,
+    request_type: Option<TangoDataType>,
+}
+
+impl DbDatum {
+    pub fn new(name: &str, data: PropertyValue) -> DbDatum {
+        DbDatum {
+            name: name.into(),
+            data: data,
+            wrong_data_type: false,
+            request_type: None,
+        }
+    }
+
+    pub fn for_request(name: &str, typ: TangoDataType) -> DbDatum {
+        DbDatum {
+            name: name.into(),
+            data: PropertyValue::Empty,
+            wrong_data_type: false,
+            request_type: Some(typ),
+        }
+    }
+
+    pub fn name_only(name: &str) -> DbDatum {
+        DbDatum {
+            name: name.into(),
+            data: PropertyValue::Empty,
+            wrong_data_type: false,
+            request_type: None
+        }
+    }
+
+    pub unsafe fn from_c(mut db_datum: c::DbDatum, free: bool) -> DbDatum {
+        let data = if db_datum.is_empty != 0 {
+            PropertyValue::Empty
+        } else {
+            let mut data = db_datum.prop_data;
+            match TangoDataType::from_c(db_datum.data_type) {
+                TangoDataType::Boolean => PropertyValue::Boolean(*data.bool_val() != 0),
+                TangoDataType::UChar => PropertyValue::UChar(*data.char_val()),
+                TangoDataType::Short => PropertyValue::Short(*data.short_val()),
+                TangoDataType::UShort => PropertyValue::UShort(*data.ushort_val()),
+                TangoDataType::Long | TangoDataType::Int => PropertyValue::Long(*data.long_val()),
+                TangoDataType::ULong => PropertyValue::ULong(*data.ulong_val()),
+                TangoDataType::Long64 => PropertyValue::Long64(*data.long64_val()),
+                TangoDataType::ULong64 => PropertyValue::ULong64(*data.ulong64_val()),
+                TangoDataType::Float => PropertyValue::Float(*data.float_val()),
+                TangoDataType::Double => PropertyValue::Double(*data.double_val()),
+                TangoDataType::String | TangoDataType::ConstString => PropertyValue::String({
+                    let ptr = *data.string_val();
+                    let len = libc::strlen(ptr);
+                    Vec::from(slice::from_raw_parts(ptr as *mut u8, len))
+                }),
+                TangoDataType::ShortArray => PropertyValue::ShortArray({
+                    let ptr = *data.short_arr();
+                    Vec::from(slice::from_raw_parts(ptr.sequence, ptr.length as usize))
+                }),
+                TangoDataType::UShortArray => PropertyValue::UShortArray({
+                    let ptr = *data.ushort_arr();
+                    Vec::from(slice::from_raw_parts(ptr.sequence, ptr.length as usize))
+                }),
+                TangoDataType::LongArray => PropertyValue::LongArray({
+                    let ptr = *data.long_arr();
+                    Vec::from(slice::from_raw_parts(ptr.sequence, ptr.length as usize))
+                }),
+                TangoDataType::ULongArray => PropertyValue::ULongArray({
+                    let ptr = *data.ulong_arr();
+                    Vec::from(slice::from_raw_parts(ptr.sequence, ptr.length as usize))
+                }),
+                TangoDataType::Long64Array => PropertyValue::Long64Array({
+                    let ptr = *data.long64_arr();
+                    Vec::from(slice::from_raw_parts(ptr.sequence, ptr.length as usize))
+                }),
+                TangoDataType::ULong64Array => PropertyValue::ULong64Array({
+                    let ptr = *data.ulong64_arr();
+                    Vec::from(slice::from_raw_parts(ptr.sequence, ptr.length as usize))
+                }),
+                TangoDataType::FloatArray => PropertyValue::FloatArray({
+                    let ptr = *data.float_arr();
+                    Vec::from(slice::from_raw_parts(ptr.sequence, ptr.length as usize))
+                }),
+                TangoDataType::DoubleArray => PropertyValue::DoubleArray({
+                    let ptr = *data.double_arr();
+                    Vec::from(slice::from_raw_parts(ptr.sequence, ptr.length as usize))
+                }),
+                TangoDataType::StringArray => PropertyValue::StringArray({
+                    let ptr = *data.string_arr();
+                    let mut res = Vec::with_capacity(ptr.length as usize);
+                    for i in 0..ptr.length {
+                        let raw = *ptr.sequence.offset(i as isize);
+                        let len = libc::strlen(raw);
+                        res.push(Vec::from(slice::from_raw_parts(raw as *mut u8, len)));
+                    }
+                    res
+                }),
+                _ => panic!("data type {:?} not allowed for attributes", db_datum.data_type)
+            }
+        };
+        let res = DbDatum {
+            name: string_from(db_datum.property_name),
+            data: data,
+            wrong_data_type: db_datum.wrong_data_type != 0,
+            request_type: None,
+        };
+        if free {
+            c::tango_free_DbDatum(&mut db_datum);
+        }
+        res
+    }
+
+    pub unsafe fn into_c(self) -> c::DbDatum {
+        let mut content = c::DbDatum::default();
+
+        content.property_name = cstring_from(self.name).into_raw();
+
+        macro_rules! impl_array {
+            ($val:ident, $alt:ident, $arr:ident, $ctype:ty) => {
+                {
+                    let array = content.prop_data.$arr();
+                    (*array).length = $val.len() as u32;
+                    (*array).sequence = Box::into_raw($val.into_boxed_slice()) as *mut $ctype;
+                    TangoDataType::$alt as u32
+                }
+            }
+        }
+
+        if self.wrong_data_type {
+            content.wrong_data_type = 1;
+        }
+
+        if let Some(typ) = self.request_type {
+            content.data_type = typ as u32;
+        } else {
+            let tag = match self.data {
+                PropertyValue::Empty => {
+                    content.is_empty = 1;
+                    0
+                }
+                PropertyValue::Boolean(v) => {
+                    *content.prop_data.bool_val() = v as u8;
+                    TangoDataType::Boolean as u32
+                }
+                PropertyValue::Short(v) => {
+                    *content.prop_data.short_val() = v;
+                    TangoDataType::Short as u32
+                }
+                PropertyValue::Long(v) => {
+                    *content.prop_data.long_val() = v;
+                    TangoDataType::Long as u32
+                }
+                PropertyValue::Float(v) => {
+                    *content.prop_data.float_val() = v;
+                    TangoDataType::Float as u32
+                }
+                PropertyValue::Double(v) => {
+                    *content.prop_data.double_val() = v;
+                    TangoDataType::Double as u32
+                }
+                PropertyValue::UShort(v) => {
+                    *content.prop_data.ushort_val() = v;
+                    TangoDataType::UShort as u32
+                }
+                PropertyValue::ULong(v) => {
+                    *content.prop_data.ulong_val() = v;
+                    TangoDataType::ULong as u32
+                }
+                PropertyValue::Long64(v) => {
+                    *content.prop_data.long64_val() = v;
+                    TangoDataType::Long64 as u32
+                }
+                PropertyValue::ULong64(v) => {
+                    *content.prop_data.ulong64_val() = v;
+                    TangoDataType::ULong64 as u32
+                }
+                PropertyValue::String(v) => {
+                    let cstr = cstring_from(v);
+                    *content.prop_data.string_val() = cstr.into_raw();
+                    TangoDataType::String as u32
+                }
+                PropertyValue::ShortArray(v) => impl_array!(v, ShortArray, short_arr, i16),
+                PropertyValue::UShortArray(v) => impl_array!(v, UShortArray, ushort_arr, u16),
+                PropertyValue::LongArray(v) => impl_array!(v, LongArray, long_arr, i32),
+                PropertyValue::ULongArray(v) => impl_array!(v, ULongArray, ulong_arr, u32),
+                PropertyValue::Long64Array(v) => impl_array!(v, Long64Array, long64_arr, i64),
+                PropertyValue::ULong64Array(v) => impl_array!(v, ULong64Array, ulong64_arr, u64),
+                PropertyValue::FloatArray(v) => impl_array!(v, FloatArray, float_arr, f32),
+                PropertyValue::DoubleArray(v) => impl_array!(v, DoubleArray, double_arr, f64),
+                PropertyValue::StringArray(v) => {
+                    let array = content.prop_data.string_arr();
+                    let mut vec = Vec::with_capacity(v.len());
+                    (*array).length = v.len() as u32;
+                    for s in v.into_iter() {
+                        vec.push(cstring_from(s).into_raw());
+                    }
+                    (*array).sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut i8;
+                    TangoDataType::StringArray as u32
+                },
+                _ => panic!("Cannot send property value of type {:?}", self.data)
+            };
+            content.data_type = tag;
+        }
+        content
+    }
+
+    pub unsafe fn free_c_data(db_datum: c::DbDatum) {
+        drop(CString::from_raw(db_datum.property_name));
+        let mut data = db_datum.prop_data;
+        match TangoDataType::from_c(db_datum.data_type) {
+            TangoDataType::Void |
+            TangoDataType::Boolean |
+            TangoDataType::UChar |
+            TangoDataType::Short |
+            TangoDataType::Long |
+            TangoDataType::Int |
+            TangoDataType::Float |
+            TangoDataType::Double |
+            TangoDataType::UShort |
+            TangoDataType::ULong |
+            TangoDataType::Long64 |
+            TangoDataType::ULong64 |
+            TangoDataType::State => {}
+            TangoDataType::String | TangoDataType::ConstString => {
+                drop(CString::from_raw(*data.string_val()));
+            }
+            TangoDataType::ShortArray => drop(Box::from_raw((*data.short_arr()).sequence)),
+            TangoDataType::UShortArray => drop(Box::from_raw((*data.ushort_arr()).sequence)),
+            TangoDataType::LongArray => drop(Box::from_raw((*data.long_arr()).sequence)),
+            TangoDataType::ULongArray => drop(Box::from_raw((*data.ulong_arr()).sequence)),
+            TangoDataType::Long64Array => drop(Box::from_raw((*data.long64_arr()).sequence)),
+            TangoDataType::ULong64Array => drop(Box::from_raw((*data.ulong64_arr()).sequence)),
+            TangoDataType::FloatArray => drop(Box::from_raw((*data.float_arr()).sequence)),
+            TangoDataType::DoubleArray => drop(Box::from_raw((*data.double_arr()).sequence)),
+            TangoDataType::StringArray => {
+                for i in 0..(*data.string_arr()).length {
+                    drop(CString::from_raw(*(*data.string_arr()).sequence.offset(i as isize) as *mut i8));
+                }
+                drop(Box::from_raw((*data.string_arr()).sequence));
+            }
+            _ => unreachable!()
+        }
+    }
+}
+
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum PropertyValue {
+    Empty,
+
+    Boolean(bool),
+    UChar(u8),
+    Short(i16),
+    UShort(u16),
+    Long(i32),
+    ULong(u32),
+    Long64(i64),
+    ULong64(u64),
+    Float(f32),
+    Double(f64),
+    String(Vec<u8>),
+
+    ShortArray(Vec<i16>),
+    UShortArray(Vec<u16>),
+    LongArray(Vec<i32>),
+    ULongArray(Vec<u32>),
+    Long64Array(Vec<i64>),
+    ULong64Array(Vec<u64>),
+    FloatArray(Vec<f32>),
+    DoubleArray(Vec<f64>),
+    StringArray(Vec<Vec<u8>>),
+}
+
+impl PropertyValue {
+    pub fn len(&self) -> usize {
+        use PropertyValue::*;
+        match *self {
+            ShortArray(ref a) => a.len(),
+            UShortArray(ref a) => a.len(),
+            LongArray(ref a) => a.len(),
+            ULongArray(ref a) => a.len(),
+            Long64Array(ref a) => a.len(),
+            ULong64Array(ref a) => a.len(),
+            FloatArray(ref a) => a.len(),
+            DoubleArray(ref a) => a.len(),
+            StringArray(ref a) => a.len(),
+            Empty => 0,
+            _ => 1,
+        }
+    }
+}

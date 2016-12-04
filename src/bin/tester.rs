@@ -47,8 +47,13 @@ fn main() {
 
     test_commands(&mut dev);
     test_attributes(&mut dev);
+    test_properties(&mut dev);
 
     drop(dev);
+
+    let mut db = tango::DatabaseProxy::new().unwrap();
+    test_database(&mut db);
+    drop(db);
 }
 
 fn test_commands(dev: &mut tango::DeviceProxy) {
@@ -165,4 +170,74 @@ fn test_attributes(dev: &mut tango::DeviceProxy) {
     assert_eq!(res.failures[0].reason, "API_AttrNotFound");
     let res = dev.write_attribute(tango::AttributeData::simple("boolean_scalar", Short(10))).unwrap_err();
     assert_eq!(res.failures[0].reason, "API_IncompatibleAttrDataType");
+}
+
+fn test_properties(dev: &mut tango::DeviceProxy) {
+    use tango::PropertyValue::*;
+    use tango::TangoDataType;
+    println!("\nTesting properties for all data types:");
+    let tests = vec![
+        ("Boolean", Boolean(true), TangoDataType::Boolean),
+        ("Short", Short(-147), TangoDataType::Short),
+        ("Long", Long(-(1 << 20)), TangoDataType::Long),
+        ("Float", Float(42.42), TangoDataType::Float),
+        ("Double", Double(123.456790123752), TangoDataType::Double),
+        ("UShort", UShort(137), TangoDataType::UShort),
+        ("ULong", ULong(1 << 20), TangoDataType::ULong),
+        ("Long64", Long64(-(1 << 60)), TangoDataType::Long64),
+        ("ULong64", ULong64(1 << 60), TangoDataType::ULong64),
+        ("String", String(b"some_str_ing".to_vec()), TangoDataType::String),
+        ("ShortArray", ShortArray(vec![-5, 1, 0]), TangoDataType::ShortArray),
+        ("UShortArray", UShortArray(vec![5, 1, 0]), TangoDataType::UShortArray),
+        ("LongArray", LongArray(vec![-(1 << 20), 1, 0]), TangoDataType::LongArray),
+        ("ULongArray", ULongArray(vec![1 << 30, 1, 0]), TangoDataType::ULongArray),
+        ("Long64Array", Long64Array(vec![-(1 << 60), 1, 0]), TangoDataType::Long64Array),
+        ("ULong64Array", ULong64Array(vec![1 << 60, 1, 0]), TangoDataType::ULong64Array),
+        ("FloatArray", FloatArray(vec![-42.4, 0.0, 80.123]), TangoDataType::FloatArray),
+        ("DoubleArray", DoubleArray(vec![-5.0, 1.0, 0.0]), TangoDataType::DoubleArray),
+        ("StringArray", StringArray(vec![vec![b'a', b'b'],
+                                         vec![b'c'], vec![b'd']]), TangoDataType::StringArray),
+    ];
+    for (prop, data, typ) in tests {
+        println!("{}", prop);
+        let put_prop = tango::DbDatum::new(prop, data);
+        dev.put_device_property(vec![put_prop.clone()]).unwrap();
+        let req_prop = tango::DbDatum::for_request(prop, typ);
+        let res = dev.get_device_property(vec![req_prop]).unwrap();
+        assert_eq!(res[0], put_prop);
+    }
+}
+
+fn test_database(db: &mut tango::DatabaseProxy) {
+    println!("\nTesting database proxy:");
+
+    let exported = db.get_device_exported("*").unwrap();
+    println!("get_device_exported: {} devices", exported.data.len());
+    drop(exported);
+
+    let exported = db.get_device_exported_for_class("TangoTest").unwrap();
+    println!("get_device_exported_for_class TangoTest: {} devices", exported.data.len());
+    drop(exported);
+
+    let prop = tango::DbDatum::new("prop", tango::PropertyValue::Long64(1));
+    db.put_property("test_obj", vec![prop.clone()]).unwrap();
+    println!("put_property");
+
+    let obj_list = db.get_object_list("*").unwrap();
+    println!("get_object_list: {:?} objects", obj_list.data.len());
+    drop(obj_list);
+
+    let req = tango::DbDatum::for_request("prop", tango::TangoDataType::Long64);
+    let prop_return = db.get_property("test_obj", vec![req]).unwrap();
+    println!("get_property");
+    assert_eq!(prop_return, vec![prop]);
+    drop(prop_return);
+
+    db.delete_property("test_obj", &["prop"]).unwrap();
+    println!("delete_property");
+
+    let obj_prop_list = db.get_object_property_list("test_obj", "*").unwrap();
+    println!("get_object_property_list: {:?} properties", obj_prop_list.data.len());
+    assert_eq!(obj_prop_list.data.len(), 0);
+    drop(obj_prop_list);
 }
