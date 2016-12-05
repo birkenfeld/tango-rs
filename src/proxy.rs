@@ -28,7 +28,7 @@ impl DeviceProxy {
         let address = CString::new(address).unwrap();
         tango_call!(tango_create_device_proxy,
                     DeviceProxy { ptr: dev },
-                    address.into_raw(), &mut dev)
+                    address.as_ptr() as *mut i8, &mut dev)
     }
 
     pub fn get_timeout(&self) -> TangoResult<i32> {
@@ -242,9 +242,12 @@ impl DeviceProxy {
     pub fn get_device_property(&self, prop_list: Vec<DbDatum>) -> TangoResult<Vec<DbDatum>> {
         let mut db_data = c::DbData::default();
         let mut ptr_vec = Vec::with_capacity(prop_list.len());
+        let mut cstr_vec = Vec::with_capacity(prop_list.len());
         db_data.length = prop_list.len() as u32;
         for datum in prop_list {
-            ptr_vec.push(unsafe { datum.into_c() });
+            let (datum, cstr) = unsafe { datum.into_c() };
+            ptr_vec.push(datum);
+            cstr_vec.push(cstr);
         }
         db_data.sequence = ptr_vec.as_mut_ptr();
         try!(tango_call!(tango_get_device_property, (),
@@ -263,9 +266,12 @@ impl DeviceProxy {
     pub fn put_device_property(&mut self, prop_list: Vec<DbDatum>) -> TangoResult<()> {
         let mut db_data = c::DbData::default();
         let mut ptr_vec = Vec::with_capacity(prop_list.len());
+        let mut cstr_vec = Vec::with_capacity(prop_list.len());
         db_data.length = prop_list.len() as u32;
         for datum in prop_list {
-            ptr_vec.push(unsafe { datum.into_c() });
+            let (datum, cstr) = unsafe { datum.into_c() };
+            ptr_vec.push(datum);
+            cstr_vec.push(cstr);
         }
         db_data.sequence = ptr_vec.as_mut_ptr();
         let res = tango_call!(tango_put_device_property, (),
@@ -281,10 +287,13 @@ impl DeviceProxy {
     pub fn delete_device_property(&mut self, prop_list: &[&str]) -> TangoResult<()> {
         let mut db_data = c::DbData::default();
         let mut ptr_vec = Vec::with_capacity(prop_list.len());
+        let mut cstr_vec = Vec::with_capacity(prop_list.len());
         db_data.length = prop_list.len() as u32;
         for prop in prop_list {
             let datum = DbDatum::name_only(prop);
-            ptr_vec.push(unsafe { datum.into_c() });
+            let (datum, cstr) = unsafe { datum.into_c() };
+            ptr_vec.push(datum);
+            cstr_vec.push(cstr);
         }
         db_data.sequence = ptr_vec.as_mut_ptr();
         let res = tango_call!(tango_delete_device_property, (),

@@ -1,3 +1,7 @@
+// For leak checking:
+// #![feature(alloc_system)]
+// extern crate alloc_system;
+
 extern crate libc;
 extern crate time;
 extern crate c_tango;

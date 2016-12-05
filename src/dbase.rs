@@ -68,9 +68,12 @@ impl DatabaseProxy {
         let c_name = CString::new(obj_name).unwrap();
         let mut db_data = c::DbData::default();
         let mut ptr_vec = Vec::with_capacity(prop_list.len());
+        let mut cstr_vec = Vec::with_capacity(prop_list.len());
         db_data.length = prop_list.len() as u32;
         for datum in prop_list {
-            ptr_vec.push(unsafe { datum.into_c() });
+            let (datum, cstr) = unsafe { datum.into_c() };
+            ptr_vec.push(datum);
+            cstr_vec.push(cstr);
         }
         db_data.sequence = ptr_vec.as_mut_ptr();
         try!(tango_call!(tango_get_property, (),
@@ -90,9 +93,12 @@ impl DatabaseProxy {
         let c_name = CString::new(obj_name).unwrap();
         let mut db_data = c::DbData::default();
         let mut ptr_vec = Vec::with_capacity(prop_list.len());
+        let mut cstr_vec = Vec::with_capacity(prop_list.len());
         db_data.length = prop_list.len() as u32;
         for datum in prop_list {
-            ptr_vec.push(unsafe { datum.into_c() });
+            let (datum, cstr) = unsafe { datum.into_c() };
+            ptr_vec.push(datum);
+            cstr_vec.push(cstr);
         }
         db_data.sequence = ptr_vec.as_mut_ptr();
         let res = tango_call!(tango_put_property, (),
@@ -109,10 +115,13 @@ impl DatabaseProxy {
         let c_name = CString::new(obj_name).unwrap();
         let mut db_data = c::DbData::default();
         let mut ptr_vec = Vec::with_capacity(prop_list.len());
+        let mut cstr_vec = Vec::with_capacity(prop_list.len());
         db_data.length = prop_list.len() as u32;
         for prop in prop_list {
             let datum = DbDatum::name_only(prop);
-            ptr_vec.push(unsafe { datum.into_c() });
+            let (datum, cstr) = unsafe { datum.into_c() };
+            ptr_vec.push(datum);
+            cstr_vec.push(cstr);
         }
         db_data.sequence = ptr_vec.as_mut_ptr();
         let res = tango_call!(tango_delete_property, (),

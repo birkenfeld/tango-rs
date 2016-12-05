@@ -1205,10 +1205,13 @@ impl DbDatum {
         res
     }
 
-    pub unsafe fn into_c(self) -> c::DbDatum {
+    pub unsafe fn into_c(self) -> (c::DbDatum, CString) {
         let mut content = c::DbDatum::default();
 
-        content.property_name = cstring_from(self.name).into_raw();
+        // Since the property name string is sometimes overwritten, we have to store
+        // a reference to it somewhere else to be able to free it.
+        let name_string = cstring_from(self.name);
+        content.property_name = name_string.as_ptr() as *mut i8;
 
         macro_rules! impl_array {
             ($val:ident, $alt:ident, $arr:ident, $ctype:ty) => {
@@ -1296,11 +1299,10 @@ impl DbDatum {
             };
             content.data_type = tag;
         }
-        content
+        (content, name_string)
     }
 
     pub unsafe fn free_c_data(db_datum: c::DbDatum) {
-        drop(CString::from_raw(db_datum.property_name));
         let mut data = db_datum.prop_data;
         match TangoDataType::from_c(db_datum.data_type) {
             TangoDataType::Void |
