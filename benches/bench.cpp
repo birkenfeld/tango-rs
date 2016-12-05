@@ -1,9 +1,13 @@
+#include <cstdio>
+#include <chrono>
 #include <tango.h>
-#include <stdio.h>
 
 int main() {
     Tango::DeviceProxy dev("tango://localhost:10000/sys/tg_test/1");
-    for (int i=0; i < 2000; ++i) {
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+
+    start = std::chrono::system_clock::now();
+    for (int i=0; i < 10000; ++i) {
         Tango::DeviceData argin;
         std::string instr("This is a minimal Tango test client.");
         std::string outstr;
@@ -16,6 +20,9 @@ int main() {
 	    continue;
         }
         argout >> outstr;
-        std::cout << outstr << std::endl;
+	assert(outstr == instr);
     }
+    end = std::chrono::system_clock::now();
+    int elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count() / 10000;
+    std::cout << "per call: " << elapsed << " ns" << std::endl;
 }
