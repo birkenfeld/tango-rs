@@ -1,7 +1,7 @@
 use std::ffi::CString;
 use std::ptr;
 
-use libc;
+use libc::{self, c_char, c_uint, c_void};
 use c_tango as c;
 
 use super::error::{TangoResult, TangoError};
@@ -9,7 +9,7 @@ use super::types::*;
 
 
 pub struct DeviceProxy {
-    ptr: *mut libc::c_void,
+    ptr: *mut c_void,
 }
 
 impl Drop for DeviceProxy {
@@ -28,7 +28,7 @@ impl DeviceProxy {
         let address = CString::new(address).unwrap();
         tango_call!(tango_create_device_proxy,
                     DeviceProxy { ptr: dev },
-                    address.as_ptr() as *mut i8, &mut dev)
+                    address.as_ptr() as *mut c_char, &mut dev)
     }
 
     pub fn get_timeout(&self) -> TangoResult<i32> {
@@ -45,7 +45,7 @@ impl DeviceProxy {
     }
 
     pub fn get_source(&self) -> TangoResult<DevSource> {
-        let mut source = 0 as libc::c_uint;
+        let mut source = 0 as c_uint;
         tango_call!(tango_get_source,
                     DevSource::from_c(source),
                     self.ptr, &mut source)
@@ -84,7 +84,7 @@ impl DeviceProxy {
         tango_call!(tango_locking_status,
                     unsafe {
                         let res = string_from(resptr);
-                        libc::free(resptr as *mut libc::c_void);
+                        libc::free(resptr as *mut c_void);
                         res
                     },
                     self.ptr, &mut resptr)
@@ -95,7 +95,7 @@ impl DeviceProxy {
         let mut cmdinfo = c::CommandInfo::default();
         tango_call!(tango_command_query,
                     unsafe { CommandInfo::from_c(cmdinfo, true) },
-                    self.ptr, c_name.as_ptr() as *mut i8, &mut cmdinfo)
+                    self.ptr, c_name.as_ptr() as *mut c_char, &mut cmdinfo)
     }
 
     pub fn command_list_query(&self) -> TangoResult<Vec<CommandInfo>> {
@@ -119,7 +119,7 @@ impl DeviceProxy {
         let mut argout = c::CommandData::default();
         let res = tango_call!(tango_command_inout,
                               unsafe { CommandData::from_c(argout) },
-                              self.ptr, c_name.as_ptr() as *mut i8,
+                              self.ptr, c_name.as_ptr() as *mut c_char,
                               &mut argin, &mut argout);
         unsafe { CommandData::free_c_data(argin) };
         res
@@ -185,7 +185,7 @@ impl DeviceProxy {
         let mut data = c::AttributeData::default();
         tango_call!(tango_read_attribute,
                     unsafe { AttributeData::from_c(data, true) },
-                    self.ptr, c_name.as_ptr() as *mut i8, &mut data)
+                    self.ptr, c_name.as_ptr() as *mut c_char, &mut data)
     }
 
     pub fn write_attribute(&mut self, attr_data: AttributeData) -> TangoResult<()> {

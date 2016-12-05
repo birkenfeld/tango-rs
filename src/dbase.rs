@@ -1,7 +1,7 @@
 use std::ffi::CString;
 use std::ptr;
 
-use libc;
+use libc::{c_char, c_void};
 use c_tango as c;
 
 use super::error::{TangoResult, TangoError};
@@ -9,7 +9,7 @@ use super::types::*;
 
 
 pub struct DatabaseProxy {
-    ptr: *mut libc::c_void,
+    ptr: *mut c_void,
 }
 
 impl Drop for DatabaseProxy {
@@ -35,7 +35,7 @@ impl DatabaseProxy {
         let mut db_datum = c::DbDatum::default();
         tango_call!(tango_get_device_exported,
                     unsafe { DbDatum::from_c(db_datum, true) },
-                    self.ptr, c_filter.as_ptr() as *mut i8, &mut db_datum)
+                    self.ptr, c_filter.as_ptr() as *mut c_char, &mut db_datum)
     }
 
     pub fn get_device_exported_for_class(&self, class_name: &str) -> TangoResult<DbDatum> {
@@ -43,7 +43,7 @@ impl DatabaseProxy {
         let mut db_datum = c::DbDatum::default();
         tango_call!(tango_get_device_exported_for_class,
                     unsafe { DbDatum::from_c(db_datum, true) },
-                    self.ptr, c_class.as_ptr() as *mut i8, &mut db_datum)
+                    self.ptr, c_class.as_ptr() as *mut c_char, &mut db_datum)
     }
 
     pub fn get_object_list(&self, name_filter: &str) -> TangoResult<DbDatum> {
@@ -51,7 +51,7 @@ impl DatabaseProxy {
         let mut db_datum = c::DbDatum::default();
         tango_call!(tango_get_object_list,
                     unsafe { DbDatum::from_c(db_datum, true) },
-                    self.ptr, c_filter.as_ptr() as *mut i8, &mut db_datum)
+                    self.ptr, c_filter.as_ptr() as *mut c_char, &mut db_datum)
     }
 
     pub fn get_object_property_list(&self, obj_name: &str, name_filter: &str) -> TangoResult<DbDatum> {
@@ -60,8 +60,8 @@ impl DatabaseProxy {
         let mut db_datum = c::DbDatum::default();
         tango_call!(tango_get_object_property_list,
                     unsafe { DbDatum::from_c(db_datum, true) },
-                    self.ptr, c_name.as_ptr() as *mut i8,
-                    c_filter.as_ptr() as *mut i8, &mut db_datum)
+                    self.ptr, c_name.as_ptr() as *mut c_char,
+                    c_filter.as_ptr() as *mut c_char, &mut db_datum)
     }
 
     pub fn get_property(&self, obj_name: &str, prop_list: Vec<DbDatum>) -> TangoResult<Vec<DbDatum>> {
@@ -77,7 +77,7 @@ impl DatabaseProxy {
         }
         db_data.sequence = ptr_vec.as_mut_ptr();
         try!(tango_call!(tango_get_property, (),
-                         self.ptr, c_name.as_ptr() as *mut i8, &mut db_data));
+                         self.ptr, c_name.as_ptr() as *mut c_char, &mut db_data));
         let mut res = Vec::with_capacity(db_data.length as usize);
         unsafe {
             for i in 0..db_data.length {
@@ -102,7 +102,7 @@ impl DatabaseProxy {
         }
         db_data.sequence = ptr_vec.as_mut_ptr();
         let res = tango_call!(tango_put_property, (),
-                              self.ptr, c_name.as_ptr() as *mut i8, &mut db_data);
+                              self.ptr, c_name.as_ptr() as *mut c_char, &mut db_data);
         unsafe {
             for ptr in ptr_vec {
                 DbDatum::free_c_data(ptr);
@@ -125,7 +125,7 @@ impl DatabaseProxy {
         }
         db_data.sequence = ptr_vec.as_mut_ptr();
         let res = tango_call!(tango_delete_property, (),
-                              self.ptr, c_name.as_ptr() as *mut i8, &mut db_data);
+                              self.ptr, c_name.as_ptr() as *mut c_char, &mut db_data);
         unsafe {
             for ptr in ptr_vec {
                 DbDatum::free_c_data(ptr);
