@@ -1,10 +1,10 @@
 # tango-rs
 
 This library is a client for [Tango control system](http://tango-controls.org)
-servers.  It uses the preexisting C bindings (included) and only wraps the
+servers.  It uses the preexisting C bindings (included) and wraps the API
 functions provided by it in a Rustic interface.
 
-Covered major API calls:
+Device proxy API calls:
 
 * `command_inout`
 * `command_query`
@@ -12,16 +12,25 @@ Covered major API calls:
 * `get_attribute_list`
 * `get_attribute_config`
 * `attribute_list_query`
-* `read_attribute`
-* `write_attribute`
-* `read_attributes`
-* `write_attributes`
-* `get_device_property`
-* `put_device_property`
-* `delete_device_property`
+* `read/write_attribute`
+* `read/write_attributes`
+* `get/put/delete_device_property`
+* `get/set_timeout`
+* `get/set_source`
+* `lock/unlock/is_locked`
+
 
 Database API calls:
 
-* `get_property`
-* `put_property`
-* `delete_property`
+* `get_device_exported/_for_class`
+* `get_object_list`
+* `get_object_property_list`
+* `get/put/delete_property`
+
+## Testing
+
+For testing/benchmarking, you need a Tango database running on `localhost:10000`,
+and the default instance of the standard testing server (`TangoTest/test`).
+
+Then, you can run `cargo test` to test all wrapped APIs, and `cargo bench` to
+measure the duration of `command_inout` roundtrips.
