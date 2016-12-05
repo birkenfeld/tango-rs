@@ -3,7 +3,7 @@ extern crate gcc;
 use std::env;
 
 fn main() {
-    let tango_root = env::var("TANGO_ROOT").unwrap_or("/opt/tango".into());
+    let tango_root = env::var("TANGO_ROOT").unwrap_or("/usr".into());
     let include_1 = tango_root.clone() + "/include";
     let include_2 = tango_root.clone() + "/include/tango";
     let libdir = tango_root + "/lib";

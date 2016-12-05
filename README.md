@@ -27,10 +27,16 @@ Database API calls:
 * `get_object_property_list`
 * `get/put/delete_property`
 
+## Building
+
+You need an installed Tango library with headers.  Set the `TANGO_ROOT`
+environment variable to the prefix if it is not `/usr`.
+
 ## Testing
 
-For testing/benchmarking, you need a Tango database running on `localhost:10000`,
-and the default instance of the standard testing server (`TangoTest/test`).
+For testing/benchmarking, you need a Tango database running on
+`localhost:10000`, and the default instance of the standard testing server
+(`TangoTest/test`).
 
 Then, you can run `cargo test` to test all wrapped APIs, and `cargo bench` to
 measure the duration of `command_inout` roundtrips.
