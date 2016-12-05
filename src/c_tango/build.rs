@@ -1,22 +1,23 @@
 extern crate gcc;
+extern crate pkg_config;
 
-use std::env;
+use std::process;
 
 fn main() {
-    let tango_root = env::var("TANGO_ROOT").unwrap_or("/usr".into());
-    let include_1 = tango_root.clone() + "/include";
-    let include_2 = tango_root.clone() + "/include/tango";
-    let libdir = tango_root + "/lib";
-    gcc::Config::new()
-        .cpp(true)
-        .file("src/c_tango_proxy.c")
-        .file("src/c_tango_command.c")
-        .file("src/c_tango_attribute.c")
-        .file("src/c_tango_dbase.c")
-        .include("src")
-        .include(include_1)
-        .include(include_2)
-        .flag("-std=c++0x")
-        .compile("libc_tango.a");
-    println!("cargo:rustc-link-search=native={}", libdir);
+    let tango_lib = match pkg_config::probe_library("tango") {
+        Ok(lib) => lib,
+        Err(err) => { print!("{}---", err); process::exit(1); }
+    };
+    let mut config = gcc::Config::new();
+    config.cpp(true);
+    config.flag("-std=c++0x");
+    config.file("src/c_tango_proxy.c");
+    config.file("src/c_tango_command.c");
+    config.file("src/c_tango_attribute.c");
+    config.file("src/c_tango_dbase.c");
+    config.include("src");
+    for path in tango_lib.include_paths {
+        config.include(path);
+    }
+    config.compile("libc_tango.a");
 }

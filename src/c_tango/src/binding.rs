@@ -897,11 +897,6 @@ impl ::std::default::Default for Struct_Unnamed41 {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
 }
 pub type DbData = Struct_Unnamed41;
-#[link(name = "c_tango")]
-#[link(name = "tango")]
-#[link(name = "omniORB4")]
-#[link(name = "omniDynamic4")]
-#[link(name = "omnithread")]
 extern "C" {
     pub fn select(__nfds: ::libc::c_int, __readfds: *mut fd_set,
                   __writefds: *mut fd_set, __exceptfds: *mut fd_set,

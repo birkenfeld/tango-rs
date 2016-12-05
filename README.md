@@ -29,8 +29,9 @@ Database API calls:
 
 ## Building
 
-You need an installed Tango library with headers.  Set the `TANGO_ROOT`
-environment variable to the prefix if it is not `/usr`.
+You need an installed Tango library with headers.  Set the `PKG_CONFIG_PATH`
+environment variable to the directory that contains `tango.pc` if it is not
+found by default.
 
 ## Testing
 
