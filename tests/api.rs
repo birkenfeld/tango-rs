@@ -1,11 +1,14 @@
 extern crate tango;
 
-use std::cmp::min;
+use tango::*;
 
-fn main() {
-    let mut dev = tango::DeviceProxy::new("tango://localhost:10000/sys/tg_test/1").unwrap();
+#[test]
+fn proxy_api() {
+    use std::cmp::min;
 
-    let instr = tango::CommandData::from_str("This is a minimal Tango test client.");
+    let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1").unwrap();
+
+    let instr = CommandData::from_str("This is a minimal Tango test client.");
     let argout = dev.command_inout("DevString", instr).unwrap();
     println!("Command exec result: {}", argout.into_string().unwrap());
 
@@ -29,35 +32,30 @@ fn main() {
     println!("Attribute config list: {:?} attrs", aconfigs.len());
     drop(aconfigs);
 
-    dev.write_attribute(tango::AttributeData::simple(
-        "float_scalar", tango::AttrValue::Float(42.42))).unwrap();
+    dev.write_attribute(AttributeData::simple(
+        "float_scalar", AttrValue::Float(42.42))).unwrap();
     println!("Attribute write ok");
 
     let val = dev.read_attribute("float_scalar").unwrap();
     println!("Attribute value readback: {:?}", val);
     drop(val);
 
-    dev.write_attributes(vec![tango::AttributeData::simple(
-        "float_scalar", tango::AttrValue::Float(69.69))]).unwrap();
+    dev.write_attributes(vec![AttributeData::simple(
+        "float_scalar", AttrValue::Float(69.69))]).unwrap();
     println!("Attribute write list ok");
 
     let vals = dev.read_attributes(&["float_scalar"]).unwrap();
     println!("Attribute value list readback: {:?}", vals);
     drop(vals);
 
-    test_commands(&mut dev);
-    test_attributes(&mut dev);
-    test_properties(&mut dev);
-
-    drop(dev);
-
-    let mut db = tango::DatabaseProxy::new().unwrap();
-    test_database(&mut db);
-    drop(db);
 }
 
-fn test_commands(dev: &mut tango::DeviceProxy) {
+#[test]
+fn proxy_commands() {
     use tango::CommandData::*;
+
+    let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1").unwrap();
+
     // test all types
     println!("\nTesting commands for all data types:");
     let tests = vec![
@@ -71,7 +69,7 @@ fn test_commands(dev: &mut tango::DeviceProxy) {
         ("DevULong", ULong(1 << 20)),
         ("DevLong64", Long64(-(1 << 60))),
         ("DevULong64", ULong64(1 << 60)),
-        ("DevString", tango::CommandData::from_str("some_str_ing")),
+        ("DevString", CommandData::from_str("some_str_ing")),
         ("DevVarCharArray", CharArray(vec![1, 5, 7])),
         ("DevVarShortArray", ShortArray(vec![-5, 1, 0])),
         ("DevVarUShortArray", UShortArray(vec![5, 1, 0])),
@@ -97,8 +95,8 @@ fn test_commands(dev: &mut tango::DeviceProxy) {
     // test special types
     println!("DevState");
     let res = dev.command_inout("State", Void).unwrap();
-    assert!(res == State(tango::TangoDevState::Running) ||
-            res == State(tango::TangoDevState::Fault));
+    assert!(res == State(TangoDevState::Running) ||
+            res == State(TangoDevState::Fault));
     // test exceptions
     println!("errors");
     let res = dev.command_inout("NotPresent", Void).unwrap_err();
@@ -107,8 +105,12 @@ fn test_commands(dev: &mut tango::DeviceProxy) {
     assert_eq!(res.failures[0].reason, "API_IncompatibleCmdArgumentType");
 }
 
-fn test_attributes(dev: &mut tango::DeviceProxy) {
+#[test]
+fn proxy_attributes() {
     use tango::AttrValue::*;
+
+    let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1").unwrap();
+
     // test all attributes
     println!("\nTesting attributes for all data types:");
     let read_tests = vec![
@@ -161,20 +163,24 @@ fn test_attributes(dev: &mut tango::DeviceProxy) {
         ];
     for (attr, data) in write_tests {
         println!("write {}", attr);
-        dev.write_attribute(tango::AttributeData::simple(attr, data.clone())).unwrap();
+        dev.write_attribute(AttributeData::simple(attr, data.clone())).unwrap();
         let res = dev.read_attribute(attr).unwrap();
         assert_eq!(res.written_data.unwrap(), data);
     }
     println!("errors");
     let res = dev.read_attribute("not_present").unwrap_err();
     assert_eq!(res.failures[0].reason, "API_AttrNotFound");
-    let res = dev.write_attribute(tango::AttributeData::simple("boolean_scalar", Short(10))).unwrap_err();
+    let res = dev.write_attribute(AttributeData::simple("boolean_scalar", Short(10))).unwrap_err();
     assert_eq!(res.failures[0].reason, "API_IncompatibleAttrDataType");
 }
 
-fn test_properties(dev: &mut tango::DeviceProxy) {
+#[test]
+fn proxy_properties() {
     use tango::PropertyValue::*;
     use tango::TangoDataType;
+
+    let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1").unwrap();
+
     println!("\nTesting properties for all data types:");
     let tests = vec![
         ("Boolean", Boolean(true), TangoDataType::Boolean),
@@ -200,16 +206,18 @@ fn test_properties(dev: &mut tango::DeviceProxy) {
     ];
     for (prop, data, typ) in tests {
         println!("{}", prop);
-        let put_prop = tango::DbDatum::new(prop, data);
+        let put_prop = DbDatum::new(prop, data);
         dev.put_device_property(vec![put_prop.clone()]).unwrap();
-        let req_prop = tango::DbDatum::for_request(prop, typ);
+        let req_prop = DbDatum::for_request(prop, typ);
         let res = dev.get_device_property(vec![req_prop]).unwrap();
         assert_eq!(res[0], put_prop);
     }
 }
 
-fn test_database(db: &mut tango::DatabaseProxy) {
+#[test]
+fn database_api() {
     println!("\nTesting database proxy:");
+    let mut db = DatabaseProxy::new().unwrap();
 
     let exported = db.get_device_exported("*").unwrap();
     println!("get_device_exported: {} devices", exported.data.len());
@@ -219,7 +227,7 @@ fn test_database(db: &mut tango::DatabaseProxy) {
     println!("get_device_exported_for_class TangoTest: {} devices", exported.data.len());
     drop(exported);
 
-    let prop = tango::DbDatum::new("prop", tango::PropertyValue::Long64(1));
+    let prop = DbDatum::new("prop", PropertyValue::Long64(1));
     db.put_property("test_obj", vec![prop.clone()]).unwrap();
     println!("put_property");
 
@@ -227,7 +235,7 @@ fn test_database(db: &mut tango::DatabaseProxy) {
     println!("get_object_list: {:?} objects", obj_list.data.len());
     drop(obj_list);
 
-    let req = tango::DbDatum::for_request("prop", tango::TangoDataType::Long64);
+    let req = DbDatum::for_request("prop", TangoDataType::Long64);
     let prop_return = db.get_property("test_obj", vec![req]).unwrap();
     println!("get_property");
     assert_eq!(prop_return, vec![prop]);
