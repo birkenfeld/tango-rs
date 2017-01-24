@@ -6,10 +6,12 @@ use tango::*;
 fn proxy_api() {
     use std::cmp::min;
 
-    let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1").unwrap();
+    let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1")
+        .expect("Could not proxy to sys/tg_test/1, is a database running on localhost?");
 
     let instr = CommandData::from_str("This is a minimal Tango test client.");
-    let argout = dev.command_inout("DevString", instr).unwrap();
+    let argout = dev.command_inout("DevString", instr)
+        .expect("Could not execute command on sys/tg_test/1, is the TangoTest server running?");
     println!("Command exec result: {}", argout.into_string().unwrap());
 
     let cmd = dev.command_query("DevString").unwrap();
@@ -54,7 +56,8 @@ fn proxy_api() {
 fn proxy_commands() {
     use tango::CommandData::*;
 
-    let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1").unwrap();
+    let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1")
+        .expect("Could not proxy to sys/tg_test/1, is a database running on localhost?");
 
     // test all types
     println!("\nTesting commands for all data types:");
@@ -89,7 +92,9 @@ fn proxy_commands() {
         ];
     for (cmd, data) in tests {
         println!("{}", cmd);
-        let res = dev.command_inout(cmd, data.clone()).unwrap();
+        let res = dev.command_inout(cmd, data.clone())
+                     .expect("Could not execute command on sys/tg_test/1, is \
+                              the TangoTest server running?");
         assert_eq!(res, data);
     }
     // test special types
@@ -109,7 +114,8 @@ fn proxy_commands() {
 fn proxy_attributes() {
     use tango::AttrValue::*;
 
-    let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1").unwrap();
+    let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1")
+        .expect("Could not proxy to sys/tg_test/1, is a database running on localhost?");
 
     // test all attributes
     println!("\nTesting attributes for all data types:");
@@ -138,7 +144,8 @@ fn proxy_attributes() {
         "string_spectrum",
         ];
     println!("read all");
-    dev.read_attributes(&read_tests).unwrap();
+    dev.read_attributes(&read_tests)
+        .expect("Could not read attrs on sys/tg_test/1, is the TangoTest server running?");
     let write_tests = vec![
         ("boolean_scalar", Boolean(false)),
         ("boolean_spectrum", BooleanArray(vec![true, false, false])),
@@ -179,7 +186,8 @@ fn proxy_properties() {
     use tango::PropertyValue::*;
     use tango::TangoDataType;
 
-    let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1").unwrap();
+    let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1")
+        .expect("Could not proxy to sys/tg_test/1, is a database running on localhost?");
 
     println!("\nTesting properties for all data types:");
     let tests = vec![
@@ -217,7 +225,8 @@ fn proxy_properties() {
 #[test]
 fn database_api() {
     println!("\nTesting database proxy:");
-    let mut db = DatabaseProxy::new().unwrap();
+    let mut db = DatabaseProxy::new()
+        .expect("Could not get database proxy, is a database running on localhost?");
 
     let exported = db.get_device_exported("*").unwrap();
     println!("get_device_exported: {} devices", exported.data.len());
