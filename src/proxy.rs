@@ -46,7 +46,7 @@ impl DeviceProxy {
     }
 
     pub fn get_source(&self) -> TangoResult<DevSource> {
-        let mut source = c::DevSource(0);
+        let mut source = 0;
         tango_call!(tango_get_source,
                     DevSource::from_c(source),
                     self.ptr, &mut source)
@@ -55,7 +55,7 @@ impl DeviceProxy {
     pub fn set_source(&mut self, source: DevSource) -> TangoResult<()> {
         tango_call!(tango_set_source,
                     (),
-                    self.ptr, c::DevSource(source as u32))
+                    self.ptr, source as u32)
     }
 
     pub fn lock(&mut self) -> TangoResult<()> {

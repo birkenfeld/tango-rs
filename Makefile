@@ -1,5 +1,5 @@
 binding:
-	bindgen --ctypes-prefix libc --bitfield-enum '.*' --no-unstable-rust --output src/c_tango/src/binding.rs src/c_tango/src/c_tango.h
+	bindgen --ctypes-prefix libc --constified-enum '.*' --no-unstable-rust --with-derive-default --output src/c_tango/src/binding.rs src/c_tango/src/c_tango.h
 
 # for testing
 

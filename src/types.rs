@@ -59,35 +59,35 @@ pub enum TangoDataType {
 impl TangoDataType {
     fn from_c(val: c::TangoDataType) -> TangoDataType {
         match val {
-            c::DEV_VOID => TangoDataType::Void,
-            c::DEV_BOOLEAN => TangoDataType::Boolean,
-            c::DEV_SHORT => TangoDataType::Short,
-            c::DEV_LONG => TangoDataType::Long,
-            c::DEV_FLOAT => TangoDataType::Float,
-            c::DEV_DOUBLE => TangoDataType::Double,
-            c::DEV_USHORT => TangoDataType::UShort,
-            c::DEV_ULONG => TangoDataType::ULong,
-            c::DEV_STRING => TangoDataType::String,
-            c::DEVVAR_CHARARRAY => TangoDataType::CharArray,
-            c::DEVVAR_SHORTARRAY => TangoDataType::ShortArray,
-            c::DEVVAR_LONGARRAY => TangoDataType::LongArray,
-            c::DEVVAR_FLOATARRAY => TangoDataType::FloatArray,
-            c::DEVVAR_DOUBLEARRAY => TangoDataType::DoubleArray,
-            c::DEVVAR_USHORTARRAY => TangoDataType::UShortArray,
-            c::DEVVAR_ULONGARRAY => TangoDataType::ULongArray,
-            c::DEVVAR_STRINGARRAY => TangoDataType::StringArray,
-            c::DEVVAR_LONGSTRINGARRAY => TangoDataType::LongStringArray,
-            c::DEVVAR_DOUBLESTRINGARRAY => TangoDataType::DoubleStringArray,
-            c::DEV_STATE => TangoDataType::State,
-            c::CONST_DEV_STRING => TangoDataType::ConstString,
-            c::DEVVAR_BOOLEANARRAY => TangoDataType::BooleanArray,
-            c::DEV_UCHAR => TangoDataType::UChar,
-            c::DEV_LONG64 => TangoDataType::Long64,
-            c::DEV_ULONG64 => TangoDataType::ULong64,
-            c::DEVVAR_LONG64ARRAY => TangoDataType::Long64Array,
-            c::DEVVAR_ULONG64ARRAY => TangoDataType::ULong64Array,
-            c::DEV_INT => TangoDataType::Int,
-            c::DEV_ENCODED => TangoDataType::Encoded,
+            c::TangoDataType_DEV_VOID => TangoDataType::Void,
+            c::TangoDataType_DEV_BOOLEAN => TangoDataType::Boolean,
+            c::TangoDataType_DEV_SHORT => TangoDataType::Short,
+            c::TangoDataType_DEV_LONG => TangoDataType::Long,
+            c::TangoDataType_DEV_FLOAT => TangoDataType::Float,
+            c::TangoDataType_DEV_DOUBLE => TangoDataType::Double,
+            c::TangoDataType_DEV_USHORT => TangoDataType::UShort,
+            c::TangoDataType_DEV_ULONG => TangoDataType::ULong,
+            c::TangoDataType_DEV_STRING => TangoDataType::String,
+            c::TangoDataType_DEVVAR_CHARARRAY => TangoDataType::CharArray,
+            c::TangoDataType_DEVVAR_SHORTARRAY => TangoDataType::ShortArray,
+            c::TangoDataType_DEVVAR_LONGARRAY => TangoDataType::LongArray,
+            c::TangoDataType_DEVVAR_FLOATARRAY => TangoDataType::FloatArray,
+            c::TangoDataType_DEVVAR_DOUBLEARRAY => TangoDataType::DoubleArray,
+            c::TangoDataType_DEVVAR_USHORTARRAY => TangoDataType::UShortArray,
+            c::TangoDataType_DEVVAR_ULONGARRAY => TangoDataType::ULongArray,
+            c::TangoDataType_DEVVAR_STRINGARRAY => TangoDataType::StringArray,
+            c::TangoDataType_DEVVAR_LONGSTRINGARRAY => TangoDataType::LongStringArray,
+            c::TangoDataType_DEVVAR_DOUBLESTRINGARRAY => TangoDataType::DoubleStringArray,
+            c::TangoDataType_DEV_STATE => TangoDataType::State,
+            c::TangoDataType_CONST_DEV_STRING => TangoDataType::ConstString,
+            c::TangoDataType_DEVVAR_BOOLEANARRAY => TangoDataType::BooleanArray,
+            c::TangoDataType_DEV_UCHAR => TangoDataType::UChar,
+            c::TangoDataType_DEV_LONG64 => TangoDataType::Long64,
+            c::TangoDataType_DEV_ULONG64 => TangoDataType::ULong64,
+            c::TangoDataType_DEVVAR_LONG64ARRAY => TangoDataType::Long64Array,
+            c::TangoDataType_DEVVAR_ULONG64ARRAY => TangoDataType::ULong64Array,
+            c::TangoDataType_DEV_INT => TangoDataType::Int,
+            c::TangoDataType_DEV_ENCODED => TangoDataType::Encoded,
             _ => panic!("unknown Tango data type tag={:?}", val)
         }
     }
@@ -117,20 +117,20 @@ pub enum TangoDevState {
 impl TangoDevState {
     fn from_c(val: c::TangoDevState) -> TangoDevState {
         match val {
-            c::ON => TangoDevState::On,
-            c::OFF => TangoDevState::Off,
-            c::CLOSE => TangoDevState::Close,
-            c::OPEN => TangoDevState::Open,
-            c::INSERT => TangoDevState::Insert,
-            c::EXTRACT => TangoDevState::Extract,
-            c::MOVING => TangoDevState::Moving,
-            c::STANDBY => TangoDevState::Standby,
-            c::FAULT => TangoDevState::Fault,
-            c::INIT => TangoDevState::Init,
-            c::RUNNING => TangoDevState::Running,
-            c::ALARM => TangoDevState::Alarm,
-            c::DISABLE => TangoDevState::Disable,
-            c::UNKNOWN => TangoDevState::Unknown,
+            c::TangoDevState_ON => TangoDevState::On,
+            c::TangoDevState_OFF => TangoDevState::Off,
+            c::TangoDevState_CLOSE => TangoDevState::Close,
+            c::TangoDevState_OPEN => TangoDevState::Open,
+            c::TangoDevState_INSERT => TangoDevState::Insert,
+            c::TangoDevState_EXTRACT => TangoDevState::Extract,
+            c::TangoDevState_MOVING => TangoDevState::Moving,
+            c::TangoDevState_STANDBY => TangoDevState::Standby,
+            c::TangoDevState_FAULT => TangoDevState::Fault,
+            c::TangoDevState_INIT => TangoDevState::Init,
+            c::TangoDevState_RUNNING => TangoDevState::Running,
+            c::TangoDevState_ALARM => TangoDevState::Alarm,
+            c::TangoDevState_DISABLE => TangoDevState::Disable,
+            c::TangoDevState_UNKNOWN => TangoDevState::Unknown,
             _ => unimplemented!()
         }
     }
@@ -149,11 +149,11 @@ pub enum AttrQuality {
 impl AttrQuality {
     fn from_c(val: c::AttrQuality) -> AttrQuality {
         match val {
-            c::ATTR_VALID => AttrQuality::Valid,
-            c::ATTR_INVALID => AttrQuality::Invalid,
-            c::ATTR_ALARM => AttrQuality::Alarm,
-            c::ATTR_CHANGING => AttrQuality::Changing,
-            c::ATTR_WARNING => AttrQuality::Warning,
+            c::AttrQuality_ATTR_VALID => AttrQuality::Valid,
+            c::AttrQuality_ATTR_INVALID => AttrQuality::Invalid,
+            c::AttrQuality_ATTR_ALARM => AttrQuality::Alarm,
+            c::AttrQuality_ATTR_CHANGING => AttrQuality::Changing,
+            c::AttrQuality_ATTR_WARNING => AttrQuality::Warning,
             _ => unimplemented!()
         }
     }
@@ -171,10 +171,10 @@ pub enum AttrWriteType {
 impl AttrWriteType {
     fn from_c(val: c::AttrWriteType) -> AttrWriteType {
         match val {
-            c::READ => AttrWriteType::Read,
-            c::READ_WITH_WRITE => AttrWriteType::ReadWithWrite,
-            c::WRITE => AttrWriteType::Write,
-            c::READ_WRITE => AttrWriteType::ReadWrite,
+            c::AttrWriteType_READ => AttrWriteType::Read,
+            c::AttrWriteType_READ_WITH_WRITE => AttrWriteType::ReadWithWrite,
+            c::AttrWriteType_WRITE => AttrWriteType::Write,
+            c::AttrWriteType_READ_WRITE => AttrWriteType::ReadWrite,
             _ => unimplemented!()
         }
     }
@@ -191,9 +191,9 @@ pub enum AttrDataFormat {
 impl AttrDataFormat {
     fn from_c(val: c::AttrDataFormat) -> AttrDataFormat {
         match val {
-            c::SCALAR => AttrDataFormat::Scalar,
-            c::SPECTRUM => AttrDataFormat::Spectrum,
-            c::IMAGE => AttrDataFormat::Image,
+            c::AttrDataFormat_SCALAR => AttrDataFormat::Scalar,
+            c::AttrDataFormat_SPECTRUM => AttrDataFormat::Spectrum,
+            c::AttrDataFormat_IMAGE => AttrDataFormat::Image,
             _ => unimplemented!()
         }
     }
@@ -209,8 +209,8 @@ pub enum DispLevel {
 impl DispLevel {
     fn from_c(val: c::DispLevel) -> DispLevel {
         match val {
-            c::OPERATOR => DispLevel::Operator,
-            c::EXPERT => DispLevel::Expert,
+            c::DispLevel_OPERATOR => DispLevel::Operator,
+            c::DispLevel_EXPERT => DispLevel::Expert,
             _ => unimplemented!()
         }
     }
@@ -227,9 +227,9 @@ pub enum ErrSeverity {
 impl ErrSeverity {
     pub fn from_c(val: c::ErrSeverity) -> ErrSeverity {
         match val {
-            c::WARN => ErrSeverity::Warn,
-            c::ERR => ErrSeverity::Err,
-            c::PANIC => ErrSeverity::Panic,
+            c::ErrSeverity_WARN => ErrSeverity::Warn,
+            c::ErrSeverity_ERR => ErrSeverity::Err,
+            c::ErrSeverity_PANIC => ErrSeverity::Panic,
             _ => unimplemented!()
         }
     }
@@ -246,9 +246,9 @@ pub enum DevSource {
 impl DevSource {
     pub fn from_c(val: c::DevSource) -> DevSource {
         match val {
-            c::DEV => DevSource::Dev,
-            c::CACHE => DevSource::Cache,
-            c::CACHE_DEV => DevSource::CacheDev,
+            c::DevSource_DEV => DevSource::Dev,
+            c::DevSource_CACHE => DevSource::Cache,
+            c::DevSource_CACHE_DEV => DevSource::CacheDev,
             _ => unimplemented!()
         }
     }
@@ -269,8 +269,8 @@ impl CommandInfo {
     pub unsafe fn from_c(mut info: c::CommandInfo, free: bool) -> CommandInfo {
         let res = CommandInfo {
             name: string_from(info.cmd_name),
-            in_type: TangoDataType::from_c(c::TangoDataType(info.in_type as u32)),
-            out_type: TangoDataType::from_c(c::TangoDataType(info.out_type as u32)),
+            in_type: TangoDataType::from_c(info.in_type as u32),
+            out_type: TangoDataType::from_c(info.out_type as u32),
             in_type_desc: string_from(info.in_type_desc),
             out_type_desc: string_from(info.out_type_desc),
             disp_level: DispLevel::from_c(info.disp_level),
@@ -613,7 +613,7 @@ impl CommandData {
             },
             CommandData::State(_) => panic!("Cannot send input argument of type State")
         };
-        c::CommandData { arg_type: c::TangoDataType(tag as u32), cmd_data: content }
+        c::CommandData { arg_type: tag as u32, cmd_data: content }
     }
 
     pub unsafe fn free_c_data(cmd_data: c::CommandData) {
@@ -970,11 +970,11 @@ impl AttributeData {
         };
         c::AttributeData {
             name: cstring_from(self.name).into_raw(),
-            data_type: c::TangoDataType(tag as u32),
-            data_format: c::AttrDataFormat(self.format as u32),
+            data_type: tag as u32,
+            data_format: self.format as u32,
             attr_data: content,
             nb_read: 0,  // doesn't matter for writing
-            quality: c::AttrQuality(self.quality as u32),
+            quality: self.quality as u32,
             dim_x: self.dim_x as i32,
             dim_y: self.dim_y as i32,
             time_stamp: c::timeval { tv_sec: self.time_stamp.sec,
@@ -1221,7 +1221,7 @@ impl DbDatum {
         }
 
         if let Some(typ) = self.request_type {
-            content.data_type = c::TangoDataType(typ as u32);
+            content.data_type = typ as u32;
         } else {
             let tag = match self.data {
                 PropertyValue::Empty => {
@@ -1289,7 +1289,7 @@ impl DbDatum {
                 },
                 _ => panic!("Cannot send property value of type {:?}", self.data)
             };
-            content.data_type = c::TangoDataType(tag);
+            content.data_type = tag;
         }
         (content, name_string)
     }

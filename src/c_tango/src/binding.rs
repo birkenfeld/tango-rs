@@ -50,7 +50,7 @@ pub const __STDC_ISO_10646__: libc::c_uint = 201505;
 pub const __STDC_NO_THREADS__: libc::c_uint = 1;
 pub const __GNU_LIBRARY__: libc::c_uint = 6;
 pub const __GLIBC__: libc::c_uint = 2;
-pub const __GLIBC_MINOR__: libc::c_uint = 23;
+pub const __GLIBC_MINOR__: libc::c_uint = 24;
 pub const _SYS_CDEFS_H: libc::c_uint = 1;
 pub const __WORDSIZE: libc::c_uint = 64;
 pub const __WORDSIZE_TIME64_COMPAT32: libc::c_uint = 1;
@@ -74,7 +74,7 @@ pub type __u_char = libc::c_uchar;
 pub type __u_short = libc::c_ushort;
 pub type __u_int = libc::c_uint;
 pub type __u_long = libc::c_ulong;
-pub type __int8_t = libc::c_char;
+pub type __int8_t = libc::c_schar;
 pub type __uint8_t = libc::c_uchar;
 pub type __int16_t = libc::c_short;
 pub type __uint16_t = libc::c_ushort;
@@ -95,19 +95,25 @@ pub type __off_t = libc::c_long;
 pub type __off64_t = libc::c_long;
 pub type __pid_t = libc::c_int;
 #[repr(C)]
-#[derive(Debug, Copy)]
-pub struct _bindgen_ty_1 {
+#[derive(Debug, Default, Copy)]
+pub struct __fsid_t {
     pub __val: [libc::c_int; 2usize],
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_1() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_1>() , 8usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_1>() , 4usize);
+fn bindgen_test_layout___fsid_t() {
+    assert_eq!(::std::mem::size_of::<__fsid_t>() , 8usize , concat ! (
+               "Size of: " , stringify ! ( __fsid_t ) ));
+    assert_eq! (::std::mem::align_of::<__fsid_t>() , 4usize , concat ! (
+                "Alignment of " , stringify ! ( __fsid_t ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const __fsid_t ) ) . __val as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( __fsid_t ) , "::" ,
+                stringify ! ( __val ) ));
 }
-impl Clone for _bindgen_ty_1 {
+impl Clone for __fsid_t {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_1 as __fsid_t;
 pub type __clock_t = libc::c_long;
 pub type __rlim_t = libc::c_ulong;
 pub type __rlim64_t = libc::c_ulong;
@@ -137,45 +143,75 @@ pub type __intptr_t = libc::c_long;
 pub type __socklen_t = libc::c_uint;
 pub type time_t = __time_t;
 #[repr(C)]
-#[derive(Debug, Copy)]
+#[derive(Debug, Default, Copy)]
 pub struct timeval {
     pub tv_sec: __time_t,
     pub tv_usec: __suseconds_t,
 }
 #[test]
 fn bindgen_test_layout_timeval() {
-    assert_eq!(::std::mem::size_of::<timeval>() , 16usize);
-    assert_eq!(::std::mem::align_of::<timeval>() , 8usize);
+    assert_eq!(::std::mem::size_of::<timeval>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( timeval ) ));
+    assert_eq! (::std::mem::align_of::<timeval>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( timeval ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const timeval ) ) . tv_sec as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( timeval ) , "::" ,
+                stringify ! ( tv_sec ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const timeval ) ) . tv_usec as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( timeval ) , "::" ,
+                stringify ! ( tv_usec ) ));
 }
 impl Clone for timeval {
     fn clone(&self) -> Self { *self }
 }
 pub type __sig_atomic_t = libc::c_int;
 #[repr(C)]
-#[derive(Debug, Copy)]
-pub struct _bindgen_ty_2 {
+#[derive(Debug, Default, Copy)]
+pub struct __sigset_t {
     pub __val: [libc::c_ulong; 16usize],
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_2() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_2>() , 128usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_2>() , 8usize);
+fn bindgen_test_layout___sigset_t() {
+    assert_eq!(::std::mem::size_of::<__sigset_t>() , 128usize , concat ! (
+               "Size of: " , stringify ! ( __sigset_t ) ));
+    assert_eq! (::std::mem::align_of::<__sigset_t>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( __sigset_t ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const __sigset_t ) ) . __val as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( __sigset_t ) , "::" ,
+                stringify ! ( __val ) ));
 }
-impl Clone for _bindgen_ty_2 {
+impl Clone for __sigset_t {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_2 as __sigset_t;
-pub use self::__sigset_t as sigset_t;
+pub type sigset_t = __sigset_t;
 #[repr(C)]
-#[derive(Debug, Copy)]
+#[derive(Debug, Default, Copy)]
 pub struct timespec {
     pub tv_sec: __time_t,
     pub tv_nsec: __syscall_slong_t,
 }
 #[test]
 fn bindgen_test_layout_timespec() {
-    assert_eq!(::std::mem::size_of::<timespec>() , 16usize);
-    assert_eq!(::std::mem::align_of::<timespec>() , 8usize);
+    assert_eq!(::std::mem::size_of::<timespec>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( timespec ) ));
+    assert_eq! (::std::mem::align_of::<timespec>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( timespec ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const timespec ) ) . tv_sec as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( timespec ) , "::" ,
+                stringify ! ( tv_sec ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const timespec ) ) . tv_nsec as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( timespec ) , "::" ,
+                stringify ! ( tv_nsec ) ));
 }
 impl Clone for timespec {
     fn clone(&self) -> Self { *self }
@@ -183,19 +219,25 @@ impl Clone for timespec {
 pub type suseconds_t = __suseconds_t;
 pub type __fd_mask = libc::c_long;
 #[repr(C)]
-#[derive(Debug, Copy)]
-pub struct _bindgen_ty_3 {
+#[derive(Debug, Default, Copy)]
+pub struct fd_set {
     pub __fds_bits: [__fd_mask; 16usize],
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_3() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_3>() , 128usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_3>() , 8usize);
+fn bindgen_test_layout_fd_set() {
+    assert_eq!(::std::mem::size_of::<fd_set>() , 128usize , concat ! (
+               "Size of: " , stringify ! ( fd_set ) ));
+    assert_eq! (::std::mem::align_of::<fd_set>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( fd_set ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const fd_set ) ) . __fds_bits as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( fd_set ) , "::" ,
+                stringify ! ( __fds_bits ) ));
 }
-impl Clone for _bindgen_ty_3 {
+impl Clone for fd_set {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_3 as fd_set;
 pub type fd_mask = __fd_mask;
 extern "C" {
     pub fn select(__nfds: libc::c_int, __readfds: *mut fd_set,
@@ -209,15 +251,27 @@ extern "C" {
      -> libc::c_int;
 }
 #[repr(C)]
-#[derive(Debug, Copy)]
+#[derive(Debug, Default, Copy)]
 pub struct timezone {
     pub tz_minuteswest: libc::c_int,
     pub tz_dsttime: libc::c_int,
 }
 #[test]
 fn bindgen_test_layout_timezone() {
-    assert_eq!(::std::mem::size_of::<timezone>() , 8usize);
-    assert_eq!(::std::mem::align_of::<timezone>() , 4usize);
+    assert_eq!(::std::mem::size_of::<timezone>() , 8usize , concat ! (
+               "Size of: " , stringify ! ( timezone ) ));
+    assert_eq! (::std::mem::align_of::<timezone>() , 4usize , concat ! (
+                "Alignment of " , stringify ! ( timezone ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const timezone ) ) . tz_minuteswest as * const
+                _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( timezone ) , "::" ,
+                stringify ! ( tz_minuteswest ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const timezone ) ) . tz_dsttime as * const _ as
+                usize } , 4usize , concat ! (
+                "Alignment of field: " , stringify ! ( timezone ) , "::" ,
+                stringify ! ( tz_dsttime ) ));
 }
 impl Clone for timezone {
     fn clone(&self) -> Self { *self }
@@ -235,30 +289,32 @@ extern "C" {
     pub fn adjtime(__delta: *const timeval, __olddelta: *mut timeval)
      -> libc::c_int;
 }
-pub const __itimer_which_ITIMER_REAL: __itimer_which = __itimer_which(0);
-pub const __itimer_which_ITIMER_VIRTUAL: __itimer_which = __itimer_which(1);
-pub const __itimer_which_ITIMER_PROF: __itimer_which = __itimer_which(2);
-impl ::std::ops::BitOr<__itimer_which> for __itimer_which {
-    type
-    Output
-    =
-    Self;
-    #[inline]
-    fn bitor(self, other: Self) -> Self { __itimer_which(self.0 | other.0) }
-}
+pub const __itimer_which_ITIMER_REAL: __itimer_which = 0;
+pub const __itimer_which_ITIMER_VIRTUAL: __itimer_which = 1;
+pub const __itimer_which_ITIMER_PROF: __itimer_which = 2;
+pub type __itimer_which = libc::c_uint;
 #[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub struct __itimer_which(pub u32);
-#[repr(C)]
-#[derive(Debug, Copy)]
+#[derive(Debug, Default, Copy)]
 pub struct itimerval {
     pub it_interval: timeval,
     pub it_value: timeval,
 }
 #[test]
 fn bindgen_test_layout_itimerval() {
-    assert_eq!(::std::mem::size_of::<itimerval>() , 32usize);
-    assert_eq!(::std::mem::align_of::<itimerval>() , 8usize);
+    assert_eq!(::std::mem::size_of::<itimerval>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( itimerval ) ));
+    assert_eq! (::std::mem::align_of::<itimerval>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( itimerval ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const itimerval ) ) . it_interval as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( itimerval ) , "::" ,
+                stringify ! ( it_interval ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const itimerval ) ) . it_value as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( itimerval ) , "::" ,
+                stringify ! ( it_value ) ));
 }
 impl Clone for itimerval {
     fn clone(&self) -> Self { *self }
@@ -273,427 +329,590 @@ extern "C" {
                      __old: *mut itimerval) -> libc::c_int;
 }
 extern "C" {
-    pub fn utimes(__file: *const libc::c_char, __tvp: *mut timeval)
+    pub fn utimes(__file: *const libc::c_char, __tvp: *const timeval)
      -> libc::c_int;
 }
 extern "C" {
-    pub fn lutimes(__file: *const libc::c_char, __tvp: *mut timeval)
+    pub fn lutimes(__file: *const libc::c_char, __tvp: *const timeval)
      -> libc::c_int;
 }
 extern "C" {
-    pub fn futimes(__fd: libc::c_int, __tvp: *mut timeval) -> libc::c_int;
+    pub fn futimes(__fd: libc::c_int, __tvp: *const timeval) -> libc::c_int;
 }
 pub type TangoDevLong = libc::c_int;
 pub type TangoDevULong = libc::c_uint;
 pub type TangoDevLong64 = libc::c_long;
 pub type TangoDevULong64 = libc::c_ulong;
-pub const DEV_VOID: _bindgen_ty_4 = _bindgen_ty_4(0);
-pub const DEV_BOOLEAN: _bindgen_ty_4 = _bindgen_ty_4(1);
-pub const DEV_SHORT: _bindgen_ty_4 = _bindgen_ty_4(2);
-pub const DEV_LONG: _bindgen_ty_4 = _bindgen_ty_4(3);
-pub const DEV_FLOAT: _bindgen_ty_4 = _bindgen_ty_4(4);
-pub const DEV_DOUBLE: _bindgen_ty_4 = _bindgen_ty_4(5);
-pub const DEV_USHORT: _bindgen_ty_4 = _bindgen_ty_4(6);
-pub const DEV_ULONG: _bindgen_ty_4 = _bindgen_ty_4(7);
-pub const DEV_STRING: _bindgen_ty_4 = _bindgen_ty_4(8);
-pub const DEVVAR_CHARARRAY: _bindgen_ty_4 = _bindgen_ty_4(9);
-pub const DEVVAR_SHORTARRAY: _bindgen_ty_4 = _bindgen_ty_4(10);
-pub const DEVVAR_LONGARRAY: _bindgen_ty_4 = _bindgen_ty_4(11);
-pub const DEVVAR_FLOATARRAY: _bindgen_ty_4 = _bindgen_ty_4(12);
-pub const DEVVAR_DOUBLEARRAY: _bindgen_ty_4 = _bindgen_ty_4(13);
-pub const DEVVAR_USHORTARRAY: _bindgen_ty_4 = _bindgen_ty_4(14);
-pub const DEVVAR_ULONGARRAY: _bindgen_ty_4 = _bindgen_ty_4(15);
-pub const DEVVAR_STRINGARRAY: _bindgen_ty_4 = _bindgen_ty_4(16);
-pub const DEVVAR_LONGSTRINGARRAY: _bindgen_ty_4 = _bindgen_ty_4(17);
-pub const DEVVAR_DOUBLESTRINGARRAY: _bindgen_ty_4 = _bindgen_ty_4(18);
-pub const DEV_STATE: _bindgen_ty_4 = _bindgen_ty_4(19);
-pub const CONST_DEV_STRING: _bindgen_ty_4 = _bindgen_ty_4(20);
-pub const DEVVAR_BOOLEANARRAY: _bindgen_ty_4 = _bindgen_ty_4(21);
-pub const DEV_UCHAR: _bindgen_ty_4 = _bindgen_ty_4(22);
-pub const DEV_LONG64: _bindgen_ty_4 = _bindgen_ty_4(23);
-pub const DEV_ULONG64: _bindgen_ty_4 = _bindgen_ty_4(24);
-pub const DEVVAR_LONG64ARRAY: _bindgen_ty_4 = _bindgen_ty_4(25);
-pub const DEVVAR_ULONG64ARRAY: _bindgen_ty_4 = _bindgen_ty_4(26);
-pub const DEV_INT: _bindgen_ty_4 = _bindgen_ty_4(27);
-pub const DEV_ENCODED: _bindgen_ty_4 = _bindgen_ty_4(28);
-impl ::std::ops::BitOr<_bindgen_ty_4> for _bindgen_ty_4 {
-    type
-    Output
-    =
-    Self;
-    #[inline]
-    fn bitor(self, other: Self) -> Self { _bindgen_ty_4(self.0 | other.0) }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub struct _bindgen_ty_4(pub u32);
-pub use self::_bindgen_ty_4 as TangoDataType;
-pub const ON: _bindgen_ty_5 = _bindgen_ty_5(0);
-pub const OFF: _bindgen_ty_5 = _bindgen_ty_5(1);
-pub const CLOSE: _bindgen_ty_5 = _bindgen_ty_5(2);
-pub const OPEN: _bindgen_ty_5 = _bindgen_ty_5(3);
-pub const INSERT: _bindgen_ty_5 = _bindgen_ty_5(4);
-pub const EXTRACT: _bindgen_ty_5 = _bindgen_ty_5(5);
-pub const MOVING: _bindgen_ty_5 = _bindgen_ty_5(6);
-pub const STANDBY: _bindgen_ty_5 = _bindgen_ty_5(7);
-pub const FAULT: _bindgen_ty_5 = _bindgen_ty_5(8);
-pub const INIT: _bindgen_ty_5 = _bindgen_ty_5(9);
-pub const RUNNING: _bindgen_ty_5 = _bindgen_ty_5(10);
-pub const ALARM: _bindgen_ty_5 = _bindgen_ty_5(11);
-pub const DISABLE: _bindgen_ty_5 = _bindgen_ty_5(12);
-pub const UNKNOWN: _bindgen_ty_5 = _bindgen_ty_5(13);
-impl ::std::ops::BitOr<_bindgen_ty_5> for _bindgen_ty_5 {
-    type
-    Output
-    =
-    Self;
-    #[inline]
-    fn bitor(self, other: Self) -> Self { _bindgen_ty_5(self.0 | other.0) }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub struct _bindgen_ty_5(pub u32);
-pub use self::_bindgen_ty_5 as TangoDevState;
-pub const ATTR_VALID: _bindgen_ty_6 = _bindgen_ty_6(0);
-pub const ATTR_INVALID: _bindgen_ty_6 = _bindgen_ty_6(1);
-pub const ATTR_ALARM: _bindgen_ty_6 = _bindgen_ty_6(2);
-pub const ATTR_CHANGING: _bindgen_ty_6 = _bindgen_ty_6(3);
-pub const ATTR_WARNING: _bindgen_ty_6 = _bindgen_ty_6(4);
-impl ::std::ops::BitOr<_bindgen_ty_6> for _bindgen_ty_6 {
-    type
-    Output
-    =
-    Self;
-    #[inline]
-    fn bitor(self, other: Self) -> Self { _bindgen_ty_6(self.0 | other.0) }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub struct _bindgen_ty_6(pub u32);
-pub use self::_bindgen_ty_6 as AttrQuality;
-pub const READ: _bindgen_ty_7 = _bindgen_ty_7(0);
-pub const READ_WITH_WRITE: _bindgen_ty_7 = _bindgen_ty_7(1);
-pub const WRITE: _bindgen_ty_7 = _bindgen_ty_7(2);
-pub const READ_WRITE: _bindgen_ty_7 = _bindgen_ty_7(3);
-impl ::std::ops::BitOr<_bindgen_ty_7> for _bindgen_ty_7 {
-    type
-    Output
-    =
-    Self;
-    #[inline]
-    fn bitor(self, other: Self) -> Self { _bindgen_ty_7(self.0 | other.0) }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub struct _bindgen_ty_7(pub u32);
-pub use self::_bindgen_ty_7 as AttrWriteType;
-pub const SCALAR: _bindgen_ty_8 = _bindgen_ty_8(0);
-pub const SPECTRUM: _bindgen_ty_8 = _bindgen_ty_8(1);
-pub const IMAGE: _bindgen_ty_8 = _bindgen_ty_8(2);
-impl ::std::ops::BitOr<_bindgen_ty_8> for _bindgen_ty_8 {
-    type
-    Output
-    =
-    Self;
-    #[inline]
-    fn bitor(self, other: Self) -> Self { _bindgen_ty_8(self.0 | other.0) }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub struct _bindgen_ty_8(pub u32);
-pub use self::_bindgen_ty_8 as AttrDataFormat;
-pub const OPERATOR: _bindgen_ty_9 = _bindgen_ty_9(0);
-pub const EXPERT: _bindgen_ty_9 = _bindgen_ty_9(1);
-impl ::std::ops::BitOr<_bindgen_ty_9> for _bindgen_ty_9 {
-    type
-    Output
-    =
-    Self;
-    #[inline]
-    fn bitor(self, other: Self) -> Self { _bindgen_ty_9(self.0 | other.0) }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub struct _bindgen_ty_9(pub u32);
-pub use self::_bindgen_ty_9 as DispLevel;
-pub const WARN: _bindgen_ty_10 = _bindgen_ty_10(0);
-pub const ERR: _bindgen_ty_10 = _bindgen_ty_10(1);
-pub const PANIC: _bindgen_ty_10 = _bindgen_ty_10(2);
-impl ::std::ops::BitOr<_bindgen_ty_10> for _bindgen_ty_10 {
-    type
-    Output
-    =
-    Self;
-    #[inline]
-    fn bitor(self, other: Self) -> Self { _bindgen_ty_10(self.0 | other.0) }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub struct _bindgen_ty_10(pub u32);
-pub use self::_bindgen_ty_10 as ErrSeverity;
-pub const DEV: _bindgen_ty_11 = _bindgen_ty_11(0);
-pub const CACHE: _bindgen_ty_11 = _bindgen_ty_11(1);
-pub const CACHE_DEV: _bindgen_ty_11 = _bindgen_ty_11(2);
-impl ::std::ops::BitOr<_bindgen_ty_11> for _bindgen_ty_11 {
-    type
-    Output
-    =
-    Self;
-    #[inline]
-    fn bitor(self, other: Self) -> Self { _bindgen_ty_11(self.0 | other.0) }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub struct _bindgen_ty_11(pub u32);
-pub use self::_bindgen_ty_11 as DevSource;
+pub const TangoDataType_DEV_VOID: TangoDataType = 0;
+pub const TangoDataType_DEV_BOOLEAN: TangoDataType = 1;
+pub const TangoDataType_DEV_SHORT: TangoDataType = 2;
+pub const TangoDataType_DEV_LONG: TangoDataType = 3;
+pub const TangoDataType_DEV_FLOAT: TangoDataType = 4;
+pub const TangoDataType_DEV_DOUBLE: TangoDataType = 5;
+pub const TangoDataType_DEV_USHORT: TangoDataType = 6;
+pub const TangoDataType_DEV_ULONG: TangoDataType = 7;
+pub const TangoDataType_DEV_STRING: TangoDataType = 8;
+pub const TangoDataType_DEVVAR_CHARARRAY: TangoDataType = 9;
+pub const TangoDataType_DEVVAR_SHORTARRAY: TangoDataType = 10;
+pub const TangoDataType_DEVVAR_LONGARRAY: TangoDataType = 11;
+pub const TangoDataType_DEVVAR_FLOATARRAY: TangoDataType = 12;
+pub const TangoDataType_DEVVAR_DOUBLEARRAY: TangoDataType = 13;
+pub const TangoDataType_DEVVAR_USHORTARRAY: TangoDataType = 14;
+pub const TangoDataType_DEVVAR_ULONGARRAY: TangoDataType = 15;
+pub const TangoDataType_DEVVAR_STRINGARRAY: TangoDataType = 16;
+pub const TangoDataType_DEVVAR_LONGSTRINGARRAY: TangoDataType = 17;
+pub const TangoDataType_DEVVAR_DOUBLESTRINGARRAY: TangoDataType = 18;
+pub const TangoDataType_DEV_STATE: TangoDataType = 19;
+pub const TangoDataType_CONST_DEV_STRING: TangoDataType = 20;
+pub const TangoDataType_DEVVAR_BOOLEANARRAY: TangoDataType = 21;
+pub const TangoDataType_DEV_UCHAR: TangoDataType = 22;
+pub const TangoDataType_DEV_LONG64: TangoDataType = 23;
+pub const TangoDataType_DEV_ULONG64: TangoDataType = 24;
+pub const TangoDataType_DEVVAR_LONG64ARRAY: TangoDataType = 25;
+pub const TangoDataType_DEVVAR_ULONG64ARRAY: TangoDataType = 26;
+pub const TangoDataType_DEV_INT: TangoDataType = 27;
+pub const TangoDataType_DEV_ENCODED: TangoDataType = 28;
+pub type TangoDataType = libc::c_uint;
+pub const TangoDevState_ON: TangoDevState = 0;
+pub const TangoDevState_OFF: TangoDevState = 1;
+pub const TangoDevState_CLOSE: TangoDevState = 2;
+pub const TangoDevState_OPEN: TangoDevState = 3;
+pub const TangoDevState_INSERT: TangoDevState = 4;
+pub const TangoDevState_EXTRACT: TangoDevState = 5;
+pub const TangoDevState_MOVING: TangoDevState = 6;
+pub const TangoDevState_STANDBY: TangoDevState = 7;
+pub const TangoDevState_FAULT: TangoDevState = 8;
+pub const TangoDevState_INIT: TangoDevState = 9;
+pub const TangoDevState_RUNNING: TangoDevState = 10;
+pub const TangoDevState_ALARM: TangoDevState = 11;
+pub const TangoDevState_DISABLE: TangoDevState = 12;
+pub const TangoDevState_UNKNOWN: TangoDevState = 13;
+pub type TangoDevState = libc::c_uint;
+pub const AttrQuality_ATTR_VALID: AttrQuality = 0;
+pub const AttrQuality_ATTR_INVALID: AttrQuality = 1;
+pub const AttrQuality_ATTR_ALARM: AttrQuality = 2;
+pub const AttrQuality_ATTR_CHANGING: AttrQuality = 3;
+pub const AttrQuality_ATTR_WARNING: AttrQuality = 4;
+pub type AttrQuality = libc::c_uint;
+pub const AttrWriteType_READ: AttrWriteType = 0;
+pub const AttrWriteType_READ_WITH_WRITE: AttrWriteType = 1;
+pub const AttrWriteType_WRITE: AttrWriteType = 2;
+pub const AttrWriteType_READ_WRITE: AttrWriteType = 3;
+pub type AttrWriteType = libc::c_uint;
+pub const AttrDataFormat_SCALAR: AttrDataFormat = 0;
+pub const AttrDataFormat_SPECTRUM: AttrDataFormat = 1;
+pub const AttrDataFormat_IMAGE: AttrDataFormat = 2;
+pub type AttrDataFormat = libc::c_uint;
+pub const DispLevel_OPERATOR: DispLevel = 0;
+pub const DispLevel_EXPERT: DispLevel = 1;
+pub type DispLevel = libc::c_uint;
+pub const ErrSeverity_WARN: ErrSeverity = 0;
+pub const ErrSeverity_ERR: ErrSeverity = 1;
+pub const ErrSeverity_PANIC: ErrSeverity = 2;
+pub type ErrSeverity = libc::c_uint;
+pub const DevSource_DEV: DevSource = 0;
+pub const DevSource_CACHE: DevSource = 1;
+pub const DevSource_CACHE_DEV: DevSource = 2;
+pub type DevSource = libc::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_12 {
+pub struct TangoDevEncoded {
     pub encoded_format: *mut libc::c_char,
     pub encoded_length: libc::c_uint,
     pub encoded_data: *mut libc::c_uchar,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_12() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_12>() , 24usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_12>() , 8usize);
+fn bindgen_test_layout_TangoDevEncoded() {
+    assert_eq!(::std::mem::size_of::<TangoDevEncoded>() , 24usize , concat ! (
+               "Size of: " , stringify ! ( TangoDevEncoded ) ));
+    assert_eq! (::std::mem::align_of::<TangoDevEncoded>() , 8usize , concat !
+                ( "Alignment of " , stringify ! ( TangoDevEncoded ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoDevEncoded ) ) . encoded_format as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoDevEncoded ) ,
+                "::" , stringify ! ( encoded_format ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoDevEncoded ) ) . encoded_length as *
+                const _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoDevEncoded ) ,
+                "::" , stringify ! ( encoded_length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoDevEncoded ) ) . encoded_data as *
+                const _ as usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoDevEncoded ) ,
+                "::" , stringify ! ( encoded_data ) ));
 }
-impl Clone for _bindgen_ty_12 {
+impl Clone for TangoDevEncoded {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_12 as TangoDevEncoded;
+impl Default for TangoDevEncoded {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_13 {
+pub struct VarBoolArray {
     pub length: libc::c_uint,
     pub sequence: *mut bool,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_13() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_13>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_13>() , 8usize);
+fn bindgen_test_layout_VarBoolArray() {
+    assert_eq!(::std::mem::size_of::<VarBoolArray>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarBoolArray ) ));
+    assert_eq! (::std::mem::align_of::<VarBoolArray>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( VarBoolArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarBoolArray ) ) . length as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarBoolArray ) , "::" ,
+                stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarBoolArray ) ) . sequence as * const _
+                as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarBoolArray ) , "::" ,
+                stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_13 {
+impl Clone for VarBoolArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_13 as VarBoolArray;
+impl Default for VarBoolArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_14 {
+pub struct VarCharArray {
     pub length: libc::c_uint,
     pub sequence: *mut libc::c_uchar,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_14() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_14>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_14>() , 8usize);
+fn bindgen_test_layout_VarCharArray() {
+    assert_eq!(::std::mem::size_of::<VarCharArray>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarCharArray ) ));
+    assert_eq! (::std::mem::align_of::<VarCharArray>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( VarCharArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarCharArray ) ) . length as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarCharArray ) , "::" ,
+                stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarCharArray ) ) . sequence as * const _
+                as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarCharArray ) , "::" ,
+                stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_14 {
+impl Clone for VarCharArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_14 as VarCharArray;
+impl Default for VarCharArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_15 {
+pub struct VarShortArray {
     pub length: libc::c_uint,
     pub sequence: *mut libc::c_short,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_15() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_15>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_15>() , 8usize);
+fn bindgen_test_layout_VarShortArray() {
+    assert_eq!(::std::mem::size_of::<VarShortArray>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarShortArray ) ));
+    assert_eq! (::std::mem::align_of::<VarShortArray>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( VarShortArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarShortArray ) ) . length as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarShortArray ) , "::"
+                , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarShortArray ) ) . sequence as * const _
+                as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarShortArray ) , "::"
+                , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_15 {
+impl Clone for VarShortArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_15 as VarShortArray;
+impl Default for VarShortArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_16 {
+pub struct VarUShortArray {
     pub length: libc::c_uint,
     pub sequence: *mut libc::c_ushort,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_16() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_16>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_16>() , 8usize);
+fn bindgen_test_layout_VarUShortArray() {
+    assert_eq!(::std::mem::size_of::<VarUShortArray>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarUShortArray ) ));
+    assert_eq! (::std::mem::align_of::<VarUShortArray>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( VarUShortArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarUShortArray ) ) . length as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarUShortArray ) , "::"
+                , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarUShortArray ) ) . sequence as * const
+                _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarUShortArray ) , "::"
+                , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_16 {
+impl Clone for VarUShortArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_16 as VarUShortArray;
+impl Default for VarUShortArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_17 {
+pub struct VarLongArray {
     pub length: libc::c_uint,
     pub sequence: *mut TangoDevLong,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_17() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_17>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_17>() , 8usize);
+fn bindgen_test_layout_VarLongArray() {
+    assert_eq!(::std::mem::size_of::<VarLongArray>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarLongArray ) ));
+    assert_eq! (::std::mem::align_of::<VarLongArray>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( VarLongArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarLongArray ) ) . length as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarLongArray ) , "::" ,
+                stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarLongArray ) ) . sequence as * const _
+                as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarLongArray ) , "::" ,
+                stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_17 {
+impl Clone for VarLongArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_17 as VarLongArray;
+impl Default for VarLongArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_18 {
+pub struct VarULongArray {
     pub length: libc::c_uint,
     pub sequence: *mut TangoDevULong,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_18() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_18>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_18>() , 8usize);
+fn bindgen_test_layout_VarULongArray() {
+    assert_eq!(::std::mem::size_of::<VarULongArray>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarULongArray ) ));
+    assert_eq! (::std::mem::align_of::<VarULongArray>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( VarULongArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarULongArray ) ) . length as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarULongArray ) , "::"
+                , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarULongArray ) ) . sequence as * const _
+                as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarULongArray ) , "::"
+                , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_18 {
+impl Clone for VarULongArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_18 as VarULongArray;
+impl Default for VarULongArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_19 {
+pub struct VarLong64Array {
     pub length: libc::c_uint,
     pub sequence: *mut TangoDevLong64,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_19() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_19>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_19>() , 8usize);
+fn bindgen_test_layout_VarLong64Array() {
+    assert_eq!(::std::mem::size_of::<VarLong64Array>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarLong64Array ) ));
+    assert_eq! (::std::mem::align_of::<VarLong64Array>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( VarLong64Array ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarLong64Array ) ) . length as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarLong64Array ) , "::"
+                , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarLong64Array ) ) . sequence as * const
+                _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarLong64Array ) , "::"
+                , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_19 {
+impl Clone for VarLong64Array {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_19 as VarLong64Array;
+impl Default for VarLong64Array {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_20 {
+pub struct VarULong64Array {
     pub length: libc::c_uint,
     pub sequence: *mut TangoDevULong64,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_20() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_20>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_20>() , 8usize);
+fn bindgen_test_layout_VarULong64Array() {
+    assert_eq!(::std::mem::size_of::<VarULong64Array>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarULong64Array ) ));
+    assert_eq! (::std::mem::align_of::<VarULong64Array>() , 8usize , concat !
+                ( "Alignment of " , stringify ! ( VarULong64Array ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarULong64Array ) ) . length as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarULong64Array ) ,
+                "::" , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarULong64Array ) ) . sequence as * const
+                _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarULong64Array ) ,
+                "::" , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_20 {
+impl Clone for VarULong64Array {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_20 as VarULong64Array;
+impl Default for VarULong64Array {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_21 {
+pub struct VarFloatArray {
     pub length: libc::c_uint,
     pub sequence: *mut f32,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_21() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_21>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_21>() , 8usize);
+fn bindgen_test_layout_VarFloatArray() {
+    assert_eq!(::std::mem::size_of::<VarFloatArray>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarFloatArray ) ));
+    assert_eq! (::std::mem::align_of::<VarFloatArray>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( VarFloatArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarFloatArray ) ) . length as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarFloatArray ) , "::"
+                , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarFloatArray ) ) . sequence as * const _
+                as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarFloatArray ) , "::"
+                , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_21 {
+impl Clone for VarFloatArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_21 as VarFloatArray;
+impl Default for VarFloatArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_22 {
+pub struct VarDoubleArray {
     pub length: libc::c_uint,
     pub sequence: *mut f64,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_22() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_22>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_22>() , 8usize);
+fn bindgen_test_layout_VarDoubleArray() {
+    assert_eq!(::std::mem::size_of::<VarDoubleArray>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarDoubleArray ) ));
+    assert_eq! (::std::mem::align_of::<VarDoubleArray>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( VarDoubleArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarDoubleArray ) ) . length as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarDoubleArray ) , "::"
+                , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarDoubleArray ) ) . sequence as * const
+                _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarDoubleArray ) , "::"
+                , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_22 {
+impl Clone for VarDoubleArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_22 as VarDoubleArray;
+impl Default for VarDoubleArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_23 {
+pub struct VarStringArray {
     pub length: libc::c_uint,
     pub sequence: *mut *mut libc::c_char,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_23() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_23>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_23>() , 8usize);
+fn bindgen_test_layout_VarStringArray() {
+    assert_eq!(::std::mem::size_of::<VarStringArray>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarStringArray ) ));
+    assert_eq! (::std::mem::align_of::<VarStringArray>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( VarStringArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarStringArray ) ) . length as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarStringArray ) , "::"
+                , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarStringArray ) ) . sequence as * const
+                _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarStringArray ) , "::"
+                , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_23 {
+impl Clone for VarStringArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_23 as VarStringArray;
+impl Default for VarStringArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_24 {
+pub struct VarStateArray {
     pub length: libc::c_uint,
     pub sequence: *mut TangoDevState,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_24() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_24>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_24>() , 8usize);
+fn bindgen_test_layout_VarStateArray() {
+    assert_eq!(::std::mem::size_of::<VarStateArray>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarStateArray ) ));
+    assert_eq! (::std::mem::align_of::<VarStateArray>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( VarStateArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarStateArray ) ) . length as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarStateArray ) , "::"
+                , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarStateArray ) ) . sequence as * const _
+                as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarStateArray ) , "::"
+                , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_24 {
+impl Clone for VarStateArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_24 as VarStateArray;
+impl Default for VarStateArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_25 {
+pub struct VarEncodedArray {
     pub length: libc::c_uint,
     pub sequence: *mut TangoDevEncoded,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_25() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_25>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_25>() , 8usize);
+fn bindgen_test_layout_VarEncodedArray() {
+    assert_eq!(::std::mem::size_of::<VarEncodedArray>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( VarEncodedArray ) ));
+    assert_eq! (::std::mem::align_of::<VarEncodedArray>() , 8usize , concat !
+                ( "Alignment of " , stringify ! ( VarEncodedArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarEncodedArray ) ) . length as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarEncodedArray ) ,
+                "::" , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarEncodedArray ) ) . sequence as * const
+                _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarEncodedArray ) ,
+                "::" , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_25 {
+impl Clone for VarEncodedArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_25 as VarEncodedArray;
+impl Default for VarEncodedArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_26 {
+pub struct VarLongStringArray {
     pub long_length: libc::c_uint,
     pub long_sequence: *mut TangoDevLong,
     pub string_length: libc::c_uint,
     pub string_sequence: *mut *mut libc::c_char,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_26() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_26>() , 32usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_26>() , 8usize);
+fn bindgen_test_layout_VarLongStringArray() {
+    assert_eq!(::std::mem::size_of::<VarLongStringArray>() , 32usize , concat
+               ! ( "Size of: " , stringify ! ( VarLongStringArray ) ));
+    assert_eq! (::std::mem::align_of::<VarLongStringArray>() , 8usize , concat
+                ! ( "Alignment of " , stringify ! ( VarLongStringArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarLongStringArray ) ) . long_length as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarLongStringArray ) ,
+                "::" , stringify ! ( long_length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarLongStringArray ) ) . long_sequence as
+                * const _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarLongStringArray ) ,
+                "::" , stringify ! ( long_sequence ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarLongStringArray ) ) . string_length as
+                * const _ as usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarLongStringArray ) ,
+                "::" , stringify ! ( string_length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarLongStringArray ) ) . string_sequence
+                as * const _ as usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarLongStringArray ) ,
+                "::" , stringify ! ( string_sequence ) ));
 }
-impl Clone for _bindgen_ty_26 {
+impl Clone for VarLongStringArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_26 as VarLongStringArray;
+impl Default for VarLongStringArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_27 {
+pub struct VarDoubleStringArray {
     pub double_length: libc::c_uint,
     pub double_sequence: *mut f64,
     pub string_length: libc::c_uint,
     pub string_sequence: *mut *mut libc::c_char,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_27() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_27>() , 32usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_27>() , 8usize);
+fn bindgen_test_layout_VarDoubleStringArray() {
+    assert_eq!(::std::mem::size_of::<VarDoubleStringArray>() , 32usize ,
+               concat ! ( "Size of: " , stringify ! ( VarDoubleStringArray )
+               ));
+    assert_eq! (::std::mem::align_of::<VarDoubleStringArray>() , 8usize ,
+                concat ! (
+                "Alignment of " , stringify ! ( VarDoubleStringArray ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarDoubleStringArray ) ) . double_length
+                as * const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarDoubleStringArray )
+                , "::" , stringify ! ( double_length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarDoubleStringArray ) ) .
+                double_sequence as * const _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarDoubleStringArray )
+                , "::" , stringify ! ( double_sequence ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarDoubleStringArray ) ) . string_length
+                as * const _ as usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarDoubleStringArray )
+                , "::" , stringify ! ( string_length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const VarDoubleStringArray ) ) .
+                string_sequence as * const _ as usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( VarDoubleStringArray )
+                , "::" , stringify ! ( string_sequence ) ));
 }
-impl Clone for _bindgen_ty_27 {
+impl Clone for VarDoubleStringArray {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_27 as VarDoubleStringArray;
+impl Default for VarDoubleStringArray {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
-#[derive(Debug, Copy)]
-pub struct _bindgen_ty_28 {
+#[derive(Debug, Default, Copy)]
+pub struct TangoAttributeData {
     pub bool_arr: __BindgenUnionField<VarBoolArray>,
     pub char_arr: __BindgenUnionField<VarCharArray>,
     pub short_arr: __BindgenUnionField<VarShortArray>,
@@ -710,17 +929,83 @@ pub struct _bindgen_ty_28 {
     pub bindgen_union_field: [u64; 2usize],
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_28() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_28>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_28>() , 8usize);
+fn bindgen_test_layout_TangoAttributeData() {
+    assert_eq!(::std::mem::size_of::<TangoAttributeData>() , 16usize , concat
+               ! ( "Size of: " , stringify ! ( TangoAttributeData ) ));
+    assert_eq! (::std::mem::align_of::<TangoAttributeData>() , 8usize , concat
+                ! ( "Alignment of " , stringify ! ( TangoAttributeData ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . bool_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( bool_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . char_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( char_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . short_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( short_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . ushort_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( ushort_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . long_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( long_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . ulong_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( ulong_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . long64_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( long64_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . ulong64_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( ulong64_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . float_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( float_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . double_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( double_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . string_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( string_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . state_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( state_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoAttributeData ) ) . encoded_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoAttributeData ) ,
+                "::" , stringify ! ( encoded_arr ) ));
 }
-impl Clone for _bindgen_ty_28 {
+impl Clone for TangoAttributeData {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_28 as TangoAttributeData;
 #[repr(C)]
-#[derive(Debug, Copy)]
-pub struct _bindgen_ty_29 {
+#[derive(Debug, Default, Copy)]
+pub struct TangoCommandData {
     pub bool_val: __BindgenUnionField<bool>,
     pub short_val: __BindgenUnionField<libc::c_short>,
     pub ushort_val: __BindgenUnionField<libc::c_ushort>,
@@ -750,17 +1035,148 @@ pub struct _bindgen_ty_29 {
     pub bindgen_union_field: [u64; 4usize],
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_29() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_29>() , 32usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_29>() , 8usize);
+fn bindgen_test_layout_TangoCommandData() {
+    assert_eq!(::std::mem::size_of::<TangoCommandData>() , 32usize , concat !
+               ( "Size of: " , stringify ! ( TangoCommandData ) ));
+    assert_eq! (::std::mem::align_of::<TangoCommandData>() , 8usize , concat !
+                ( "Alignment of " , stringify ! ( TangoCommandData ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . bool_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( bool_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . short_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( short_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . ushort_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( ushort_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . long_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( long_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . ulong_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( ulong_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . float_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( float_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . double_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( double_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . string_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( string_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . state_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( state_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . long64_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( long64_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . ulong64_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( ulong64_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . bool_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( bool_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . char_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( char_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . short_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( short_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . ushort_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( ushort_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . long_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( long_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . ulong_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( ulong_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . long64_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( long64_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . ulong64_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( ulong64_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . float_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( float_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . double_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( double_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . string_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( string_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . state_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( state_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . encoded_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( encoded_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . long_string_arr as
+                * const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( long_string_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoCommandData ) ) . double_string_arr
+                as * const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoCommandData ) ,
+                "::" , stringify ! ( double_string_arr ) ));
 }
-impl Clone for _bindgen_ty_29 {
+impl Clone for TangoCommandData {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_29 as TangoCommandData;
 #[repr(C)]
-#[derive(Debug, Copy)]
-pub struct _bindgen_ty_30 {
+#[derive(Debug, Default, Copy)]
+pub struct TangoPropertyData {
     pub bool_val: __BindgenUnionField<bool>,
     pub char_val: __BindgenUnionField<libc::c_uchar>,
     pub short_val: __BindgenUnionField<libc::c_short>,
@@ -784,32 +1200,147 @@ pub struct _bindgen_ty_30 {
     pub bindgen_union_field: [u64; 2usize],
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_30() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_30>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_30>() , 8usize);
+fn bindgen_test_layout_TangoPropertyData() {
+    assert_eq!(::std::mem::size_of::<TangoPropertyData>() , 16usize , concat !
+               ( "Size of: " , stringify ! ( TangoPropertyData ) ));
+    assert_eq! (::std::mem::align_of::<TangoPropertyData>() , 8usize , concat
+                ! ( "Alignment of " , stringify ! ( TangoPropertyData ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . bool_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( bool_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . char_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( char_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . short_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( short_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . ushort_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( ushort_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . long_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( long_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . ulong_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( ulong_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . float_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( float_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . double_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( double_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . string_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( string_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . long64_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( long64_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . ulong64_val as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( ulong64_val ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . short_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( short_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . ushort_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( ushort_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . long_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( long_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . ulong_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( ulong_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . long64_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( long64_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . ulong64_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( ulong64_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . float_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( float_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . double_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( double_arr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const TangoPropertyData ) ) . string_arr as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( TangoPropertyData ) ,
+                "::" , stringify ! ( string_arr ) ));
 }
-impl Clone for _bindgen_ty_30 {
+impl Clone for TangoPropertyData {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_30 as TangoPropertyData;
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_31 {
+pub struct CommandData {
     pub arg_type: TangoDataType,
     pub cmd_data: TangoCommandData,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_31() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_31>() , 40usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_31>() , 8usize);
+fn bindgen_test_layout_CommandData() {
+    assert_eq!(::std::mem::size_of::<CommandData>() , 40usize , concat ! (
+               "Size of: " , stringify ! ( CommandData ) ));
+    assert_eq! (::std::mem::align_of::<CommandData>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( CommandData ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CommandData ) ) . arg_type as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( CommandData ) , "::" ,
+                stringify ! ( arg_type ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CommandData ) ) . cmd_data as * const _
+                as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( CommandData ) , "::" ,
+                stringify ! ( cmd_data ) ));
 }
-impl Clone for _bindgen_ty_31 {
+impl Clone for CommandData {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_31 as CommandData;
+impl Default for CommandData {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_32 {
+pub struct AttributeData {
     pub data_type: TangoDataType,
     pub attr_data: TangoAttributeData,
     pub data_format: AttrDataFormat,
@@ -821,64 +1352,165 @@ pub struct _bindgen_ty_32 {
     pub time_stamp: timeval,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_32() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_32>() , 72usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_32>() , 8usize);
+fn bindgen_test_layout_AttributeData() {
+    assert_eq!(::std::mem::size_of::<AttributeData>() , 72usize , concat ! (
+               "Size of: " , stringify ! ( AttributeData ) ));
+    assert_eq! (::std::mem::align_of::<AttributeData>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( AttributeData ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeData ) ) . data_type as * const
+                _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeData ) , "::"
+                , stringify ! ( data_type ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeData ) ) . attr_data as * const
+                _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeData ) , "::"
+                , stringify ! ( attr_data ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeData ) ) . data_format as *
+                const _ as usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeData ) , "::"
+                , stringify ! ( data_format ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeData ) ) . quality as * const _
+                as usize } , 28usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeData ) , "::"
+                , stringify ! ( quality ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeData ) ) . nb_read as * const _
+                as usize } , 32usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeData ) , "::"
+                , stringify ! ( nb_read ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeData ) ) . name as * const _ as
+                usize } , 40usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeData ) , "::"
+                , stringify ! ( name ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeData ) ) . dim_x as * const _ as
+                usize } , 48usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeData ) , "::"
+                , stringify ! ( dim_x ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeData ) ) . dim_y as * const _ as
+                usize } , 52usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeData ) , "::"
+                , stringify ! ( dim_y ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeData ) ) . time_stamp as * const
+                _ as usize } , 56usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeData ) , "::"
+                , stringify ! ( time_stamp ) ));
 }
-impl Clone for _bindgen_ty_32 {
+impl Clone for AttributeData {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_32 as AttributeData;
+impl Default for AttributeData {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_33 {
+pub struct AttributeDataList {
     pub length: libc::c_uint,
     pub sequence: *mut AttributeData,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_33() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_33>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_33>() , 8usize);
+fn bindgen_test_layout_AttributeDataList() {
+    assert_eq!(::std::mem::size_of::<AttributeDataList>() , 16usize , concat !
+               ( "Size of: " , stringify ! ( AttributeDataList ) ));
+    assert_eq! (::std::mem::align_of::<AttributeDataList>() , 8usize , concat
+                ! ( "Alignment of " , stringify ! ( AttributeDataList ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeDataList ) ) . length as * const
+                _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeDataList ) ,
+                "::" , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeDataList ) ) . sequence as *
+                const _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeDataList ) ,
+                "::" , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_33 {
+impl Clone for AttributeDataList {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_33 as AttributeDataList;
+impl Default for AttributeDataList {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_34 {
+pub struct DevFailed {
     pub desc: *mut libc::c_char,
     pub reason: *mut libc::c_char,
     pub origin: *mut libc::c_char,
     pub severity: ErrSeverity,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_34() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_34>() , 32usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_34>() , 8usize);
+fn bindgen_test_layout_DevFailed() {
+    assert_eq!(::std::mem::size_of::<DevFailed>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( DevFailed ) ));
+    assert_eq! (::std::mem::align_of::<DevFailed>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( DevFailed ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const DevFailed ) ) . desc as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( DevFailed ) , "::" ,
+                stringify ! ( desc ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const DevFailed ) ) . reason as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( DevFailed ) , "::" ,
+                stringify ! ( reason ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const DevFailed ) ) . origin as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( DevFailed ) , "::" ,
+                stringify ! ( origin ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const DevFailed ) ) . severity as * const _ as
+                usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( DevFailed ) , "::" ,
+                stringify ! ( severity ) ));
 }
-impl Clone for _bindgen_ty_34 {
+impl Clone for DevFailed {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_34 as DevFailed;
+impl Default for DevFailed {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_35 {
+pub struct ErrorStack {
     pub length: libc::c_uint,
     pub sequence: *mut DevFailed,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_35() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_35>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_35>() , 8usize);
+fn bindgen_test_layout_ErrorStack() {
+    assert_eq!(::std::mem::size_of::<ErrorStack>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( ErrorStack ) ));
+    assert_eq! (::std::mem::align_of::<ErrorStack>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( ErrorStack ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const ErrorStack ) ) . length as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( ErrorStack ) , "::" ,
+                stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const ErrorStack ) ) . sequence as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( ErrorStack ) , "::" ,
+                stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_35 {
+impl Clone for ErrorStack {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_35 as ErrorStack;
+impl Default for ErrorStack {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_36 {
+pub struct CommandInfo {
     pub cmd_name: *mut libc::c_char,
     pub cmd_tag: libc::c_int,
     pub in_type: libc::c_int,
@@ -888,32 +1520,85 @@ pub struct _bindgen_ty_36 {
     pub disp_level: DispLevel,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_36() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_36>() , 48usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_36>() , 8usize);
+fn bindgen_test_layout_CommandInfo() {
+    assert_eq!(::std::mem::size_of::<CommandInfo>() , 48usize , concat ! (
+               "Size of: " , stringify ! ( CommandInfo ) ));
+    assert_eq! (::std::mem::align_of::<CommandInfo>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( CommandInfo ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CommandInfo ) ) . cmd_name as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( CommandInfo ) , "::" ,
+                stringify ! ( cmd_name ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CommandInfo ) ) . cmd_tag as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( CommandInfo ) , "::" ,
+                stringify ! ( cmd_tag ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CommandInfo ) ) . in_type as * const _ as
+                usize } , 12usize , concat ! (
+                "Alignment of field: " , stringify ! ( CommandInfo ) , "::" ,
+                stringify ! ( in_type ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CommandInfo ) ) . out_type as * const _
+                as usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( CommandInfo ) , "::" ,
+                stringify ! ( out_type ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CommandInfo ) ) . in_type_desc as * const
+                _ as usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( CommandInfo ) , "::" ,
+                stringify ! ( in_type_desc ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CommandInfo ) ) . out_type_desc as *
+                const _ as usize } , 32usize , concat ! (
+                "Alignment of field: " , stringify ! ( CommandInfo ) , "::" ,
+                stringify ! ( out_type_desc ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CommandInfo ) ) . disp_level as * const _
+                as usize } , 40usize , concat ! (
+                "Alignment of field: " , stringify ! ( CommandInfo ) , "::" ,
+                stringify ! ( disp_level ) ));
 }
-impl Clone for _bindgen_ty_36 {
+impl Clone for CommandInfo {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_36 as CommandInfo;
+impl Default for CommandInfo {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_37 {
+pub struct CommandInfoList {
     pub length: libc::c_uint,
     pub sequence: *mut CommandInfo,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_37() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_37>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_37>() , 8usize);
+fn bindgen_test_layout_CommandInfoList() {
+    assert_eq!(::std::mem::size_of::<CommandInfoList>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( CommandInfoList ) ));
+    assert_eq! (::std::mem::align_of::<CommandInfoList>() , 8usize , concat !
+                ( "Alignment of " , stringify ! ( CommandInfoList ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CommandInfoList ) ) . length as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( CommandInfoList ) ,
+                "::" , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const CommandInfoList ) ) . sequence as * const
+                _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( CommandInfoList ) ,
+                "::" , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_37 {
+impl Clone for CommandInfoList {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_37 as CommandInfoList;
+impl Default for CommandInfoList {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_38 {
+pub struct AttributeInfo {
     pub name: *mut libc::c_char,
     pub writable: AttrWriteType,
     pub data_format: AttrDataFormat,
@@ -934,32 +1619,140 @@ pub struct _bindgen_ty_38 {
     pub disp_level: DispLevel,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_38() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_38>() , 128usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_38>() , 8usize);
+fn bindgen_test_layout_AttributeInfo() {
+    assert_eq!(::std::mem::size_of::<AttributeInfo>() , 128usize , concat ! (
+               "Size of: " , stringify ! ( AttributeInfo ) ));
+    assert_eq! (::std::mem::align_of::<AttributeInfo>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( AttributeInfo ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . name as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( name ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . writable as * const _
+                as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( writable ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . data_format as *
+                const _ as usize } , 12usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( data_format ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . data_type as * const
+                _ as usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( data_type ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . max_dim_x as * const
+                _ as usize } , 20usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( max_dim_x ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . max_dim_y as * const
+                _ as usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( max_dim_y ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . description as *
+                const _ as usize } , 32usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( description ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . label as * const _ as
+                usize } , 40usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( label ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . unit as * const _ as
+                usize } , 48usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( unit ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . standard_unit as *
+                const _ as usize } , 56usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( standard_unit ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . display_unit as *
+                const _ as usize } , 64usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( display_unit ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . format as * const _
+                as usize } , 72usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( format ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . min_value as * const
+                _ as usize } , 80usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( min_value ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . max_value as * const
+                _ as usize } , 88usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( max_value ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . min_alarm as * const
+                _ as usize } , 96usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( min_alarm ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . max_alarm as * const
+                _ as usize } , 104usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( max_alarm ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . writable_attr_name as
+                * const _ as usize } , 112usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( writable_attr_name ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfo ) ) . disp_level as * const
+                _ as usize } , 120usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfo ) , "::"
+                , stringify ! ( disp_level ) ));
 }
-impl Clone for _bindgen_ty_38 {
+impl Clone for AttributeInfo {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_38 as AttributeInfo;
+impl Default for AttributeInfo {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_39 {
+pub struct AttributeInfoList {
     pub length: libc::c_uint,
     pub sequence: *mut AttributeInfo,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_39() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_39>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_39>() , 8usize);
+fn bindgen_test_layout_AttributeInfoList() {
+    assert_eq!(::std::mem::size_of::<AttributeInfoList>() , 16usize , concat !
+               ( "Size of: " , stringify ! ( AttributeInfoList ) ));
+    assert_eq! (::std::mem::align_of::<AttributeInfoList>() , 8usize , concat
+                ! ( "Alignment of " , stringify ! ( AttributeInfoList ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfoList ) ) . length as * const
+                _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfoList ) ,
+                "::" , stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const AttributeInfoList ) ) . sequence as *
+                const _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( AttributeInfoList ) ,
+                "::" , stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_39 {
+impl Clone for AttributeInfoList {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_39 as AttributeInfoList;
+impl Default for AttributeInfoList {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_40 {
+pub struct DbDatum {
     pub property_name: *mut libc::c_char,
     pub data_type: TangoDataType,
     pub prop_data: TangoPropertyData,
@@ -967,29 +1760,72 @@ pub struct _bindgen_ty_40 {
     pub wrong_data_type: bool,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_40() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_40>() , 40usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_40>() , 8usize);
+fn bindgen_test_layout_DbDatum() {
+    assert_eq!(::std::mem::size_of::<DbDatum>() , 40usize , concat ! (
+               "Size of: " , stringify ! ( DbDatum ) ));
+    assert_eq! (::std::mem::align_of::<DbDatum>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( DbDatum ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const DbDatum ) ) . property_name as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( DbDatum ) , "::" ,
+                stringify ! ( property_name ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const DbDatum ) ) . data_type as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( DbDatum ) , "::" ,
+                stringify ! ( data_type ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const DbDatum ) ) . prop_data as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( DbDatum ) , "::" ,
+                stringify ! ( prop_data ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const DbDatum ) ) . is_empty as * const _ as
+                usize } , 32usize , concat ! (
+                "Alignment of field: " , stringify ! ( DbDatum ) , "::" ,
+                stringify ! ( is_empty ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const DbDatum ) ) . wrong_data_type as * const
+                _ as usize } , 33usize , concat ! (
+                "Alignment of field: " , stringify ! ( DbDatum ) , "::" ,
+                stringify ! ( wrong_data_type ) ));
 }
-impl Clone for _bindgen_ty_40 {
+impl Clone for DbDatum {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_40 as DbDatum;
+impl Default for DbDatum {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 #[repr(C)]
 #[derive(Debug, Copy)]
-pub struct _bindgen_ty_41 {
+pub struct DbData {
     pub length: libc::c_uint,
     pub sequence: *mut DbDatum,
 }
 #[test]
-fn bindgen_test_layout__bindgen_ty_41() {
-    assert_eq!(::std::mem::size_of::<_bindgen_ty_41>() , 16usize);
-    assert_eq!(::std::mem::align_of::<_bindgen_ty_41>() , 8usize);
+fn bindgen_test_layout_DbData() {
+    assert_eq!(::std::mem::size_of::<DbData>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( DbData ) ));
+    assert_eq! (::std::mem::align_of::<DbData>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( DbData ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const DbData ) ) . length as * const _ as usize
+                } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( DbData ) , "::" ,
+                stringify ! ( length ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const DbData ) ) . sequence as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( DbData ) , "::" ,
+                stringify ! ( sequence ) ));
 }
-impl Clone for _bindgen_ty_41 {
+impl Clone for DbData {
     fn clone(&self) -> Self { *self }
 }
-pub use self::_bindgen_ty_41 as DbData;
+impl Default for DbData {
+    fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
 extern "C" {
     pub fn tango_create_device_proxy(dev_name: *mut libc::c_char,
                                      proxy: *mut *mut libc::c_void)
