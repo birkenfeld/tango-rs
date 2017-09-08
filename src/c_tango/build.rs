@@ -8,7 +8,7 @@ fn main() {
         Ok(lib) => lib,
         Err(err) => { print!("{}---", err); process::exit(1); }
     };
-    let mut config = gcc::Config::new();
+    let mut config = gcc::Build::new();
     config.cpp(true);
     config.flag("-std=c++0x");
     config.file("src/c_tango_proxy.c");

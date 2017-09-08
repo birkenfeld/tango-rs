@@ -31,13 +31,13 @@ fn raw(b: &mut test::Bencher) {
         b.iter(|| {
             let instr = CString::new(s).unwrap();
             let mut input = c::TangoCommandData::default();
-            ptr::write(input.string_val.as_mut(), instr.as_ptr() as *mut c_char);
+            input.string_val = instr.as_ptr() as *mut c_char;
             let mut argin = c::CommandData { arg_type: c::TangoDataType_DEV_STRING,
                                              cmd_data: input };
             let mut argout = c::CommandData::default();
             c::tango_command_inout(dev, cn.as_ptr() as *mut c_char,
                                    &mut argin, &mut argout);
-            let outstr = CStr::from_ptr(ptr::read(argout.cmd_data.string_val.as_mut()).offset(0));
+            let outstr = CStr::from_ptr(argout.cmd_data.string_val);
             assert_eq!(outstr.to_string_lossy(), s);
             c::tango_free_CommandData(&mut argout);
         });
