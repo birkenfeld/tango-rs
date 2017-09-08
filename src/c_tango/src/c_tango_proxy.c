@@ -166,7 +166,7 @@ ErrorStack *tango_locking_status(void *proxy, char **locking_status) {
 
 
 void tango_free_ErrorStack(ErrorStack *error) {
-    for (int i = 0; i < error->length; i++) {
+    for (unsigned int i = 0; i < error->length; i++) {
         delete[] error->sequence[i].desc;
         delete[] error->sequence[i].reason;
         delete[] error->sequence[i].origin;
@@ -183,7 +183,7 @@ ErrorStack *tango_translate_exception(Tango::DevFailed &tango_exception) {
     error->sequence = new DevFailed[error->length];
 
     /* copy the full tango error list */
-    for (int i=0; i<tango_exception.errors.length(); i++) {
+    for (unsigned int i=0; i<tango_exception.errors.length(); i++) {
         error->sequence[i].desc = new char[strlen(tango_exception.errors[i].desc.in()) + 1];
         strcpy(error->sequence[i].desc, tango_exception.errors[i].desc.in());
 

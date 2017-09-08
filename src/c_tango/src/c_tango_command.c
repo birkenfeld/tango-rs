@@ -88,7 +88,7 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
         case DEVVAR_CHARARRAY: {
             vector<unsigned char> char_arr(argin->cmd_data.char_arr.length);
 
-            for (int i=0; i<argin->cmd_data.char_arr.length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.char_arr.length; i++) {
                 char_arr[i] = (unsigned char) argin->cmd_data.char_arr.sequence[i];
             }
 
@@ -99,7 +99,7 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
         case DEVVAR_SHORTARRAY: {
             vector<short> short_arr(argin->cmd_data.short_arr.length);
 
-            for (int i=0; i<argin->cmd_data.short_arr.length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.short_arr.length; i++) {
                 short_arr[i] = (short) argin->cmd_data.short_arr.sequence[i];
             }
 
@@ -110,7 +110,7 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
         case DEVVAR_USHORTARRAY: {
             vector<unsigned short> ushort_arr(argin->cmd_data.ushort_arr.length);
 
-            for (int i=0; i<argin->cmd_data.ushort_arr.length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.ushort_arr.length; i++) {
                 ushort_arr[i] = (unsigned short) argin->cmd_data.ushort_arr.sequence[i];
             }
 
@@ -121,7 +121,7 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
         case DEVVAR_LONGARRAY: {
             vector<Tango::DevLong> long_arr(argin->cmd_data.long_arr.length);
 
-            for (int i=0; i<argin->cmd_data.long_arr.length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.long_arr.length; i++) {
                 long_arr[i] = (int) argin->cmd_data.long_arr.sequence[i];
             }
 
@@ -132,7 +132,7 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
         case DEVVAR_ULONGARRAY: {
             vector<Tango::DevULong> ulong_arr(argin->cmd_data.ulong_arr.length);
 
-            for (int i=0; i<argin->cmd_data.ulong_arr.length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.ulong_arr.length; i++) {
                 ulong_arr[i] = (unsigned int) argin->cmd_data.ulong_arr.sequence[i];
             }
 
@@ -143,7 +143,7 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
         case DEVVAR_LONG64ARRAY: {
             vector<Tango::DevLong64> long64_arr(argin->cmd_data.long64_arr.length);
 
-            for (int i=0; i<argin->cmd_data.long64_arr.length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.long64_arr.length; i++) {
                 long64_arr[i] = (Tango::DevLong64) argin->cmd_data.long64_arr.sequence[i];
             }
 
@@ -154,7 +154,7 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
         case DEVVAR_ULONG64ARRAY: {
             vector<Tango::DevULong64> ulong64_arr(argin->cmd_data.ulong64_arr.length);
 
-            for (int i=0; i<argin->cmd_data.ulong64_arr.length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.ulong64_arr.length; i++) {
                 ulong64_arr[i] = (Tango::DevULong64) argin->cmd_data.ulong64_arr.sequence[i];
             }
 
@@ -165,7 +165,7 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
         case DEVVAR_FLOATARRAY: {
             vector<float> float_arr(argin->cmd_data.float_arr.length);
 
-            for (int i=0; i<argin->cmd_data.float_arr.length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.float_arr.length; i++) {
                 float_arr[i] = (float) argin->cmd_data.float_arr.sequence[i];
             }
 
@@ -176,7 +176,7 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
         case DEVVAR_DOUBLEARRAY: {
             vector<double> double_arr(argin->cmd_data.double_arr.length);
 
-            for (int i=0; i<argin->cmd_data.double_arr.length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.double_arr.length; i++) {
                 double_arr[i] = (double) argin->cmd_data.double_arr.sequence[i];
             }
 
@@ -187,7 +187,7 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
         case DEVVAR_STRINGARRAY: {
             vector<string> string_arr(argin->cmd_data.string_arr.length);
 
-            for (int i=0; i<argin->cmd_data.string_arr.length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.string_arr.length; i++) {
                 string_arr[i] = argin->cmd_data.string_arr.sequence[i];
             }
 
@@ -200,12 +200,12 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
             vector<string> string_arr(argin->cmd_data.long_string_arr.string_length);
 
             /* copy the long array */
-            for (int i=0; i<argin->cmd_data.long_string_arr.long_length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.long_string_arr.long_length; i++) {
                 long_arr[i] = argin->cmd_data.long_string_arr.long_sequence[i];
             }
 
             /* copy the string array */
-            for (int i=0; i<argin->cmd_data.long_string_arr.string_length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.long_string_arr.string_length; i++) {
                 string_arr[i] = argin->cmd_data.long_string_arr.string_sequence[i];
             }
 
@@ -218,12 +218,12 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
             vector<string> string_arr(argin->cmd_data.double_string_arr.string_length);
 
             /* copy the double array */
-            for (int i=0; i<argin->cmd_data.double_string_arr.double_length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.double_string_arr.double_length; i++) {
                 double_arr[i] = argin->cmd_data.double_string_arr.double_sequence[i];
             }
 
             /* copy the string array */
-            for (int i=0; i<argin->cmd_data.double_string_arr.string_length; i++) {
+            for (unsigned int i=0; i<argin->cmd_data.double_string_arr.string_length; i++) {
                 string_arr[i] = argin->cmd_data.double_string_arr.string_sequence[i];
             }
 
@@ -638,7 +638,7 @@ void tango_free_CommandData(CommandData *command_data) {
         break;
         
     case DEVVAR_STRINGARRAY:
-        for (int i=0; i<command_data->cmd_data.string_arr.length; i++ ) {
+        for (unsigned int i=0; i<command_data->cmd_data.string_arr.length; i++ ) {
             delete[] (command_data->cmd_data.string_arr.sequence[i]);
         }
         free(command_data->cmd_data.string_arr.sequence);
@@ -653,7 +653,7 @@ void tango_free_CommandData(CommandData *command_data) {
         command_data->cmd_data.long_string_arr.long_length = 0;
 
         /* free string array */
-        for (int i=0; i<command_data->cmd_data.long_string_arr.string_length; i++ ) {
+        for (unsigned int i=0; i<command_data->cmd_data.long_string_arr.string_length; i++ ) {
             delete[] (command_data->cmd_data.long_string_arr.string_sequence[i]);
         }
 
@@ -669,13 +669,16 @@ void tango_free_CommandData(CommandData *command_data) {
         command_data->cmd_data.double_string_arr.double_length = 0;
 
         /* free string array */
-        for (int i=0; i<command_data->cmd_data.double_string_arr.string_length; i++ ) {
+        for (unsigned int i=0; i<command_data->cmd_data.double_string_arr.string_length; i++ ) {
             delete[] (command_data->cmd_data.double_string_arr.string_sequence[i]);
         }
 
         free (command_data->cmd_data.double_string_arr.string_sequence);
         command_data->cmd_data.double_string_arr.string_sequence = NULL;
         command_data->cmd_data.double_string_arr.string_length = 0;
+        break;
+
+    default:
         break;
     }
 }
@@ -710,7 +713,7 @@ ErrorStack *tango_command_list_query(void *proxy, CommandInfoList *cmd_info_list
         cmd_info_list->sequence = new CommandInfo[cmd_info_list->length];
 
         /* loop over all returned commands and convert the data */
-        for (int i=0; i < tango_cmd_info_list->size(); i++) {
+        for (unsigned int i=0; i < tango_cmd_info_list->size(); i++) {
             convert_cmd_query ((*tango_cmd_info_list)[i], &(cmd_info_list->sequence[i]));
         }
         delete tango_cmd_info_list;
@@ -737,7 +740,7 @@ void tango_free_CommandInfo(CommandInfo *command_info) {
 
 
 void tango_free_CommandInfoList(CommandInfoList *command_info_list) {
-    for (int i=0; i<command_info_list->length; i++) {
+    for (unsigned int i=0; i<command_info_list->length; i++) {
         tango_free_CommandInfo(&(command_info_list->sequence[i]));
     }
 

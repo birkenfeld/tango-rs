@@ -28,7 +28,7 @@ ErrorStack *tango_read_attributes(void *proxy, VarStringArray *attr_names, Attri
 
         /* copy the attribute names to a vecort of string */
         vector<string> names;
-        for (int i=0; i<attr_names->length; i++) {
+        for (unsigned int i=0; i<attr_names->length; i++) {
             names.push_back(attr_names->sequence[i]);
         }
 
@@ -39,7 +39,7 @@ ErrorStack *tango_read_attributes(void *proxy, VarStringArray *attr_names, Attri
         argout->sequence = new AttributeData[argout->length];
 
         /* loop over all returned attributes and convert the data */
-        for (int i = 0; i < devattr_list->size(); i++) {
+        for (unsigned int i = 0; i < devattr_list->size(); i++) {
             if ((*devattr_list)[i].has_failed())
                 throw Tango::DevFailed((*devattr_list)[i].get_err_stack());
             convert_attribute_reading ((*devattr_list)[i], &(argout->sequence[i]));
@@ -84,7 +84,7 @@ ErrorStack *tango_write_attributes(void *proxy, AttributeDataList *argin) {
     try {
         dev = (Tango::DeviceProxy *)proxy;
 
-        for (int i=0; i<argin->length; i++) {
+        for (unsigned int i=0; i<argin->length; i++) {
             convert_attribute_writing(&(argin->sequence[i]), devattr_list[i]);
         }
 
@@ -197,7 +197,7 @@ void tango_free_AttributeData (AttributeData *attribute_data) {
         break;
 
     case DEV_STRING:
-        for (int i=0; i<attribute_data->attr_data.string_arr.length; i++ ) {
+        for (unsigned int i=0; i<attribute_data->attr_data.string_arr.length; i++ ) {
             delete[] (attribute_data->attr_data.string_arr.sequence[i]);
         }
         if ( attribute_data->attr_data.string_arr.sequence != NULL )
@@ -207,7 +207,7 @@ void tango_free_AttributeData (AttributeData *attribute_data) {
         break;
 
     case DEV_ENCODED:
-        for (int i=0; i<attribute_data->attr_data.encoded_arr.length; i++ ) {
+        for (unsigned int i=0; i<attribute_data->attr_data.encoded_arr.length; i++ ) {
             delete[] (attribute_data->attr_data.encoded_arr.sequence[i].encoded_format);
             free (attribute_data->attr_data.encoded_arr.sequence[i].encoded_data);
         }
@@ -216,12 +216,15 @@ void tango_free_AttributeData (AttributeData *attribute_data) {
         attribute_data->attr_data.encoded_arr.sequence = NULL;
         attribute_data->attr_data.encoded_arr.length = 0;
         break;
+
+    default:
+        break;
     }
 }
 
 
 void tango_free_AttributeDataList(AttributeDataList *attribute_data_list) {
-    for (int i=0; i<attribute_data_list->length; i++) {
+    for (unsigned int i=0; i<attribute_data_list->length; i++) {
         tango_free_AttributeData ( &(attribute_data_list->sequence[i]) );
     }
 
@@ -271,7 +274,7 @@ ErrorStack *tango_get_attribute_config(void *proxy, VarStringArray *attr_names, 
 
         /* copy the attribute names to a vecort of string */
         vector<string> names;
-        for (int i=0; i<attr_names->length; i++) {
+        for (unsigned int i=0; i<attr_names->length; i++) {
             names.push_back(attr_names->sequence[i]);
         }
 
@@ -282,7 +285,7 @@ ErrorStack *tango_get_attribute_config(void *proxy, VarStringArray *attr_names, 
         attr_info_list->sequence = new AttributeInfo[attr_info_list->length];
 
         /* loop over all returned attributes and convert the data */
-        for (int i=0; i < tango_attr_info_list->size(); i++) {
+        for (unsigned int i=0; i < tango_attr_info_list->size(); i++) {
             convert_attr_query ((*tango_attr_info_list)[i], &(attr_info_list->sequence[i]));
         }
         delete tango_attr_info_list;
@@ -309,7 +312,7 @@ ErrorStack *tango_attribute_list_query (void *proxy, AttributeInfoList *attr_inf
         attr_info_list->sequence = new AttributeInfo[attr_info_list->length];
 
         /* loop over all returned attributes and convert the data */
-        for (int i=0; i < tango_attr_info_list->size(); i++) {
+        for (unsigned int i=0; i < tango_attr_info_list->size(); i++) {
             convert_attr_query ((*tango_attr_info_list)[i], &(attr_info_list->sequence[i]));
         }
         delete tango_attr_info_list;
@@ -323,7 +326,7 @@ ErrorStack *tango_attribute_list_query (void *proxy, AttributeInfoList *attr_inf
 }
 
 void tango_free_VarStringArray(VarStringArray *string_arr) {
-    for (int i=0; i<string_arr->length; i++) {
+    for (unsigned int i=0; i<string_arr->length; i++) {
         delete[] string_arr->sequence[i];
     }
     free(string_arr->sequence);
@@ -333,7 +336,7 @@ void tango_free_VarStringArray(VarStringArray *string_arr) {
 
 
 void tango_free_AttributeInfoList(AttributeInfoList *attribute_info_list) {
-    for (int i=0; i<attribute_info_list->length; i++) {
+    for (unsigned int i=0; i<attribute_info_list->length; i++) {
         delete[] attribute_info_list->sequence[i].name;
         delete[] attribute_info_list->sequence[i].description;
         delete[] attribute_info_list->sequence[i].label;
@@ -638,7 +641,7 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
     case DEV_BOOLEAN: {
         /* copy the data into a boolean vector */
         vector<bool> bool_arr(argin->attr_data.bool_arr.length);
-        for (int i=0; i<argin->attr_data.bool_arr.length; i++) {
+        for (unsigned int i=0; i<argin->attr_data.bool_arr.length; i++) {
             bool_arr[i] = (bool) argin->attr_data.bool_arr.sequence[i];
         }
 
@@ -650,7 +653,7 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
     case DEV_UCHAR: {
         /* copy the data into a char vector */
         vector< unsigned char> char_arr(argin->attr_data.char_arr.length);
-        for (int i=0; i<argin->attr_data.char_arr.length; i++) {
+        for (unsigned int i=0; i<argin->attr_data.char_arr.length; i++) {
             char_arr[i] = (unsigned char) argin->attr_data.char_arr.sequence[i];
         }
 
@@ -662,7 +665,7 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
     case DEV_SHORT: {
         /* copy the data into a short vector */
         vector<short> short_arr(argin->attr_data.short_arr.length);
-        for (int i=0; i<argin->attr_data.short_arr.length; i++) {
+        for (unsigned int i=0; i<argin->attr_data.short_arr.length; i++) {
             short_arr[i] = (short) argin->attr_data.short_arr.sequence[i];
         }
 
@@ -674,7 +677,7 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
     case DEV_USHORT: {
         /* copy the data into a unsigned short vector */
         vector<unsigned short> ushort_arr(argin->attr_data.ushort_arr.length);
-        for (int i=0; i<argin->attr_data.ushort_arr.length; i++) {
+        for (unsigned int i=0; i<argin->attr_data.ushort_arr.length; i++) {
             ushort_arr[i] = (unsigned short) argin->attr_data.ushort_arr.sequence[i];
         }
 
@@ -686,7 +689,7 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
     case DEV_LONG: {
         /* copy the data into a long vector */
         vector<Tango::DevLong> long_arr(argin->attr_data.long_arr.length);
-        for (int i=0; i<argin->attr_data.long_arr.length; i++) {
+        for (unsigned int i=0; i<argin->attr_data.long_arr.length; i++) {
             long_arr[i] = (int) argin->attr_data.long_arr.sequence[i];
         }
 
@@ -698,7 +701,7 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
     case DEV_ULONG: {
         /* copy the data into a unsigned vector */
         vector<Tango::DevULong> ulong_arr(argin->attr_data.ulong_arr.length);
-        for (int i=0; i<argin->attr_data.ulong_arr.length; i++) {
+        for (unsigned int i=0; i<argin->attr_data.ulong_arr.length; i++) {
             ulong_arr[i] = (unsigned int) argin->attr_data.ulong_arr.sequence[i];
         }
 
@@ -711,7 +714,7 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
         /* copy the data into a long64 vector */
         vector<Tango::DevLong64> long64_arr(argin->attr_data.long64_arr.length);
 
-        for (int i=0; i<argin->attr_data.long64_arr.length; i++) {
+        for (unsigned int i=0; i<argin->attr_data.long64_arr.length; i++) {
             long64_arr[i] = (Tango::DevLong64) argin->attr_data.long64_arr.sequence[i];
         }
 
@@ -724,7 +727,7 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
         /* copy the data into a unsigned long64 vector */
         vector<Tango::DevULong64> ulong64_arr(argin->attr_data.ulong64_arr.length);
 
-        for (int i=0; i<argin->attr_data.ulong64_arr.length; i++) {
+        for (unsigned int i=0; i<argin->attr_data.ulong64_arr.length; i++) {
             ulong64_arr[i] = (Tango::DevULong64) argin->attr_data.ulong64_arr.sequence[i];
         }
 
@@ -736,7 +739,7 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
     case DEV_FLOAT: {
         /* copy the data into a double vector */
         vector<float> float_arr(argin->attr_data.float_arr.length);
-        for (int i=0; i<argin->attr_data.float_arr.length; i++) {
+        for (unsigned int i=0; i<argin->attr_data.float_arr.length; i++) {
             float_arr[i] = (float) argin->attr_data.float_arr.sequence[i];
         }
 
@@ -748,7 +751,7 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
     case DEV_DOUBLE: {
         /* copy the data into a double vector */
         vector<double> double_arr(argin->attr_data.double_arr.length);
-        for (int i=0; i<argin->attr_data.double_arr.length; i++) {
+        for (unsigned int i=0; i<argin->attr_data.double_arr.length; i++) {
             double_arr[i] = (double) argin->attr_data.double_arr.sequence[i];
         }
 
@@ -761,7 +764,7 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
         /* copy the data into a string vector */
         vector<string> string_arr(argin->attr_data.string_arr.length);
 
-        for (int i=0; i<argin->attr_data.string_arr.length; i++) {
+        for (unsigned int i=0; i<argin->attr_data.string_arr.length; i++) {
             string_arr[i] = argin->attr_data.string_arr.sequence[i];
         }
 
@@ -773,7 +776,7 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
     case DEV_STATE: {
         /* copy the data into a state vector */
         vector<Tango::DevState> state_arr(argin->attr_data.state_arr.length);
-        for (int i=0; i<argin->attr_data.state_arr.length; i++) {
+        for (unsigned int i=0; i<argin->attr_data.state_arr.length; i++) {
             state_arr[i] = (Tango::DevState) argin->attr_data.state_arr.sequence[i];
         }
 

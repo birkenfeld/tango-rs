@@ -137,7 +137,7 @@ ErrorStack *tango_get_property(void *db_proxy, char *obj_name, DbData *prop_list
         dbase = (Tango::Database *)db_proxy;
 
         /* Copy the property names into the Tango object */
-        for (int i=0; i<prop_list->length; i++) {
+        for (unsigned int i=0; i<prop_list->length; i++) {
             tango_prop_list.push_back(Tango::DbDatum(prop_list->sequence[i].property_name));
         }
 
@@ -145,7 +145,7 @@ ErrorStack *tango_get_property(void *db_proxy, char *obj_name, DbData *prop_list
         /* read the properties */
         dbase->get_property(name, tango_prop_list);
 
-        for (int i=0; i<prop_list->length; i++) {
+        for (unsigned int i=0; i<prop_list->length; i++) {
             /* copy the property data into the C structure */
             convert_property_reading(tango_prop_list[i], &(prop_list->sequence[i]));
         }
@@ -167,7 +167,7 @@ ErrorStack *tango_put_property(void *db_proxy, char *obj_name, DbData *prop_list
         /* Copy the property names and data into the Tango object */
         tango_prop_list.resize(prop_list->length);
 
-        for (int i=0; i<prop_list->length; i++) {
+        for (unsigned int i=0; i<prop_list->length; i++) {
             convert_property_writing (&(prop_list->sequence[i]), tango_prop_list[i]);
         }
 
@@ -190,7 +190,7 @@ ErrorStack *tango_delete_property(void *db_proxy, char *obj_name, DbData *prop_l
         dbase = (Tango::Database *)db_proxy;
 
         /* Copy the property names into the Tango object */
-        for (int i=0; i<prop_list->length; i++) {
+        for (unsigned int i=0; i<prop_list->length; i++) {
             tango_prop_list.push_back(Tango::DbDatum(prop_list->sequence[i].property_name));
         }
 
@@ -214,14 +214,14 @@ ErrorStack *tango_get_device_property(void *proxy, DbData *prop_list) {
         dev = (Tango::DeviceProxy *)proxy;
 
         /* Copy the property names into the Tango object */
-        for (int i=0; i<prop_list->length; i++) {
+        for (unsigned int i=0; i<prop_list->length; i++) {
             tango_prop_list.push_back(Tango::DbDatum(prop_list->sequence[i].property_name));
         }
 
         /* read the properties */
         dev->get_property(tango_prop_list);
 
-        for (int i=0; i<prop_list->length; i++) {
+        for (unsigned int i=0; i<prop_list->length; i++) {
             /* copy the property data into the C structure */
             convert_property_reading(tango_prop_list[i], &(prop_list->sequence[i]));
         }
@@ -244,7 +244,7 @@ ErrorStack *tango_put_device_property(void *proxy, DbData *prop_list)
         /* Copy the property names into the Tango object */
         tango_prop_list.resize(prop_list->length);
 
-        for (int i=0; i<prop_list->length; i++) {
+        for (unsigned int i=0; i<prop_list->length; i++) {
             convert_property_writing(&(prop_list->sequence[i]), tango_prop_list[i]);
         }
 
@@ -266,7 +266,7 @@ ErrorStack *tango_delete_device_property(void *proxy, DbData *prop_list) {
         dev = (Tango::DeviceProxy *)proxy;
 
         /* Copy the property names into the Tango object */
-        for (int i=0; i<prop_list->length; i++) {
+        for (unsigned int i=0; i<prop_list->length; i++) {
             tango_prop_list.push_back(Tango::DbDatum(prop_list->sequence[i].property_name));
         }
 
@@ -338,7 +338,7 @@ void tango_free_DbDatum(DbDatum *db_datum) {
         break;
 
     case DEVVAR_STRINGARRAY:
-        for (int i=0; i<db_datum->prop_data.string_arr.length; i++ ) {
+        for (unsigned int i=0; i<db_datum->prop_data.string_arr.length; i++ ) {
             delete[] db_datum->prop_data.string_arr.sequence[i];
         }
 
@@ -346,12 +346,15 @@ void tango_free_DbDatum(DbDatum *db_datum) {
         db_datum->prop_data.string_arr.sequence = NULL;
         db_datum->prop_data.string_arr.length = 0;
         break;
+
+    default:
+        break;
     }
 }
 
 
 void tango_free_DbData(DbData *db_data) {
-    for (int i=0; i<db_data->length; i++) {
+    for (unsigned int i=0; i<db_data->length; i++) {
         tango_free_DbDatum(&(db_data->sequence[i]));
     }
 }
@@ -450,7 +453,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
 
         case DEVVAR_SHORTARRAY: {
             vector<short> short_vect;
-            int nb_data;
+            unsigned int nb_data;
 
             if (tango_prop >> short_vect) {
                 nb_data =  short_vect.size();
@@ -458,7 +461,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
                 prop->prop_data.short_arr.length   = nb_data;
                 prop->prop_data.short_arr.sequence = new short[nb_data];
 
-                for (int i=0 ; i<nb_data ; i++) {
+                for (unsigned int i=0 ; i<nb_data ; i++) {
                     prop->prop_data.short_arr.sequence[i] = short_vect[i];
                 }
             } else {
@@ -469,7 +472,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
 
         case DEVVAR_USHORTARRAY: {
             vector<unsigned short> ushort_vect;
-            int nb_data;
+            unsigned int nb_data;
 
             if (tango_prop >> ushort_vect) {
                 nb_data =  ushort_vect.size();
@@ -477,7 +480,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
                 prop->prop_data.ushort_arr.length   = nb_data;
                 prop->prop_data.ushort_arr.sequence = new unsigned short[nb_data];
 
-                for (int i=0 ; i<nb_data ; i++) {
+                for (unsigned int i=0 ; i<nb_data ; i++) {
                     prop->prop_data.ushort_arr.sequence[i] = ushort_vect[i];
                 }
             } else {
@@ -488,7 +491,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
 
         case DEVVAR_LONGARRAY: {
             vector<Tango::DevLong> long_vect;
-            int nb_data;
+            unsigned int nb_data;
 
             if (tango_prop >> long_vect) {
                 nb_data =  long_vect.size();
@@ -496,7 +499,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
                 prop->prop_data.long_arr.length   = nb_data;
                 prop->prop_data.long_arr.sequence = new TangoDevLong[nb_data];
 
-                for (int i=0 ; i<nb_data ; i++) {
+                for (unsigned int i=0 ; i<nb_data ; i++) {
                     prop->prop_data.long_arr.sequence[i] = long_vect[i];
                 }
             } else {
@@ -507,7 +510,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
 
         case DEVVAR_ULONGARRAY: {
             vector<Tango::DevULong> ulong_vect;
-            int nb_data;
+            unsigned int nb_data;
 
             if (tango_prop >> ulong_vect) {
                 nb_data =  ulong_vect.size();
@@ -515,7 +518,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
                 prop->prop_data.ulong_arr.length   = nb_data;
                 prop->prop_data.ulong_arr.sequence = new TangoDevULong[nb_data];
 
-                for (int i=0 ; i<nb_data ; i++) {
+                for (unsigned int i=0 ; i<nb_data ; i++) {
                     prop->prop_data.ulong_arr.sequence[i] = ulong_vect[i];
                 }
             } else {
@@ -526,7 +529,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
 
         case DEVVAR_LONG64ARRAY: {
             vector<Tango::DevLong64> long64_vect;
-            int nb_data;
+            unsigned int nb_data;
 
             if (tango_prop >> long64_vect) {
                 nb_data =  long64_vect.size();
@@ -534,7 +537,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
                 prop->prop_data.long64_arr.length   = nb_data;
                 prop->prop_data.long64_arr.sequence = new TangoDevLong64[nb_data];
 
-                for (int i=0 ; i<nb_data ; i++) {
+                for (unsigned int i=0 ; i<nb_data ; i++) {
                     prop->prop_data.long64_arr.sequence[i] = long64_vect[i];
                 }
             } else {
@@ -545,7 +548,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
 
         case DEVVAR_ULONG64ARRAY: {
             vector<Tango::DevULong64> ulong64_vect;
-            int nb_data;
+            unsigned int nb_data;
 
             if (tango_prop >> ulong64_vect) {
                 nb_data =  ulong64_vect.size();
@@ -553,7 +556,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
                 prop->prop_data.ulong64_arr.length   = nb_data;
                 prop->prop_data.ulong64_arr.sequence = new TangoDevULong64[nb_data];
 
-                for (int i=0 ; i<nb_data ; i++) {
+                for (unsigned int i=0 ; i<nb_data ; i++) {
                     prop->prop_data.ulong64_arr.sequence[i] = ulong64_vect[i];
                 }
             } else {
@@ -564,7 +567,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
 
         case DEVVAR_FLOATARRAY: {
             vector<float> float_vect;
-            int nb_data;
+            unsigned int nb_data;
 
             if (tango_prop >> float_vect) {
                 nb_data =  float_vect.size();
@@ -572,7 +575,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
                 prop->prop_data.float_arr.length   = nb_data;
                 prop->prop_data.float_arr.sequence = new float[nb_data];
 
-                for (int i=0 ; i<nb_data ; i++) {
+                for (unsigned int i=0 ; i<nb_data ; i++) {
                     prop->prop_data.float_arr.sequence[i] = float_vect[i];
                 }
             } else {
@@ -583,7 +586,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
             
         case DEVVAR_DOUBLEARRAY: {
             vector<double> double_vect;
-            int nb_data;
+            unsigned int nb_data;
 
             if (tango_prop >> double_vect) {
                 nb_data =  double_vect.size();
@@ -591,7 +594,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
                 prop->prop_data.double_arr.length   = nb_data;
                 prop->prop_data.double_arr.sequence = new double[nb_data];
 
-                for (int i=0 ; i<nb_data ; i++) {
+                for (unsigned int i=0 ; i<nb_data ; i++) {
                     prop->prop_data.double_arr.sequence[i] = double_vect[i];
                 }
             } else {
@@ -602,7 +605,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
 
         case DEVVAR_STRINGARRAY: {
             vector<string> string_vect;
-            int nb_data;
+            unsigned int nb_data;
 
             if (tango_prop >> string_vect) {
                 nb_data = string_vect.size();
@@ -612,7 +615,7 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
                 prop->prop_data.string_arr.length   = nb_data;
 
                 /* allocate strings and copy data */
-                for (int i=0 ; i<nb_data ; i++) {
+                for (unsigned int i=0 ; i<nb_data ; i++) {
                     prop->prop_data.string_arr.sequence[i] = new char[string_vect[i].length() + 1];
                     strcpy(prop->prop_data.string_arr.sequence[i], string_vect[i].c_str());
                 }
@@ -689,7 +692,7 @@ static void convert_property_writing(DbDatum *prop, Tango::DbDatum& tango_prop) 
     case DEVVAR_SHORTARRAY: {
         vector<short> short_arr(prop->prop_data.short_arr.length);
 
-        for (int i=0; i<prop->prop_data.short_arr.length; i++) {
+        for (unsigned int i=0; i<prop->prop_data.short_arr.length; i++) {
             short_arr[i] = (short) prop->prop_data.short_arr.sequence[i];
         }
 
@@ -700,7 +703,7 @@ static void convert_property_writing(DbDatum *prop, Tango::DbDatum& tango_prop) 
     case DEVVAR_USHORTARRAY: {
         vector<unsigned short> ushort_arr(prop->prop_data.ushort_arr.length);
 
-        for (int i=0; i<prop->prop_data.ushort_arr.length; i++) {
+        for (unsigned int i=0; i<prop->prop_data.ushort_arr.length; i++) {
             ushort_arr[i] = (unsigned short) prop->prop_data.ushort_arr.sequence[i];
         }
 
@@ -711,7 +714,7 @@ static void convert_property_writing(DbDatum *prop, Tango::DbDatum& tango_prop) 
     case DEVVAR_LONGARRAY: {
         vector<Tango::DevLong> long_arr(prop->prop_data.long_arr.length);
         
-        for (int i=0; i<prop->prop_data.long_arr.length; i++) {
+        for (unsigned int i=0; i<prop->prop_data.long_arr.length; i++) {
             long_arr[i] = (int) prop->prop_data.long_arr.sequence[i];
         }
         
@@ -722,7 +725,7 @@ static void convert_property_writing(DbDatum *prop, Tango::DbDatum& tango_prop) 
     case DEVVAR_ULONGARRAY: {
         vector<Tango::DevULong> ulong_arr(prop->prop_data.ulong_arr.length);
 
-        for (int i=0; i<prop->prop_data.ulong_arr.length; i++) {
+        for (unsigned int i=0; i<prop->prop_data.ulong_arr.length; i++) {
             ulong_arr[i] = (unsigned int) prop->prop_data.ulong_arr.sequence[i];
         }
 
@@ -733,7 +736,7 @@ static void convert_property_writing(DbDatum *prop, Tango::DbDatum& tango_prop) 
     case DEVVAR_LONG64ARRAY: {
         vector<Tango::DevLong64> long64_arr(prop->prop_data.long64_arr.length);
 
-        for (int i=0; i<prop->prop_data.long64_arr.length; i++) {
+        for (unsigned int i=0; i<prop->prop_data.long64_arr.length; i++) {
             long64_arr[i] = (Tango::DevLong64) prop->prop_data.long64_arr.sequence[i];
         }
 
@@ -744,7 +747,7 @@ static void convert_property_writing(DbDatum *prop, Tango::DbDatum& tango_prop) 
     case DEVVAR_ULONG64ARRAY: {
         vector<Tango::DevULong64> ulong64_arr(prop->prop_data.ulong64_arr.length);
 
-        for (int i=0; i<prop->prop_data.ulong64_arr.length; i++) {
+        for (unsigned int i=0; i<prop->prop_data.ulong64_arr.length; i++) {
             ulong64_arr[i] = (Tango::DevULong64) prop->prop_data.ulong64_arr.sequence[i];
         }
 
@@ -755,7 +758,7 @@ static void convert_property_writing(DbDatum *prop, Tango::DbDatum& tango_prop) 
     case DEVVAR_FLOATARRAY: {
         vector<float> float_arr(prop->prop_data.float_arr.length);
 
-        for (int i=0; i<prop->prop_data.float_arr.length; i++) {
+        for (unsigned int i=0; i<prop->prop_data.float_arr.length; i++) {
             float_arr[i] = (float) prop->prop_data.float_arr.sequence[i];
         }
 
@@ -766,7 +769,7 @@ static void convert_property_writing(DbDatum *prop, Tango::DbDatum& tango_prop) 
     case DEVVAR_DOUBLEARRAY: {
         vector<double> double_arr(prop->prop_data.double_arr.length);
 
-        for (int i=0; i<prop->prop_data.double_arr.length; i++) {
+        for (unsigned int i=0; i<prop->prop_data.double_arr.length; i++) {
             double_arr[i] = (double) prop->prop_data.double_arr.sequence[i];
         }
 
@@ -777,7 +780,7 @@ static void convert_property_writing(DbDatum *prop, Tango::DbDatum& tango_prop) 
     case DEVVAR_STRINGARRAY: {
         vector<string> string_arr(prop->prop_data.string_arr.length);
 
-        for (int i=0; i<prop->prop_data.string_arr.length; i++) {
+        for (unsigned int i=0; i<prop->prop_data.string_arr.length; i++) {
             string_arr[i] = prop->prop_data.string_arr.sequence[i];
         }
 
