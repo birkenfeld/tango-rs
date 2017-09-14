@@ -45,6 +45,48 @@ pub const __FD_ZERO_STOS: &'static [u8; 6usize] = b"stosq\x00";
 pub const _SIGSET_H_types: libc::c_uint = 1;
 pub const __timespec_defined: libc::c_uint = 1;
 pub const FD_SETSIZE: libc::c_uint = 1024;
+pub const _STDINT_H: libc::c_uint = 1;
+pub const __GLIBC_USE_LIB_EXT2: libc::c_uint = 0;
+pub const __GLIBC_USE_IEC_60559_BFP_EXT: libc::c_uint = 0;
+pub const __GLIBC_USE_IEC_60559_FUNCS_EXT: libc::c_uint = 0;
+pub const _BITS_WCHAR_H: libc::c_uint = 1;
+pub const INT8_MIN: libc::c_int = -128;
+pub const INT16_MIN: libc::c_int = -32768;
+pub const INT32_MIN: libc::c_int = -2147483648;
+pub const INT8_MAX: libc::c_uint = 127;
+pub const INT16_MAX: libc::c_uint = 32767;
+pub const INT32_MAX: libc::c_uint = 2147483647;
+pub const UINT8_MAX: libc::c_uint = 255;
+pub const UINT16_MAX: libc::c_uint = 65535;
+pub const UINT32_MAX: libc::c_uint = 4294967295;
+pub const INT_LEAST8_MIN: libc::c_int = -128;
+pub const INT_LEAST16_MIN: libc::c_int = -32768;
+pub const INT_LEAST32_MIN: libc::c_int = -2147483648;
+pub const INT_LEAST8_MAX: libc::c_uint = 127;
+pub const INT_LEAST16_MAX: libc::c_uint = 32767;
+pub const INT_LEAST32_MAX: libc::c_uint = 2147483647;
+pub const UINT_LEAST8_MAX: libc::c_uint = 255;
+pub const UINT_LEAST16_MAX: libc::c_uint = 65535;
+pub const UINT_LEAST32_MAX: libc::c_uint = 4294967295;
+pub const INT_FAST8_MIN: libc::c_int = -128;
+pub const INT_FAST16_MIN: libc::c_longlong = -9223372036854775808;
+pub const INT_FAST32_MIN: libc::c_longlong = -9223372036854775808;
+pub const INT_FAST8_MAX: libc::c_uint = 127;
+pub const INT_FAST16_MAX: libc::c_ulonglong = 9223372036854775807;
+pub const INT_FAST32_MAX: libc::c_ulonglong = 9223372036854775807;
+pub const UINT_FAST8_MAX: libc::c_uint = 255;
+pub const UINT_FAST16_MAX: libc::c_int = -1;
+pub const UINT_FAST32_MAX: libc::c_int = -1;
+pub const INTPTR_MIN: libc::c_longlong = -9223372036854775808;
+pub const INTPTR_MAX: libc::c_ulonglong = 9223372036854775807;
+pub const UINTPTR_MAX: libc::c_int = -1;
+pub const PTRDIFF_MIN: libc::c_longlong = -9223372036854775808;
+pub const PTRDIFF_MAX: libc::c_ulonglong = 9223372036854775807;
+pub const SIG_ATOMIC_MIN: libc::c_int = -2147483648;
+pub const SIG_ATOMIC_MAX: libc::c_uint = 2147483647;
+pub const SIZE_MAX: libc::c_int = -1;
+pub const WINT_MIN: libc::c_uint = 0;
+pub const WINT_MAX: libc::c_uint = 4294967295;
 pub const true_: libc::c_uint = 1;
 pub const false_: libc::c_uint = 0;
 pub const __bool_true_false_are_defined: libc::c_uint = 1;
@@ -319,10 +361,28 @@ extern "C" {
 extern "C" {
     pub fn futimes(__fd: libc::c_int, __tvp: *const timeval) -> libc::c_int;
 }
-pub type TangoDevLong = libc::c_int;
-pub type TangoDevULong = libc::c_uint;
-pub type TangoDevLong64 = libc::c_long;
-pub type TangoDevULong64 = libc::c_ulong;
+pub type int_least8_t = libc::c_schar;
+pub type int_least16_t = libc::c_short;
+pub type int_least32_t = libc::c_int;
+pub type int_least64_t = libc::c_long;
+pub type uint_least8_t = libc::c_uchar;
+pub type uint_least16_t = libc::c_ushort;
+pub type uint_least32_t = libc::c_uint;
+pub type uint_least64_t = libc::c_ulong;
+pub type int_fast8_t = libc::c_schar;
+pub type int_fast16_t = libc::c_long;
+pub type int_fast32_t = libc::c_long;
+pub type int_fast64_t = libc::c_long;
+pub type uint_fast8_t = libc::c_uchar;
+pub type uint_fast16_t = libc::c_ulong;
+pub type uint_fast32_t = libc::c_ulong;
+pub type uint_fast64_t = libc::c_ulong;
+pub type intmax_t = __intmax_t;
+pub type uintmax_t = __uintmax_t;
+pub type TangoDevLong = i32;
+pub type TangoDevULong = u32;
+pub type TangoDevLong64 = i64;
+pub type TangoDevULong64 = u64;
 pub const TangoDataType_DEV_VOID: TangoDataType = 0;
 pub const TangoDataType_DEV_BOOLEAN: TangoDataType = 1;
 pub const TangoDataType_DEV_SHORT: TangoDataType = 2;
@@ -398,8 +458,8 @@ pub type DevSource = libc::c_uint;
 #[derive(Debug, Copy)]
 pub struct TangoDevEncoded {
     pub encoded_format: *mut libc::c_char,
-    pub encoded_length: libc::c_uint,
-    pub encoded_data: *mut libc::c_uchar,
+    pub encoded_length: u32,
+    pub encoded_data: *mut u8,
 }
 #[test]
 fn bindgen_test_layout_TangoDevEncoded() {
@@ -432,7 +492,7 @@ impl Default for TangoDevEncoded {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarBoolArray {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut bool,
 }
 #[test]
@@ -461,8 +521,8 @@ impl Default for VarBoolArray {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarCharArray {
-    pub length: libc::c_uint,
-    pub sequence: *mut libc::c_uchar,
+    pub length: u32,
+    pub sequence: *mut u8,
 }
 #[test]
 fn bindgen_test_layout_VarCharArray() {
@@ -490,8 +550,8 @@ impl Default for VarCharArray {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarShortArray {
-    pub length: libc::c_uint,
-    pub sequence: *mut libc::c_short,
+    pub length: u32,
+    pub sequence: *mut i16,
 }
 #[test]
 fn bindgen_test_layout_VarShortArray() {
@@ -519,8 +579,8 @@ impl Default for VarShortArray {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarUShortArray {
-    pub length: libc::c_uint,
-    pub sequence: *mut libc::c_ushort,
+    pub length: u32,
+    pub sequence: *mut u16,
 }
 #[test]
 fn bindgen_test_layout_VarUShortArray() {
@@ -548,7 +608,7 @@ impl Default for VarUShortArray {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarLongArray {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut TangoDevLong,
 }
 #[test]
@@ -577,7 +637,7 @@ impl Default for VarLongArray {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarULongArray {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut TangoDevULong,
 }
 #[test]
@@ -606,7 +666,7 @@ impl Default for VarULongArray {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarLong64Array {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut TangoDevLong64,
 }
 #[test]
@@ -635,7 +695,7 @@ impl Default for VarLong64Array {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarULong64Array {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut TangoDevULong64,
 }
 #[test]
@@ -664,7 +724,7 @@ impl Default for VarULong64Array {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarFloatArray {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut f32,
 }
 #[test]
@@ -693,7 +753,7 @@ impl Default for VarFloatArray {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarDoubleArray {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut f64,
 }
 #[test]
@@ -722,7 +782,7 @@ impl Default for VarDoubleArray {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarStringArray {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut *mut libc::c_char,
 }
 #[test]
@@ -751,7 +811,7 @@ impl Default for VarStringArray {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarStateArray {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut TangoDevState,
 }
 #[test]
@@ -780,7 +840,7 @@ impl Default for VarStateArray {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarEncodedArray {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut TangoDevEncoded,
 }
 #[test]
@@ -809,9 +869,9 @@ impl Default for VarEncodedArray {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarLongStringArray {
-    pub long_length: libc::c_uint,
+    pub long_length: u32,
     pub long_sequence: *mut TangoDevLong,
-    pub string_length: libc::c_uint,
+    pub string_length: u32,
     pub string_sequence: *mut *mut libc::c_char,
 }
 #[test]
@@ -850,9 +910,9 @@ impl Default for VarLongStringArray {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct VarDoubleStringArray {
-    pub double_length: libc::c_uint,
+    pub double_length: u32,
     pub double_sequence: *mut f64,
-    pub string_length: libc::c_uint,
+    pub string_length: u32,
     pub string_sequence: *mut *mut libc::c_char,
 }
 #[test]
@@ -990,10 +1050,10 @@ impl Default for TangoAttributeData {
 #[derive(Copy)]
 pub union TangoCommandData {
     pub bool_val: bool,
-    pub short_val: libc::c_short,
-    pub ushort_val: libc::c_ushort,
-    pub long_val: libc::c_int,
-    pub ulong_val: libc::c_uint,
+    pub short_val: i16,
+    pub ushort_val: u16,
+    pub long_val: i32,
+    pub ulong_val: u32,
     pub float_val: f32,
     pub double_val: f64,
     pub string_val: *mut libc::c_char,
@@ -1164,11 +1224,11 @@ impl Default for TangoCommandData {
 #[derive(Copy)]
 pub union TangoPropertyData {
     pub bool_val: bool,
-    pub char_val: libc::c_uchar,
-    pub short_val: libc::c_short,
-    pub ushort_val: libc::c_ushort,
-    pub long_val: libc::c_int,
-    pub ulong_val: libc::c_uint,
+    pub char_val: u8,
+    pub short_val: i16,
+    pub ushort_val: u16,
+    pub long_val: i32,
+    pub ulong_val: u32,
     pub float_val: f32,
     pub double_val: f64,
     pub string_val: *mut libc::c_char,
@@ -1336,8 +1396,8 @@ pub struct AttributeData {
     pub quality: AttrQuality,
     pub nb_read: libc::c_long,
     pub name: *mut libc::c_char,
-    pub dim_x: libc::c_int,
-    pub dim_y: libc::c_int,
+    pub dim_x: i32,
+    pub dim_y: i32,
     pub time_stamp: timeval,
 }
 #[test]
@@ -1401,7 +1461,7 @@ impl Default for AttributeData {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct AttributeDataList {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut AttributeData,
 }
 #[test]
@@ -1471,7 +1531,7 @@ impl Default for DevFailed {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct ErrorStack {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut DevFailed,
 }
 #[test]
@@ -1501,9 +1561,9 @@ impl Default for ErrorStack {
 #[derive(Debug, Copy)]
 pub struct CommandInfo {
     pub cmd_name: *mut libc::c_char,
-    pub cmd_tag: libc::c_int,
-    pub in_type: libc::c_int,
-    pub out_type: libc::c_int,
+    pub cmd_tag: i32,
+    pub in_type: i32,
+    pub out_type: i32,
     pub in_type_desc: *mut libc::c_char,
     pub out_type_desc: *mut libc::c_char,
     pub disp_level: DispLevel,
@@ -1559,7 +1619,7 @@ impl Default for CommandInfo {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct CommandInfoList {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut CommandInfo,
 }
 #[test]
@@ -1592,8 +1652,8 @@ pub struct AttributeInfo {
     pub writable: AttrWriteType,
     pub data_format: AttrDataFormat,
     pub data_type: TangoDataType,
-    pub max_dim_x: libc::c_int,
-    pub max_dim_y: libc::c_int,
+    pub max_dim_x: i32,
+    pub max_dim_y: i32,
     pub description: *mut libc::c_char,
     pub label: *mut libc::c_char,
     pub unit: *mut libc::c_char,
@@ -1713,7 +1773,7 @@ impl Default for AttributeInfo {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct AttributeInfoList {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut AttributeInfo,
 }
 #[test]
@@ -1789,7 +1849,7 @@ impl Default for DbDatum {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct DbData {
-    pub length: libc::c_uint,
+    pub length: u32,
     pub sequence: *mut DbDatum,
 }
 #[test]

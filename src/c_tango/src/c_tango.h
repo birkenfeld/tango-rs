@@ -14,21 +14,19 @@
 #define C_TANGO_H
 
 #include <sys/time.h>
+#include <stdint.h>
 #ifndef __cplusplus
 #include <stdbool.h>
 #endif
 
+typedef int32_t TangoDevLong;
+typedef uint32_t TangoDevULong;
+typedef int64_t TangoDevLong64;
+typedef uint64_t TangoDevULong64;
 
-typedef int TangoDevLong;
-typedef unsigned int TangoDevULong;
-
-#if __WORDSIZE == 64
-typedef long TangoDevLong64;
-typedef unsigned long TangoDevULong64;
-#else
-typedef long long TangoDevLong64;
-typedef unsigned long long TangoDevULong64;
-#endif
+#define INIT_SEQ(seq, type, size)               \
+    (seq).length = size;                        \
+    (seq).sequence = new type[size]
 
 
 typedef enum {
@@ -120,86 +118,86 @@ typedef enum {
 
 typedef struct {
     char *encoded_format;
-    unsigned int encoded_length;
-    unsigned char *encoded_data;
+    uint32_t encoded_length;
+    uint8_t *encoded_data;
 } TangoDevEncoded;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     bool *sequence;
 } VarBoolArray;
 
 typedef struct {
-    unsigned int length;
-    unsigned char *sequence;
+    uint32_t length;
+    uint8_t *sequence;
 } VarCharArray;
 
 typedef struct {
-    unsigned int length;
-    short *sequence;
+    uint32_t length;
+    int16_t *sequence;
 } VarShortArray;
 
 typedef struct {
-    unsigned int length;
-    unsigned short  *sequence;
+    uint32_t length;
+    uint16_t  *sequence;
 } VarUShortArray;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     TangoDevLong *sequence;
 } VarLongArray;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     TangoDevULong *sequence;
 } VarULongArray;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     TangoDevLong64 *sequence;
 } VarLong64Array;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     TangoDevULong64 *sequence;
 } VarULong64Array;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     float *sequence;
 } VarFloatArray;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     double *sequence;
 } VarDoubleArray;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     char **sequence;
 } VarStringArray;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     TangoDevState  *sequence;
 } VarStateArray;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     TangoDevEncoded *sequence;
 } VarEncodedArray;
 
 typedef struct {
-    unsigned int long_length;
+    uint32_t long_length;
     TangoDevLong *long_sequence;
-    unsigned int string_length;
+    uint32_t string_length;
     char **string_sequence;
 } VarLongStringArray;
 
 typedef struct {
-    unsigned int double_length;
+    uint32_t double_length;
     double *double_sequence;
-    unsigned int string_length;
+    uint32_t string_length;
     char **string_sequence;
 } VarDoubleStringArray;
 
@@ -221,10 +219,10 @@ typedef union {
 
 typedef union {
     bool bool_val;
-    short short_val;
-    unsigned short ushort_val;
-    int long_val;
-    unsigned int ulong_val;
+    int16_t short_val;
+    uint16_t ushort_val;
+    int32_t long_val;
+    uint32_t ulong_val;
     float float_val;
     double double_val;
     char *string_val;
@@ -250,11 +248,11 @@ typedef union {
 
 typedef union {
     bool bool_val;
-    unsigned char char_val;
-    short short_val;
-    unsigned short ushort_val;
-    int long_val;
-    unsigned int ulong_val;
+    uint8_t char_val;
+    int16_t short_val;
+    uint16_t ushort_val;
+    int32_t long_val;
+    uint32_t ulong_val;
     float float_val;
     double double_val;
     char *string_val;
@@ -284,13 +282,13 @@ typedef struct {
     AttrQuality quality;
     long nb_read;
     char *name;
-    int dim_x;
-    int dim_y;
+    int32_t dim_x;
+    int32_t dim_y;
     struct timeval time_stamp;
 } AttributeData;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     AttributeData *sequence;
 } AttributeDataList;
 
@@ -302,22 +300,22 @@ typedef struct {
 } DevFailed;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     DevFailed *sequence;
 } ErrorStack;
 
 typedef struct {
     char *cmd_name;
-    int cmd_tag;
-    int in_type;
-    int out_type;
+    int32_t cmd_tag;
+    int32_t in_type;
+    int32_t out_type;
     char *in_type_desc;
     char *out_type_desc;
     DispLevel disp_level;
 } CommandInfo;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     CommandInfo *sequence;
 } CommandInfoList;
 
@@ -326,8 +324,8 @@ typedef struct {
     AttrWriteType writable;
     AttrDataFormat data_format;
     TangoDataType data_type;
-    int max_dim_x;
-    int max_dim_y;
+    int32_t max_dim_x;
+    int32_t max_dim_y;
     char *description;
     char *label;
     char *unit;
@@ -343,7 +341,7 @@ typedef struct {
 } AttributeInfo;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     AttributeInfo *sequence;
 } AttributeInfoList;
 
@@ -356,7 +354,7 @@ typedef struct {
 } DbDatum;
 
 typedef struct {
-    unsigned int length;
+    uint32_t length;
     DbDatum *sequence;
 } DbData;
 
