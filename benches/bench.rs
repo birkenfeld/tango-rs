@@ -16,7 +16,7 @@ fn wrapped(b: &mut test::Bencher) {
     b.iter(|| {
         let instr = tango::CommandData::from_str(s);
         let argout = dev.command_inout("DevString", instr).unwrap();
-        assert_eq!(argout.into_string().unwrap(), s);
+        assert_eq!(argout.into_bytes().unwrap(), s.as_bytes());
     });
 }
 
@@ -47,7 +47,7 @@ fn raw(b: &mut test::Bencher) {
             c::tango_command_inout(dev, cn.as_ptr() as *mut c_char,
                                    &mut argin, &mut argout);
             let outstr = CStr::from_ptr(argout.cmd_data.string_val);
-            assert_eq!(outstr.to_string_lossy(), s);
+            assert_eq!(outstr, instr.as_c_str());
             c::tango_free_CommandData(&mut argout);
         });
         c::tango_delete_device_proxy(dev);
