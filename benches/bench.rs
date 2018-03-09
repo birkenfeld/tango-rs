@@ -27,14 +27,23 @@ fn raw(b: &mut test::Bencher) {
         let dn = CString::new("tango://localhost:10000/sys/tg_test/1").unwrap();
         let cn = CString::new("DevString").unwrap();
         let s = "This is a minimal Tango test client.";
-        c::tango_create_device_proxy(dn.as_ptr() as *mut c_char, &mut dev);
+        let err = c::tango_create_device_proxy(dn.as_ptr() as *mut c_char, &mut dev);
+        if !err.is_null() {
+            panic!("Connection failed, please start TangoTest server.");
+        }
         b.iter(|| {
             let instr = CString::new(s).unwrap();
-            let mut input = c::TangoCommandData::default();
-            input.string_val = instr.as_ptr() as *mut c_char;
-            let mut argin = c::CommandData { arg_type: c::TangoDataType_DEV_STRING,
-                                             cmd_data: input };
-            let mut argout = c::CommandData::default();
+            let input = c::TangoCommandData {
+                string_val: instr.as_ptr() as *mut c_char
+            };
+            let mut argin = c::CommandData {
+                arg_type: c::TangoDataType_DEV_STRING,
+                cmd_data: input
+            };
+            let mut argout = c::CommandData {
+                arg_type: c::TangoDataType_DEV_VOID,
+                cmd_data: c::TangoCommandData { bool_val: false }
+            };
             c::tango_command_inout(dev, cn.as_ptr() as *mut c_char,
                                    &mut argin, &mut argout);
             let outstr = CStr::from_ptr(argout.cmd_data.string_val);

@@ -11,6 +11,7 @@ fn main() {
     let mut config = cc::Build::new();
     config.cpp(true);
     config.flag("-std=c++0x");
+    config.flag("-Wno-deprecated");
     config.file("src/c_tango_proxy.c");
     config.file("src/c_tango_command.c");
     config.file("src/c_tango_attribute.c");
