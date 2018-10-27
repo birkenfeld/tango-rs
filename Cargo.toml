@@ -1,11 +1,16 @@
+[workspace]
+
 [package]
-name = "tango"
+name = "tango-client"
 version = "0.1.0"
+description = "Client for the Tango control system."
+license = "GPL-3.0+"
 authors = ["Georg Brandl <georg@python.org>"]
 
 [dependencies]
 libc = "0.2"
 time = "0.1"
 
-[dependencies.c-tango]
+[dependencies.tango-client-sys]
 path = "src/c_tango"
+version = "0.1"

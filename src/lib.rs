@@ -1,10 +1,11 @@
 // For leak checking:
-// #![feature(alloc_system)]
-// extern crate alloc_system;
+// use std::alloc::System;
+// #[global_allocator]
+// static ALLOCATOR: System = System;
 
 extern crate libc;
 extern crate time;
-extern crate c_tango;
+extern crate tango_client_sys as c_tango;
 
 
 macro_rules! tango_call {
