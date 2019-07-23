@@ -1,20 +1,17 @@
 #![feature(test)]
-
-extern crate libc;
-extern crate tango;
-extern crate c_tango as c;
 extern crate test;
 
+use tango_client::c;
 use libc::{c_void, c_char};
 use std::ffi::*;
 use std::ptr;
 
 #[bench]
 fn wrapped(b: &mut test::Bencher) {
-    let mut dev = tango::DeviceProxy::new("tango://localhost:10000/sys/tg_test/1").unwrap();
+    let mut dev = tango_client::DeviceProxy::new("tango://localhost:10000/sys/tg_test/1").unwrap();
     let s = "This is a minimal Tango test client.";
     b.iter(|| {
-        let instr = tango::CommandData::from_str(s);
+        let instr = tango_client::CommandData::from_str(s);
         let argout = dev.command_inout("DevString", instr).unwrap();
         assert_eq!(argout.into_bytes().unwrap(), s.as_bytes());
     });

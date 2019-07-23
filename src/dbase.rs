@@ -1,12 +1,11 @@
 use std::ffi::CString;
 use std::mem;
 use std::ptr;
-
 use libc::{c_char, c_void};
-use c_tango as c;
 
-use super::error::{TangoResult, TangoError};
-use super::types::*;
+use crate::c;
+use crate::error::{TangoResult, TangoError};
+use crate::types::*;
 
 
 pub struct DatabaseProxy {
@@ -77,8 +76,8 @@ impl DatabaseProxy {
             cstr_vec.push(cstr);
         }
         db_data.sequence = ptr_vec.as_mut_ptr();
-        try!(tango_call!(tango_get_property, (),
-                         self.ptr, c_name.as_ptr() as *mut c_char, &mut db_data));
+        tango_call!(tango_get_property, (), self.ptr,
+                    c_name.as_ptr() as *mut c_char, &mut db_data)?;
         let mut res = Vec::with_capacity(db_data.length as usize);
         unsafe {
             for i in 0..db_data.length {

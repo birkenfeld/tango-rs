@@ -1,10 +1,10 @@
 use std::ffi::{CStr, CString};
 use std::mem;
 use std::slice;
-
 use libc;
 use time::{get_time, Timespec};
-use c_tango as c;
+
+use crate::c;
 
 
 pub unsafe fn string_from(ptr: *const i8) -> String {

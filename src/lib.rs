@@ -3,9 +3,8 @@
 // #[global_allocator]
 // static ALLOCATOR: System = System;
 
-extern crate libc;
-extern crate time;
-extern crate tango_client_sys as c_tango;
+#[doc(hidden)]
+pub use tango_client_sys as c;
 
 
 macro_rules! tango_call {

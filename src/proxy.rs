@@ -1,12 +1,11 @@
 use std::ffi::CString;
 use std::mem;
 use std::ptr;
-
 use libc::{self, c_char, c_void};
-use c_tango as c;
 
-use super::error::{TangoResult, TangoError};
-use super::types::*;
+use crate::c;
+use crate::error::{TangoResult, TangoError};
+use crate::types::*;
 
 
 pub struct DeviceProxy {
@@ -101,8 +100,7 @@ impl DeviceProxy {
 
     pub fn command_list_query(&self) -> TangoResult<Vec<CommandInfo>> {
         let mut infolist = unsafe { mem::zeroed() };
-        try!(tango_call!(tango_command_list_query, (),
-                         self.ptr, &mut infolist));
+        tango_call!(tango_command_list_query, (), self.ptr, &mut infolist)?;
         let mut res = Vec::with_capacity(infolist.length as usize);
         unsafe {
             for i in 0..infolist.length {
@@ -128,8 +126,7 @@ impl DeviceProxy {
 
     pub fn get_attribute_list(&self) -> TangoResult<Vec<String>> {
         let mut namelist = unsafe { mem::zeroed() };
-        try!(tango_call!(tango_get_attribute_list, (),
-                         self.ptr, &mut namelist));
+        tango_call!(tango_get_attribute_list, (), self.ptr, &mut namelist)?;
         let mut res = Vec::with_capacity(namelist.length as usize);
         unsafe {
             for i in 0..namelist.length {
@@ -150,8 +147,7 @@ impl DeviceProxy {
         }
         namelist.length = attr_names.len() as u32;
         namelist.sequence = ptr_vec.as_mut_ptr();
-        try!(tango_call!(tango_get_attribute_config, (),
-                         self.ptr, &mut namelist, &mut infolist));
+        tango_call!(tango_get_attribute_config, (), self.ptr, &mut namelist, &mut infolist)?;
         let mut res = Vec::with_capacity(infolist.length as usize);
         unsafe {
             for i in 0..infolist.length {
@@ -168,8 +164,7 @@ impl DeviceProxy {
 
     pub fn attribute_list_query(&self) -> TangoResult<Vec<AttributeInfo>> {
         let mut infolist = unsafe { mem::zeroed() };
-        try!(tango_call!(tango_attribute_list_query, (),
-                         self.ptr, &mut infolist));
+        tango_call!(tango_attribute_list_query, (), self.ptr, &mut infolist)?;
         let mut res = Vec::with_capacity(infolist.length as usize);
         unsafe {
             for i in 0..infolist.length {
@@ -206,8 +201,7 @@ impl DeviceProxy {
         }
         namelist.length = attr_names.len() as u32;
         namelist.sequence = ptr_vec.as_mut_ptr();
-        try!(tango_call!(tango_read_attributes, (),
-                         self.ptr, &mut namelist, &mut datalist));
+        tango_call!(tango_read_attributes, (), self.ptr, &mut namelist, &mut datalist)?;
         let mut res = Vec::with_capacity(datalist.length as usize);
         unsafe {
             for i in 0..datalist.length {
@@ -251,8 +245,7 @@ impl DeviceProxy {
             cstr_vec.push(cstr);
         }
         db_data.sequence = ptr_vec.as_mut_ptr();
-        try!(tango_call!(tango_get_device_property, (),
-                         self.ptr, &mut db_data));
+        tango_call!(tango_get_device_property, (), self.ptr, &mut db_data)?;
         let mut res = Vec::with_capacity(db_data.length as usize);
         unsafe {
             for i in 0..db_data.length {

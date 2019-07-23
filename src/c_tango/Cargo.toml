@@ -2,9 +2,9 @@
 name = "tango-client-sys"
 description = "C bindings for a client to the Tango control system."
 license = "GPL-3.0+"
-version = "0.1.0"
-authors = ["Georg Brandl <georg@python.org>"]
-build = "build.rs"
+version = "0.1.1"
+authors = ["Georg Brandl <g.brandl@fz-juelich.de>"]
+edition = "2018"
 
 [dependencies]
 libc = "0.2"

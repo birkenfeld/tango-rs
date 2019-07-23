@@ -1,6 +1,4 @@
-extern crate tango;
-
-use tango::*;
+use tango_client::*;
 
 #[test]
 fn proxy_api() {
@@ -54,7 +52,7 @@ fn proxy_api() {
 
 #[test]
 fn proxy_commands() {
-    use tango::CommandData::*;
+    use tango_client::CommandData::*;
 
     let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1")
         .expect("Could not proxy to sys/tg_test/1, is a database running on localhost?");
@@ -112,7 +110,7 @@ fn proxy_commands() {
 
 #[test]
 fn proxy_attributes() {
-    use tango::AttrValue::*;
+    use tango_client::AttrValue::*;
 
     let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1")
         .expect("Could not proxy to sys/tg_test/1, is a database running on localhost?");
@@ -183,8 +181,8 @@ fn proxy_attributes() {
 
 #[test]
 fn proxy_properties() {
-    use tango::PropertyValue::*;
-    use tango::TangoDataType;
+    use tango_client::PropertyValue::*;
+    use tango_client::TangoDataType;
 
     let mut dev = DeviceProxy::new("tango://localhost:10000/sys/tg_test/1")
         .expect("Could not proxy to sys/tg_test/1, is a database running on localhost?");

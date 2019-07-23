@@ -2,9 +2,8 @@ use std::error;
 use std::fmt;
 use std::ptr;
 
-use c_tango as c;
-
-use super::types::{ErrSeverity, string_from};
+use crate::c;
+use crate::types::{ErrSeverity, string_from};
 
 pub type TangoResult<R> = Result<R, TangoError>;
 
@@ -24,13 +23,13 @@ pub struct TangoError {
 
 impl fmt::Display for TangoError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        try!(write!(f, "TangoError[\n"));
+        write!(f, "TangoError[\n")?;
         for fail in &self.failures {
-            try!(write!(f, "DevFailed[\n"));
-            try!(write!(f, "      desc = {}\n", fail.desc));
-            try!(write!(f, "    origin = {}\n", fail.origin));
-            try!(write!(f, "    reason = {}[\n", fail.reason));
-            try!(write!(f, "  severity = {:?}]\n\n", fail.severity));
+            write!(f, "DevFailed[\n")?;
+            write!(f, "      desc = {}\n", fail.desc)?;
+            write!(f, "    origin = {}\n", fail.origin)?;
+            write!(f, "    reason = {}[\n", fail.reason)?;
+            write!(f, "  severity = {:?}]\n\n", fail.severity)?;
         }
         write!(f, "]\n")
     }
