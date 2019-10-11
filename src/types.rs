@@ -1142,7 +1142,7 @@ pub enum AttrValue {
 
 impl AttrValue {
     pub fn len(&self) -> usize {
-        match *self {
+        match self {
             AttrValue::Boolean(_) |
             AttrValue::UChar(_) |
             AttrValue::Short(_) |
@@ -1157,19 +1157,19 @@ impl AttrValue {
             AttrValue::State(_) |
             AttrValue::Encoded(_) => 1,
 
-            AttrValue::BooleanArray(ref v) => v.len(),
-            AttrValue::UCharArray(ref v) => v.len(),
-            AttrValue::ShortArray(ref v) => v.len(),
-            AttrValue::UShortArray(ref v) => v.len(),
-            AttrValue::LongArray(ref v) => v.len(),
-            AttrValue::ULongArray(ref v) => v.len(),
-            AttrValue::Long64Array(ref v) => v.len(),
-            AttrValue::ULong64Array(ref v) => v.len(),
-            AttrValue::FloatArray(ref v) => v.len(),
-            AttrValue::DoubleArray(ref v) => v.len(),
-            AttrValue::StringArray(ref v) => v.len(),
-            AttrValue::StateArray(ref v) => v.len(),
-            AttrValue::EncodedArray(ref v) => v.len(),
+            AttrValue::BooleanArray(v) => v.len(),
+            AttrValue::UCharArray(v) => v.len(),
+            AttrValue::ShortArray(v) => v.len(),
+            AttrValue::UShortArray(v) => v.len(),
+            AttrValue::LongArray(v) => v.len(),
+            AttrValue::ULongArray(v) => v.len(),
+            AttrValue::Long64Array(v) => v.len(),
+            AttrValue::ULong64Array(v) => v.len(),
+            AttrValue::FloatArray(v) => v.len(),
+            AttrValue::DoubleArray(v) => v.len(),
+            AttrValue::StringArray(v) => v.len(),
+            AttrValue::StateArray(v) => v.len(),
+            AttrValue::EncodedArray(v) => v.len(),
         }
     }
 
@@ -1604,16 +1604,16 @@ pub enum PropertyValue {
 impl PropertyValue {
     pub fn len(&self) -> usize {
         use PropertyValue::*;
-        match *self {
-            ShortArray(ref a) => a.len(),
-            UShortArray(ref a) => a.len(),
-            LongArray(ref a) => a.len(),
-            ULongArray(ref a) => a.len(),
-            Long64Array(ref a) => a.len(),
-            ULong64Array(ref a) => a.len(),
-            FloatArray(ref a) => a.len(),
-            DoubleArray(ref a) => a.len(),
-            StringArray(ref a) => a.len(),
+        match self {
+            ShortArray(a) => a.len(),
+            UShortArray(a) => a.len(),
+            LongArray(a) => a.len(),
+            ULongArray(a) => a.len(),
+            Long64Array(a) => a.len(),
+            ULong64Array(a) => a.len(),
+            FloatArray(a) => a.len(),
+            DoubleArray(a) => a.len(),
+            StringArray(a) => a.len(),
             Empty => 0,
             _ => 1,
         }
