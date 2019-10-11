@@ -1,6 +1,5 @@
 use std::ffi::{CStr, CString};
-use std::mem;
-use std::slice;
+use std::{fmt, mem, slice};
 use libc;
 use time::{get_time, Timespec};
 
@@ -133,6 +132,27 @@ impl TangoDevState {
             c::TangoDevState_UNKNOWN => TangoDevState::Unknown,
             _ => unimplemented!()
         }
+    }
+}
+
+impl fmt::Display for TangoDevState {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", match self {
+            TangoDevState::On => "ON",
+            TangoDevState::Off => "OFF",
+            TangoDevState::Close => "CLOSE",
+            TangoDevState::Open => "OPEN",
+            TangoDevState::Insert => "INSERT",
+            TangoDevState::Extract => "EXTRACT",
+            TangoDevState::Moving => "MOVING",
+            TangoDevState::Standby => "STANDBY",
+            TangoDevState::Fault => "FAULT",
+            TangoDevState::Init => "INIT",
+            TangoDevState::Running => "RUNNING",
+            TangoDevState::Alarm => "ALARM",
+            TangoDevState::Disable => "DISABLE",
+            TangoDevState::Unknown => "UNKNOWN",
+        })
     }
 }
 
@@ -323,70 +343,102 @@ impl CommandData {
         CommandData::String(s.to_owned().into_bytes())
     }
 
-    pub fn into_bool(self) -> Option<bool> {
+    pub fn into_bool(self) -> Result<bool, Self> {
         match self {
-            CommandData::Boolean(v) => Some(v),
-            _ => None,
+            CommandData::Boolean(v) => Ok(v),
+            _ => Err(self),
         }
     }
 
-    pub fn into_i32(self) -> Option<i32> {
+    pub fn into_i32(self) -> Result<i32, Self> {
         match self {
-            CommandData::Boolean(v) => Some(v as i32),
-            CommandData::Short(v) => Some(v as i32),
-            CommandData::Long(v) => Some(v),
-            CommandData::UShort(v) => Some(v as i32),
-            _ => None,
+            CommandData::Boolean(v) => Ok(v as i32),
+            CommandData::Short(v) => Ok(v as i32),
+            CommandData::Long(v) => Ok(v),
+            CommandData::UShort(v) => Ok(v as i32),
+            _ => Err(self),
         }
     }
 
-    pub fn into_i64(self) -> Option<i64> {
+    pub fn into_i64(self) -> Result<i64, Self> {
         match self {
-            CommandData::Boolean(v) => Some(v as i64),
-            CommandData::Short(v) => Some(v as i64),
-            CommandData::Long(v) => Some(v as i64),
-            CommandData::Long64(v) => Some(v),
-            CommandData::UShort(v) => Some(v as i64),
-            CommandData::ULong(v) => Some(v as i64),
-            _ => None,
+            CommandData::Boolean(v) => Ok(v as i64),
+            CommandData::Short(v) => Ok(v as i64),
+            CommandData::Long(v) => Ok(v as i64),
+            CommandData::Long64(v) => Ok(v),
+            CommandData::UShort(v) => Ok(v as i64),
+            CommandData::ULong(v) => Ok(v as i64),
+            _ => Err(self),
         }
     }
 
-    pub fn into_u32(self) -> Option<u32> {
+    pub fn into_u32(self) -> Result<u32, Self> {
         match self {
-            CommandData::Boolean(v) => Some(v as u32),
-            CommandData::Short(v) => Some(v as u32),
-            CommandData::UShort(v) => Some(v as u32),
-            CommandData::ULong(v) => Some(v as u32),
-            _ => None,
+            CommandData::Boolean(v) => Ok(v as u32),
+            CommandData::Short(v) => Ok(v as u32),
+            CommandData::UShort(v) => Ok(v as u32),
+            CommandData::ULong(v) => Ok(v as u32),
+            _ => Err(self),
         }
     }
 
-    pub fn into_u64(self) -> Option<u64> {
+    pub fn into_u64(self) -> Result<u64, Self> {
         match self {
-            CommandData::Boolean(v) => Some(v as u64),
-            CommandData::Short(v) => Some(v as u64),
-            CommandData::Long(v) => Some(v as u64),
-            CommandData::UShort(v) => Some(v as u64),
-            CommandData::ULong(v) => Some(v as u64),
-            CommandData::ULong64(v) => Some(v),
-            _ => None,
+            CommandData::Boolean(v) => Ok(v as u64),
+            CommandData::Short(v) => Ok(v as u64),
+            CommandData::Long(v) => Ok(v as u64),
+            CommandData::UShort(v) => Ok(v as u64),
+            CommandData::ULong(v) => Ok(v as u64),
+            CommandData::ULong64(v) => Ok(v),
+            _ => Err(self),
         }
     }
 
-    pub fn into_bytes(self) -> Option<Vec<u8>> {
+    pub fn into_f32(self) -> Result<f32, Self> {
         match self {
-            CommandData::String(s) => Some(s),
-            CommandData::CharArray(s) => Some(s),
-            _ => None,
+            CommandData::Boolean(v) => Ok(v as i32 as f32),
+            CommandData::Short(v) => Ok(v as f32),
+            CommandData::Long(v) => Ok(v as f32),
+            CommandData::Long64(v) => Ok(v as f32),
+            CommandData::UShort(v) => Ok(v as f32),
+            CommandData::ULong(v) => Ok(v as f32),
+            CommandData::ULong64(v) => Ok(v as f32),
+            CommandData::Float(v) => Ok(v),
+            CommandData::Double(v) => Ok(v as f32),
+            _ => Err(self),
         }
     }
 
-    pub fn into_string(self) -> Option<String> {
+    pub fn into_f64(self) -> Result<f64, Self> {
         match self {
-            CommandData::String(s) => String::from_utf8(s).ok(),
-            CommandData::CharArray(s) => String::from_utf8(s).ok(),
-            _ => None,
+            CommandData::Boolean(v) => Ok(v as i32 as f64),
+            CommandData::Short(v) => Ok(v as f64),
+            CommandData::Long(v) => Ok(v as f64),
+            CommandData::Long64(v) => Ok(v as f64),
+            CommandData::UShort(v) => Ok(v as f64),
+            CommandData::ULong(v) => Ok(v as f64),
+            CommandData::ULong64(v) => Ok(v as f64),
+            CommandData::Float(v) => Ok(v as f64),
+            CommandData::Double(v) => Ok(v),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_bytes(self) -> Result<Vec<u8>, Self> {
+        match self {
+            CommandData::String(s) => Ok(s),
+            CommandData::CharArray(s) => Ok(s),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_string(self) -> Result<String, Self> {
+        match self {
+            CommandData::String(s) => String::from_utf8(s).map_err(
+                |e| CommandData::String(e.into_bytes())),
+            CommandData::CharArray(s) => String::from_utf8(s).map_err(
+                |e| CommandData::CharArray(e.into_bytes())),
+            _ => Err(self),
         }
     }
 
@@ -671,6 +723,46 @@ impl CommandData {
                 drop(Box::from_raw(data.double_string_arr.string_sequence));
                 drop(Box::from_raw(data.double_string_arr.double_sequence));
             }
+        }
+    }
+}
+
+impl fmt::Display for CommandData {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            CommandData::Void => write!(f, "<Void>"),
+            CommandData::Boolean(v) => write!(f, "{}", v),
+            CommandData::Short(v) => write!(f, "{}", v),
+            CommandData::UShort(v) => write!(f, "{}", v),
+            CommandData::Long(v) => write!(f, "{}", v),
+            CommandData::ULong(v) => write!(f, "{}", v),
+            CommandData::Long64(v) => write!(f, "{}", v),
+            CommandData::ULong64(v) => write!(f, "{}", v),
+            CommandData::Float(v) => write!(f, "{}", v),
+            CommandData::Double(v) => write!(f, "{}", v),
+            CommandData::String(v) => write!(f, "{}", String::from_utf8_lossy(v)),
+            CommandData::State(v) => write!(f, "{}", v),
+            CommandData::Encoded(_) => write!(f, "<DevEncoded>"),
+
+            CommandData::BooleanArray(v) => slice_display(v, |x| x, f),
+            CommandData::CharArray(v) => slice_display(v, |x| x, f),
+            CommandData::ShortArray(v) => slice_display(v, |x| x, f),
+            CommandData::UShortArray(v) => slice_display(v, |x| x, f),
+            CommandData::LongArray(v) => slice_display(v, |x| x, f),
+            CommandData::ULongArray(v) => slice_display(v, |x| x, f),
+            CommandData::Long64Array(v) => slice_display(v, |x| x, f),
+            CommandData::ULong64Array(v) => slice_display(v, |x| x, f),
+            CommandData::FloatArray(v) => slice_display(v, |x| x, f),
+            CommandData::DoubleArray(v) => slice_display(v, |x| x, f),
+            CommandData::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+            CommandData::LongStringArray(vi, vs) => {
+                slice_display(vi, |x| x, f)?;
+                slice_display(vs, |x| String::from_utf8_lossy(x), f)
+            },
+            CommandData::DoubleStringArray(vd, vs) => {
+                slice_display(vd, |x| x, f)?;
+                slice_display(vs, |x| String::from_utf8_lossy(x), f)
+            },
         }
     }
 }
@@ -1080,6 +1172,155 @@ impl AttrValue {
             AttrValue::EncodedArray(ref v) => v.len(),
         }
     }
+
+    pub fn into_bool(self) -> Result<bool, Self> {
+        match self {
+            AttrValue::Boolean(v) => Ok(v),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_i32(self) -> Result<i32, Self> {
+        match self {
+            AttrValue::Boolean(v) => Ok(v as i32),
+            AttrValue::UChar(v) => Ok(v as i32),
+            AttrValue::Short(v) => Ok(v as i32),
+            AttrValue::UShort(v) => Ok(v as i32),
+            AttrValue::Long(v) => Ok(v),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_i64(self) -> Result<i64, Self> {
+        match self {
+            AttrValue::Boolean(v) => Ok(v as i64),
+            AttrValue::UChar(v) => Ok(v as i64),
+            AttrValue::Short(v) => Ok(v as i64),
+            AttrValue::UShort(v) => Ok(v as i64),
+            AttrValue::Long(v) => Ok(v as i64),
+            AttrValue::ULong(v) => Ok(v as i64),
+            AttrValue::Long64(v) => Ok(v),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_u32(self) -> Result<u32, Self> {
+        match self {
+            AttrValue::Boolean(v) => Ok(v as u32),
+            AttrValue::UChar(v) => Ok(v as u32),
+            AttrValue::Short(v) => Ok(v as u32),
+            AttrValue::UShort(v) => Ok(v as u32),
+            AttrValue::ULong(v) => Ok(v as u32),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_u64(self) -> Result<u64, Self> {
+        match self {
+            AttrValue::Boolean(v) => Ok(v as u64),
+            AttrValue::UChar(v) => Ok(v as u64),
+            AttrValue::Short(v) => Ok(v as u64),
+            AttrValue::UShort(v) => Ok(v as u64),
+            AttrValue::Long(v) => Ok(v as u64),
+            AttrValue::ULong(v) => Ok(v as u64),
+            AttrValue::ULong64(v) => Ok(v),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_f32(self) -> Result<f32, Self> {
+        match self {
+            AttrValue::Boolean(v) => Ok(v as i32 as f32),
+            AttrValue::UChar(v) => Ok(v as f32),
+            AttrValue::Short(v) => Ok(v as f32),
+            AttrValue::Long(v) => Ok(v as f32),
+            AttrValue::Long64(v) => Ok(v as f32),
+            AttrValue::UShort(v) => Ok(v as f32),
+            AttrValue::ULong(v) => Ok(v as f32),
+            AttrValue::ULong64(v) => Ok(v as f32),
+            AttrValue::Float(v) => Ok(v),
+            AttrValue::Double(v) => Ok(v as f32),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_f64(self) -> Result<f64, Self> {
+        match self {
+            AttrValue::Boolean(v) => Ok(v as i32 as f64),
+            AttrValue::UChar(v) => Ok(v as f64),
+            AttrValue::Short(v) => Ok(v as f64),
+            AttrValue::Long(v) => Ok(v as f64),
+            AttrValue::Long64(v) => Ok(v as f64),
+            AttrValue::UShort(v) => Ok(v as f64),
+            AttrValue::ULong(v) => Ok(v as f64),
+            AttrValue::ULong64(v) => Ok(v as f64),
+            AttrValue::Float(v) => Ok(v as f64),
+            AttrValue::Double(v) => Ok(v),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_bytes(self) -> Result<Vec<u8>, Self> {
+        match self {
+            AttrValue::String(s) => Ok(s),
+            AttrValue::Encoded((_, s)) => Ok(s),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_string(self) -> Result<String, Self> {
+        match self {
+            AttrValue::String(s) => String::from_utf8(s).map_err(
+                |e| AttrValue::String(e.into_bytes())),
+            _ => Err(self),
+        }
+    }
+}
+
+fn slice_display<'a, T, D: fmt::Display>(slice: &'a [T], mkdisp: impl Fn(&'a T) -> D,
+                                         f: &mut fmt::Formatter) -> fmt::Result {
+    write!(f, "[")?;
+    for (i, item) in slice.iter().enumerate() {
+        if i != 0 {
+            write!(f, ", ")?;
+        }
+        write!(f, "{}", mkdisp(item))?;
+    }
+    write!(f, "]")
+}
+
+impl fmt::Display for AttrValue {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            AttrValue::Boolean(v) => write!(f, "{}", v),
+            AttrValue::UChar(v) => write!(f, "{}", v),
+            AttrValue::Short(v) => write!(f, "{}", v),
+            AttrValue::UShort(v) => write!(f, "{}", v),
+            AttrValue::Long(v) => write!(f, "{}", v),
+            AttrValue::ULong(v) => write!(f, "{}", v),
+            AttrValue::Long64(v) => write!(f, "{}", v),
+            AttrValue::ULong64(v) => write!(f, "{}", v),
+            AttrValue::Float(v) => write!(f, "{}", v),
+            AttrValue::Double(v) => write!(f, "{}", v),
+            AttrValue::String(v) => write!(f, "{}", String::from_utf8_lossy(v)),
+            AttrValue::State(v) => write!(f, "{}", v),
+            AttrValue::Encoded(_) => write!(f, "<DevEncoded>"),
+
+            AttrValue::BooleanArray(v) => slice_display(v, |x| x, f),
+            AttrValue::UCharArray(v) => slice_display(v, |x| x, f),
+            AttrValue::ShortArray(v) => slice_display(v, |x| x, f),
+            AttrValue::UShortArray(v) => slice_display(v, |x| x, f),
+            AttrValue::LongArray(v) => slice_display(v, |x| x, f),
+            AttrValue::ULongArray(v) => slice_display(v, |x| x, f),
+            AttrValue::Long64Array(v) => slice_display(v, |x| x, f),
+            AttrValue::ULong64Array(v) => slice_display(v, |x| x, f),
+            AttrValue::FloatArray(v) => slice_display(v, |x| x, f),
+            AttrValue::DoubleArray(v) => slice_display(v, |x| x, f),
+            AttrValue::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+            AttrValue::StateArray(v) => slice_display(v, |x| x, f),
+            AttrValue::EncodedArray(v) => slice_display(v, |_| "<DevEncoded>", f),
+        }
+    }
 }
 
 
@@ -1375,6 +1616,137 @@ impl PropertyValue {
             StringArray(ref a) => a.len(),
             Empty => 0,
             _ => 1,
+        }
+    }
+
+    pub fn into_bool(self) -> Result<bool, Self> {
+        match self {
+            PropertyValue::Boolean(v) => Ok(v),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_i32(self) -> Result<i32, Self> {
+        match self {
+            PropertyValue::Boolean(v) => Ok(v as i32),
+            PropertyValue::UChar(v) => Ok(v as i32),
+            PropertyValue::Short(v) => Ok(v as i32),
+            PropertyValue::UShort(v) => Ok(v as i32),
+            PropertyValue::Long(v) => Ok(v),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_i64(self) -> Result<i64, Self> {
+        match self {
+            PropertyValue::Boolean(v) => Ok(v as i64),
+            PropertyValue::UChar(v) => Ok(v as i64),
+            PropertyValue::Short(v) => Ok(v as i64),
+            PropertyValue::UShort(v) => Ok(v as i64),
+            PropertyValue::Long(v) => Ok(v as i64),
+            PropertyValue::ULong(v) => Ok(v as i64),
+            PropertyValue::Long64(v) => Ok(v),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_u32(self) -> Result<u32, Self> {
+        match self {
+            PropertyValue::Boolean(v) => Ok(v as u32),
+            PropertyValue::UChar(v) => Ok(v as u32),
+            PropertyValue::Short(v) => Ok(v as u32),
+            PropertyValue::UShort(v) => Ok(v as u32),
+            PropertyValue::ULong(v) => Ok(v as u32),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_u64(self) -> Result<u64, Self> {
+        match self {
+            PropertyValue::Boolean(v) => Ok(v as u64),
+            PropertyValue::UChar(v) => Ok(v as u64),
+            PropertyValue::Short(v) => Ok(v as u64),
+            PropertyValue::UShort(v) => Ok(v as u64),
+            PropertyValue::Long(v) => Ok(v as u64),
+            PropertyValue::ULong(v) => Ok(v as u64),
+            PropertyValue::ULong64(v) => Ok(v),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_f32(self) -> Result<f32, Self> {
+        match self {
+            PropertyValue::Boolean(v) => Ok(v as i32 as f32),
+            PropertyValue::UChar(v) => Ok(v as f32),
+            PropertyValue::Short(v) => Ok(v as f32),
+            PropertyValue::Long(v) => Ok(v as f32),
+            PropertyValue::Long64(v) => Ok(v as f32),
+            PropertyValue::UShort(v) => Ok(v as f32),
+            PropertyValue::ULong(v) => Ok(v as f32),
+            PropertyValue::ULong64(v) => Ok(v as f32),
+            PropertyValue::Float(v) => Ok(v),
+            PropertyValue::Double(v) => Ok(v as f32),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_f64(self) -> Result<f64, Self> {
+        match self {
+            PropertyValue::Boolean(v) => Ok(v as i32 as f64),
+            PropertyValue::UChar(v) => Ok(v as f64),
+            PropertyValue::Short(v) => Ok(v as f64),
+            PropertyValue::Long(v) => Ok(v as f64),
+            PropertyValue::Long64(v) => Ok(v as f64),
+            PropertyValue::UShort(v) => Ok(v as f64),
+            PropertyValue::ULong(v) => Ok(v as f64),
+            PropertyValue::ULong64(v) => Ok(v as f64),
+            PropertyValue::Float(v) => Ok(v as f64),
+            PropertyValue::Double(v) => Ok(v),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_bytes(self) -> Result<Vec<u8>, Self> {
+        match self {
+            PropertyValue::String(s) => Ok(s),
+            _ => Err(self),
+        }
+    }
+
+    pub fn into_string(self) -> Result<String, Self> {
+        match self {
+            PropertyValue::String(s) => String::from_utf8(s).map_err(
+                |e| PropertyValue::String(e.into_bytes())),
+            _ => Err(self),
+        }
+    }
+}
+
+impl fmt::Display for PropertyValue {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            PropertyValue::Empty => write!(f, "<Empty>"),
+            PropertyValue::Boolean(v) => write!(f, "{}", v),
+            PropertyValue::UChar(v) => write!(f, "{}", v),
+            PropertyValue::Short(v) => write!(f, "{}", v),
+            PropertyValue::UShort(v) => write!(f, "{}", v),
+            PropertyValue::Long(v) => write!(f, "{}", v),
+            PropertyValue::ULong(v) => write!(f, "{}", v),
+            PropertyValue::Long64(v) => write!(f, "{}", v),
+            PropertyValue::ULong64(v) => write!(f, "{}", v),
+            PropertyValue::Float(v) => write!(f, "{}", v),
+            PropertyValue::Double(v) => write!(f, "{}", v),
+            PropertyValue::String(v) => write!(f, "{}", String::from_utf8_lossy(v)),
+
+            PropertyValue::ShortArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::UShortArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::LongArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::ULongArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::Long64Array(v) => slice_display(v, |x| x, f),
+            PropertyValue::ULong64Array(v) => slice_display(v, |x| x, f),
+            PropertyValue::FloatArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::DoubleArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
         }
     }
 }
