@@ -137,7 +137,7 @@ impl TangoDevState {
 
 impl fmt::Display for TangoDevState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", match self {
+        f.pad(match self {
             TangoDevState::On => "ON",
             TangoDevState::Off => "OFF",
             TangoDevState::Close => "CLOSE",
@@ -730,19 +730,19 @@ impl CommandData {
 impl fmt::Display for CommandData {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            CommandData::Void => write!(f, "<Void>"),
-            CommandData::Boolean(v) => write!(f, "{}", v),
-            CommandData::Short(v) => write!(f, "{}", v),
-            CommandData::UShort(v) => write!(f, "{}", v),
-            CommandData::Long(v) => write!(f, "{}", v),
-            CommandData::ULong(v) => write!(f, "{}", v),
-            CommandData::Long64(v) => write!(f, "{}", v),
-            CommandData::ULong64(v) => write!(f, "{}", v),
-            CommandData::Float(v) => write!(f, "{}", v),
-            CommandData::Double(v) => write!(f, "{}", v),
-            CommandData::String(v) => write!(f, "{}", String::from_utf8_lossy(v)),
-            CommandData::State(v) => write!(f, "{}", v),
-            CommandData::Encoded(_) => write!(f, "<DevEncoded>"),
+            CommandData::Void => f.pad("<Void>"),
+            CommandData::Boolean(v) => fmt::Display::fmt(&v, f),
+            CommandData::Short(v) => fmt::Display::fmt(&v, f),
+            CommandData::UShort(v) => fmt::Display::fmt(&v, f),
+            CommandData::Long(v) => fmt::Display::fmt(&v, f),
+            CommandData::ULong(v) => fmt::Display::fmt(&v, f),
+            CommandData::Long64(v) => fmt::Display::fmt(&v, f),
+            CommandData::ULong64(v) => fmt::Display::fmt(&v, f),
+            CommandData::Float(v) => fmt::Display::fmt(&v, f),
+            CommandData::Double(v) => fmt::Display::fmt(&v, f),
+            CommandData::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+            CommandData::State(v) => fmt::Display::fmt(&v, f),
+            CommandData::Encoded(_) => f.pad("<DevEncoded>"),
 
             CommandData::BooleanArray(v) => slice_display(v, |x| x, f),
             CommandData::CharArray(v) => slice_display(v, |x| x, f),
@@ -1284,7 +1284,7 @@ fn slice_display<'a, T, D: fmt::Display>(slice: &'a [T], mkdisp: impl Fn(&'a T) 
         if i != 0 {
             write!(f, ", ")?;
         }
-        write!(f, "{}", mkdisp(item))?;
+        fmt::Display::fmt(&mkdisp(item), f)?;
     }
     write!(f, "]")
 }
@@ -1292,19 +1292,19 @@ fn slice_display<'a, T, D: fmt::Display>(slice: &'a [T], mkdisp: impl Fn(&'a T) 
 impl fmt::Display for AttrValue {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            AttrValue::Boolean(v) => write!(f, "{}", v),
-            AttrValue::UChar(v) => write!(f, "{}", v),
-            AttrValue::Short(v) => write!(f, "{}", v),
-            AttrValue::UShort(v) => write!(f, "{}", v),
-            AttrValue::Long(v) => write!(f, "{}", v),
-            AttrValue::ULong(v) => write!(f, "{}", v),
-            AttrValue::Long64(v) => write!(f, "{}", v),
-            AttrValue::ULong64(v) => write!(f, "{}", v),
-            AttrValue::Float(v) => write!(f, "{}", v),
-            AttrValue::Double(v) => write!(f, "{}", v),
-            AttrValue::String(v) => write!(f, "{}", String::from_utf8_lossy(v)),
-            AttrValue::State(v) => write!(f, "{}", v),
-            AttrValue::Encoded(_) => write!(f, "<DevEncoded>"),
+            AttrValue::Boolean(v) => fmt::Display::fmt(&v, f),
+            AttrValue::UChar(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Short(v) => fmt::Display::fmt(&v, f),
+            AttrValue::UShort(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Long(v) => fmt::Display::fmt(&v, f),
+            AttrValue::ULong(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Long64(v) => fmt::Display::fmt(&v, f),
+            AttrValue::ULong64(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Float(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Double(v) => fmt::Display::fmt(&v, f),
+            AttrValue::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+            AttrValue::State(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Encoded(_) => f.pad("<DevEncoded>"),
 
             AttrValue::BooleanArray(v) => slice_display(v, |x| x, f),
             AttrValue::UCharArray(v) => slice_display(v, |x| x, f),
@@ -1725,18 +1725,18 @@ impl PropertyValue {
 impl fmt::Display for PropertyValue {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            PropertyValue::Empty => write!(f, "<Empty>"),
-            PropertyValue::Boolean(v) => write!(f, "{}", v),
-            PropertyValue::UChar(v) => write!(f, "{}", v),
-            PropertyValue::Short(v) => write!(f, "{}", v),
-            PropertyValue::UShort(v) => write!(f, "{}", v),
-            PropertyValue::Long(v) => write!(f, "{}", v),
-            PropertyValue::ULong(v) => write!(f, "{}", v),
-            PropertyValue::Long64(v) => write!(f, "{}", v),
-            PropertyValue::ULong64(v) => write!(f, "{}", v),
-            PropertyValue::Float(v) => write!(f, "{}", v),
-            PropertyValue::Double(v) => write!(f, "{}", v),
-            PropertyValue::String(v) => write!(f, "{}", String::from_utf8_lossy(v)),
+            PropertyValue::Empty => f.pad("<Empty>"),
+            PropertyValue::Boolean(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::UChar(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Short(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::UShort(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Long(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::ULong(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Long64(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::ULong64(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Float(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Double(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
 
             PropertyValue::ShortArray(v) => slice_display(v, |x| x, f),
             PropertyValue::UShortArray(v) => slice_display(v, |x| x, f),
