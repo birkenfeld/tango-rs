@@ -767,6 +767,166 @@ impl fmt::Display for CommandData {
     }
 }
 
+impl fmt::LowerHex for CommandData {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            CommandData::Void => f.pad("<Void>"),
+            CommandData::Boolean(v) => fmt::Display::fmt(&v, f),
+            CommandData::Short(v) => fmt::LowerHex::fmt(&v, f),
+            CommandData::UShort(v) => fmt::LowerHex::fmt(&v, f),
+            CommandData::Long(v) => fmt::LowerHex::fmt(&v, f),
+            CommandData::ULong(v) => fmt::LowerHex::fmt(&v, f),
+            CommandData::Long64(v) => fmt::LowerHex::fmt(&v, f),
+            CommandData::ULong64(v) => fmt::LowerHex::fmt(&v, f),
+            CommandData::Float(v) => fmt::Display::fmt(&v, f),
+            CommandData::Double(v) => fmt::Display::fmt(&v, f),
+            CommandData::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+            CommandData::State(v) => fmt::Display::fmt(&v, f),
+            CommandData::Encoded(_) => f.pad("<DevEncoded>"),
+
+            CommandData::BooleanArray(v) => slice_display(v, |x| x, f),
+            CommandData::CharArray(v) => slice_lower_hex(v, |x| x, f),
+            CommandData::ShortArray(v) => slice_lower_hex(v, |x| x, f),
+            CommandData::UShortArray(v) => slice_lower_hex(v, |x| x, f),
+            CommandData::LongArray(v) => slice_lower_hex(v, |x| x, f),
+            CommandData::ULongArray(v) => slice_lower_hex(v, |x| x, f),
+            CommandData::Long64Array(v) => slice_lower_hex(v, |x| x, f),
+            CommandData::ULong64Array(v) => slice_lower_hex(v, |x| x, f),
+            CommandData::FloatArray(v) => slice_display(v, |x| x, f),
+            CommandData::DoubleArray(v) => slice_display(v, |x| x, f),
+            CommandData::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+            CommandData::LongStringArray(vi, vs) => {
+                slice_lower_hex(vi, |x| x, f)?;
+                slice_display(vs, |x| String::from_utf8_lossy(x), f)
+            },
+            CommandData::DoubleStringArray(vd, vs) => {
+                slice_display(vd, |x| x, f)?;
+                slice_display(vs, |x| String::from_utf8_lossy(x), f)
+            },
+        }
+    }
+}
+
+impl fmt::UpperHex for CommandData {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            CommandData::Void => f.pad("<Void>"),
+            CommandData::Boolean(v) => fmt::Display::fmt(&v, f),
+            CommandData::Short(v) => fmt::UpperHex::fmt(&v, f),
+            CommandData::UShort(v) => fmt::UpperHex::fmt(&v, f),
+            CommandData::Long(v) => fmt::UpperHex::fmt(&v, f),
+            CommandData::ULong(v) => fmt::UpperHex::fmt(&v, f),
+            CommandData::Long64(v) => fmt::UpperHex::fmt(&v, f),
+            CommandData::ULong64(v) => fmt::UpperHex::fmt(&v, f),
+            CommandData::Float(v) => fmt::Display::fmt(&v, f),
+            CommandData::Double(v) => fmt::Display::fmt(&v, f),
+            CommandData::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+            CommandData::State(v) => fmt::Display::fmt(&v, f),
+            CommandData::Encoded(_) => f.pad("<DevEncoded>"),
+
+            CommandData::BooleanArray(v) => slice_display(v, |x| x, f),
+            CommandData::CharArray(v) => slice_upper_hex(v, |x| x, f),
+            CommandData::ShortArray(v) => slice_upper_hex(v, |x| x, f),
+            CommandData::UShortArray(v) => slice_upper_hex(v, |x| x, f),
+            CommandData::LongArray(v) => slice_upper_hex(v, |x| x, f),
+            CommandData::ULongArray(v) => slice_upper_hex(v, |x| x, f),
+            CommandData::Long64Array(v) => slice_upper_hex(v, |x| x, f),
+            CommandData::ULong64Array(v) => slice_upper_hex(v, |x| x, f),
+            CommandData::FloatArray(v) => slice_display(v, |x| x, f),
+            CommandData::DoubleArray(v) => slice_display(v, |x| x, f),
+            CommandData::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+            CommandData::LongStringArray(vi, vs) => {
+                slice_upper_hex(vi, |x| x, f)?;
+                slice_display(vs, |x| String::from_utf8_lossy(x), f)
+            },
+            CommandData::DoubleStringArray(vd, vs) => {
+                slice_display(vd, |x| x, f)?;
+                slice_display(vs, |x| String::from_utf8_lossy(x), f)
+            },
+        }
+    }
+}
+
+impl fmt::LowerExp for CommandData {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            CommandData::Void => f.pad("<Void>"),
+            CommandData::Boolean(v) => fmt::Display::fmt(&v, f),
+            CommandData::Short(v) => fmt::Display::fmt(&v, f),
+            CommandData::UShort(v) => fmt::Display::fmt(&v, f),
+            CommandData::Long(v) => fmt::Display::fmt(&v, f),
+            CommandData::ULong(v) => fmt::Display::fmt(&v, f),
+            CommandData::Long64(v) => fmt::Display::fmt(&v, f),
+            CommandData::ULong64(v) => fmt::Display::fmt(&v, f),
+            CommandData::Float(v) => fmt::LowerExp::fmt(&v, f),
+            CommandData::Double(v) => fmt::LowerExp::fmt(&v, f),
+            CommandData::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+            CommandData::State(v) => fmt::Display::fmt(&v, f),
+            CommandData::Encoded(_) => f.pad("<DevEncoded>"),
+
+            CommandData::BooleanArray(v) => slice_display(v, |x| x, f),
+            CommandData::CharArray(v) => slice_display(v, |x| x, f),
+            CommandData::ShortArray(v) => slice_display(v, |x| x, f),
+            CommandData::UShortArray(v) => slice_display(v, |x| x, f),
+            CommandData::LongArray(v) => slice_display(v, |x| x, f),
+            CommandData::ULongArray(v) => slice_display(v, |x| x, f),
+            CommandData::Long64Array(v) => slice_display(v, |x| x, f),
+            CommandData::ULong64Array(v) => slice_display(v, |x| x, f),
+            CommandData::FloatArray(v) => slice_lower_exp(v, |x| x, f),
+            CommandData::DoubleArray(v) => slice_lower_exp(v, |x| x, f),
+            CommandData::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+            CommandData::LongStringArray(vi, vs) => {
+                slice_display(vi, |x| x, f)?;
+                slice_display(vs, |x| String::from_utf8_lossy(x), f)
+            },
+            CommandData::DoubleStringArray(vd, vs) => {
+                slice_lower_exp(vd, |x| x, f)?;
+                slice_display(vs, |x| String::from_utf8_lossy(x), f)
+            },
+        }
+    }
+}
+
+impl fmt::UpperExp for CommandData {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            CommandData::Void => f.pad("<Void>"),
+            CommandData::Boolean(v) => fmt::Display::fmt(&v, f),
+            CommandData::Short(v) => fmt::Display::fmt(&v, f),
+            CommandData::UShort(v) => fmt::Display::fmt(&v, f),
+            CommandData::Long(v) => fmt::Display::fmt(&v, f),
+            CommandData::ULong(v) => fmt::Display::fmt(&v, f),
+            CommandData::Long64(v) => fmt::Display::fmt(&v, f),
+            CommandData::ULong64(v) => fmt::Display::fmt(&v, f),
+            CommandData::Float(v) => fmt::UpperExp::fmt(&v, f),
+            CommandData::Double(v) => fmt::UpperExp::fmt(&v, f),
+            CommandData::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+            CommandData::State(v) => fmt::Display::fmt(&v, f),
+            CommandData::Encoded(_) => f.pad("<DevEncoded>"),
+
+            CommandData::BooleanArray(v) => slice_display(v, |x| x, f),
+            CommandData::CharArray(v) => slice_display(v, |x| x, f),
+            CommandData::ShortArray(v) => slice_display(v, |x| x, f),
+            CommandData::UShortArray(v) => slice_display(v, |x| x, f),
+            CommandData::LongArray(v) => slice_display(v, |x| x, f),
+            CommandData::ULongArray(v) => slice_display(v, |x| x, f),
+            CommandData::Long64Array(v) => slice_display(v, |x| x, f),
+            CommandData::ULong64Array(v) => slice_display(v, |x| x, f),
+            CommandData::FloatArray(v) => slice_upper_exp(v, |x| x, f),
+            CommandData::DoubleArray(v) => slice_upper_exp(v, |x| x, f),
+            CommandData::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+            CommandData::LongStringArray(vi, vs) => {
+                slice_display(vi, |x| x, f)?;
+                slice_display(vs, |x| String::from_utf8_lossy(x), f)
+            },
+            CommandData::DoubleStringArray(vd, vs) => {
+                slice_upper_exp(vd, |x| x, f)?;
+                slice_display(vs, |x| String::from_utf8_lossy(x), f)
+            },
+        }
+    }
+}
+
 
 #[derive(Debug)]
 pub struct AttributeInfo {
@@ -1277,18 +1437,6 @@ impl AttrValue {
     }
 }
 
-fn slice_display<'a, T, D: fmt::Display>(slice: &'a [T], mkdisp: impl Fn(&'a T) -> D,
-                                         f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "[")?;
-    for (i, item) in slice.iter().enumerate() {
-        if i != 0 {
-            write!(f, ", ")?;
-        }
-        fmt::Display::fmt(&mkdisp(item), f)?;
-    }
-    write!(f, "]")
-}
-
 impl fmt::Display for AttrValue {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
@@ -1316,6 +1464,142 @@ impl fmt::Display for AttrValue {
             AttrValue::ULong64Array(v) => slice_display(v, |x| x, f),
             AttrValue::FloatArray(v) => slice_display(v, |x| x, f),
             AttrValue::DoubleArray(v) => slice_display(v, |x| x, f),
+            AttrValue::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+            AttrValue::StateArray(v) => slice_display(v, |x| x, f),
+            AttrValue::EncodedArray(v) => slice_display(v, |_| "<DevEncoded>", f),
+        }
+    }
+}
+
+impl fmt::LowerHex for AttrValue {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            AttrValue::Boolean(v) => fmt::Display::fmt(&v, f),
+            AttrValue::UChar(v) => fmt::LowerHex::fmt(&v, f),
+            AttrValue::Short(v) => fmt::LowerHex::fmt(&v, f),
+            AttrValue::UShort(v) => fmt::LowerHex::fmt(&v, f),
+            AttrValue::Long(v) => fmt::LowerHex::fmt(&v, f),
+            AttrValue::ULong(v) => fmt::LowerHex::fmt(&v, f),
+            AttrValue::Long64(v) => fmt::LowerHex::fmt(&v, f),
+            AttrValue::ULong64(v) => fmt::LowerHex::fmt(&v, f),
+            AttrValue::Float(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Double(v) => fmt::Display::fmt(&v, f),
+            AttrValue::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+            AttrValue::State(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Encoded(_) => f.pad("<DevEncoded>"),
+
+            AttrValue::BooleanArray(v) => slice_display(v, |x| x, f),
+            AttrValue::UCharArray(v) => slice_lower_hex(v, |x| x, f),
+            AttrValue::ShortArray(v) => slice_lower_hex(v, |x| x, f),
+            AttrValue::UShortArray(v) => slice_lower_hex(v, |x| x, f),
+            AttrValue::LongArray(v) => slice_lower_hex(v, |x| x, f),
+            AttrValue::ULongArray(v) => slice_lower_hex(v, |x| x, f),
+            AttrValue::Long64Array(v) => slice_lower_hex(v, |x| x, f),
+            AttrValue::ULong64Array(v) => slice_lower_hex(v, |x| x, f),
+            AttrValue::FloatArray(v) => slice_display(v, |x| x, f),
+            AttrValue::DoubleArray(v) => slice_display(v, |x| x, f),
+            AttrValue::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+            AttrValue::StateArray(v) => slice_display(v, |x| x, f),
+            AttrValue::EncodedArray(v) => slice_display(v, |_| "<DevEncoded>", f),
+        }
+    }
+}
+
+impl fmt::UpperHex for AttrValue {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            AttrValue::Boolean(v) => fmt::Display::fmt(&v, f),
+            AttrValue::UChar(v) => fmt::UpperHex::fmt(&v, f),
+            AttrValue::Short(v) => fmt::UpperHex::fmt(&v, f),
+            AttrValue::UShort(v) => fmt::UpperHex::fmt(&v, f),
+            AttrValue::Long(v) => fmt::UpperHex::fmt(&v, f),
+            AttrValue::ULong(v) => fmt::UpperHex::fmt(&v, f),
+            AttrValue::Long64(v) => fmt::UpperHex::fmt(&v, f),
+            AttrValue::ULong64(v) => fmt::UpperHex::fmt(&v, f),
+            AttrValue::Float(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Double(v) => fmt::Display::fmt(&v, f),
+            AttrValue::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+            AttrValue::State(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Encoded(_) => f.pad("<DevEncoded>"),
+
+            AttrValue::BooleanArray(v) => slice_display(v, |x| x, f),
+            AttrValue::UCharArray(v) => slice_upper_hex(v, |x| x, f),
+            AttrValue::ShortArray(v) => slice_upper_hex(v, |x| x, f),
+            AttrValue::UShortArray(v) => slice_upper_hex(v, |x| x, f),
+            AttrValue::LongArray(v) => slice_upper_hex(v, |x| x, f),
+            AttrValue::ULongArray(v) => slice_upper_hex(v, |x| x, f),
+            AttrValue::Long64Array(v) => slice_upper_hex(v, |x| x, f),
+            AttrValue::ULong64Array(v) => slice_upper_hex(v, |x| x, f),
+            AttrValue::FloatArray(v) => slice_display(v, |x| x, f),
+            AttrValue::DoubleArray(v) => slice_display(v, |x| x, f),
+            AttrValue::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+            AttrValue::StateArray(v) => slice_display(v, |x| x, f),
+            AttrValue::EncodedArray(v) => slice_display(v, |_| "<DevEncoded>", f),
+        }
+    }
+}
+
+impl fmt::LowerExp for AttrValue {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            AttrValue::Boolean(v) => fmt::Display::fmt(&v, f),
+            AttrValue::UChar(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Short(v) => fmt::Display::fmt(&v, f),
+            AttrValue::UShort(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Long(v) => fmt::Display::fmt(&v, f),
+            AttrValue::ULong(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Long64(v) => fmt::Display::fmt(&v, f),
+            AttrValue::ULong64(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Float(v) => fmt::LowerExp::fmt(&v, f),
+            AttrValue::Double(v) => fmt::LowerExp::fmt(&v, f),
+            AttrValue::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+            AttrValue::State(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Encoded(_) => f.pad("<DevEncoded>"),
+
+            AttrValue::BooleanArray(v) => slice_display(v, |x| x, f),
+            AttrValue::UCharArray(v) => slice_display(v, |x| x, f),
+            AttrValue::ShortArray(v) => slice_display(v, |x| x, f),
+            AttrValue::UShortArray(v) => slice_display(v, |x| x, f),
+            AttrValue::LongArray(v) => slice_display(v, |x| x, f),
+            AttrValue::ULongArray(v) => slice_display(v, |x| x, f),
+            AttrValue::Long64Array(v) => slice_display(v, |x| x, f),
+            AttrValue::ULong64Array(v) => slice_display(v, |x| x, f),
+            AttrValue::FloatArray(v) => slice_lower_exp(v, |x| x, f),
+            AttrValue::DoubleArray(v) => slice_lower_exp(v, |x| x, f),
+            AttrValue::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+            AttrValue::StateArray(v) => slice_display(v, |x| x, f),
+            AttrValue::EncodedArray(v) => slice_display(v, |_| "<DevEncoded>", f),
+        }
+    }
+}
+
+impl fmt::UpperExp for AttrValue {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            AttrValue::Boolean(v) => fmt::Display::fmt(&v, f),
+            AttrValue::UChar(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Short(v) => fmt::Display::fmt(&v, f),
+            AttrValue::UShort(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Long(v) => fmt::Display::fmt(&v, f),
+            AttrValue::ULong(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Long64(v) => fmt::Display::fmt(&v, f),
+            AttrValue::ULong64(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Float(v) => fmt::UpperExp::fmt(&v, f),
+            AttrValue::Double(v) => fmt::UpperExp::fmt(&v, f),
+            AttrValue::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+            AttrValue::State(v) => fmt::Display::fmt(&v, f),
+            AttrValue::Encoded(_) => f.pad("<DevEncoded>"),
+
+            AttrValue::BooleanArray(v) => slice_display(v, |x| x, f),
+            AttrValue::UCharArray(v) => slice_display(v, |x| x, f),
+            AttrValue::ShortArray(v) => slice_display(v, |x| x, f),
+            AttrValue::UShortArray(v) => slice_display(v, |x| x, f),
+            AttrValue::LongArray(v) => slice_display(v, |x| x, f),
+            AttrValue::ULongArray(v) => slice_display(v, |x| x, f),
+            AttrValue::Long64Array(v) => slice_display(v, |x| x, f),
+            AttrValue::ULong64Array(v) => slice_display(v, |x| x, f),
+            AttrValue::FloatArray(v) => slice_upper_exp(v, |x| x, f),
+            AttrValue::DoubleArray(v) => slice_upper_exp(v, |x| x, f),
             AttrValue::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
             AttrValue::StateArray(v) => slice_display(v, |x| x, f),
             AttrValue::EncodedArray(v) => slice_display(v, |_| "<DevEncoded>", f),
@@ -1750,3 +2034,142 @@ impl fmt::Display for PropertyValue {
         }
     }
 }
+
+impl fmt::LowerHex for PropertyValue {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            PropertyValue::Empty => f.pad("<Empty>"),
+            PropertyValue::Boolean(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::UChar(v) => fmt::LowerHex::fmt(&v, f),
+            PropertyValue::Short(v) => fmt::LowerHex::fmt(&v, f),
+            PropertyValue::UShort(v) => fmt::LowerHex::fmt(&v, f),
+            PropertyValue::Long(v) => fmt::LowerHex::fmt(&v, f),
+            PropertyValue::ULong(v) => fmt::LowerHex::fmt(&v, f),
+            PropertyValue::Long64(v) => fmt::LowerHex::fmt(&v, f),
+            PropertyValue::ULong64(v) => fmt::LowerHex::fmt(&v, f),
+            PropertyValue::Float(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Double(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+
+            PropertyValue::ShortArray(v) => slice_lower_hex(v, |x| x, f),
+            PropertyValue::UShortArray(v) => slice_lower_hex(v, |x| x, f),
+            PropertyValue::LongArray(v) => slice_lower_hex(v, |x| x, f),
+            PropertyValue::ULongArray(v) => slice_lower_hex(v, |x| x, f),
+            PropertyValue::Long64Array(v) => slice_lower_hex(v, |x| x, f),
+            PropertyValue::ULong64Array(v) => slice_lower_hex(v, |x| x, f),
+            PropertyValue::FloatArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::DoubleArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+        }
+    }
+}
+
+impl fmt::UpperHex for PropertyValue {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            PropertyValue::Empty => f.pad("<Empty>"),
+            PropertyValue::Boolean(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::UChar(v) => fmt::UpperHex::fmt(&v, f),
+            PropertyValue::Short(v) => fmt::UpperHex::fmt(&v, f),
+            PropertyValue::UShort(v) => fmt::UpperHex::fmt(&v, f),
+            PropertyValue::Long(v) => fmt::UpperHex::fmt(&v, f),
+            PropertyValue::ULong(v) => fmt::UpperHex::fmt(&v, f),
+            PropertyValue::Long64(v) => fmt::UpperHex::fmt(&v, f),
+            PropertyValue::ULong64(v) => fmt::UpperHex::fmt(&v, f),
+            PropertyValue::Float(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Double(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+
+            PropertyValue::ShortArray(v) => slice_upper_hex(v, |x| x, f),
+            PropertyValue::UShortArray(v) => slice_upper_hex(v, |x| x, f),
+            PropertyValue::LongArray(v) => slice_upper_hex(v, |x| x, f),
+            PropertyValue::ULongArray(v) => slice_upper_hex(v, |x| x, f),
+            PropertyValue::Long64Array(v) => slice_upper_hex(v, |x| x, f),
+            PropertyValue::ULong64Array(v) => slice_upper_hex(v, |x| x, f),
+            PropertyValue::FloatArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::DoubleArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+        }
+    }
+}
+
+impl fmt::LowerExp for PropertyValue {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            PropertyValue::Empty => f.pad("<Empty>"),
+            PropertyValue::Boolean(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::UChar(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Short(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::UShort(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Long(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::ULong(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Long64(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::ULong64(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Float(v) => fmt::LowerExp::fmt(&v, f),
+            PropertyValue::Double(v) => fmt::LowerExp::fmt(&v, f),
+            PropertyValue::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+
+            PropertyValue::ShortArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::UShortArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::LongArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::ULongArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::Long64Array(v) => slice_display(v, |x| x, f),
+            PropertyValue::ULong64Array(v) => slice_display(v, |x| x, f),
+            PropertyValue::FloatArray(v) => slice_lower_exp(v, |x| x, f),
+            PropertyValue::DoubleArray(v) => slice_lower_exp(v, |x| x, f),
+            PropertyValue::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+        }
+    }
+}
+
+impl fmt::UpperExp for PropertyValue {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            PropertyValue::Empty => f.pad("<Empty>"),
+            PropertyValue::Boolean(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::UChar(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Short(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::UShort(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Long(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::ULong(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Long64(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::ULong64(v) => fmt::Display::fmt(&v, f),
+            PropertyValue::Float(v) => fmt::UpperExp::fmt(&v, f),
+            PropertyValue::Double(v) => fmt::UpperExp::fmt(&v, f),
+            PropertyValue::String(v) => fmt::Display::fmt(&String::from_utf8_lossy(v), f),
+
+            PropertyValue::ShortArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::UShortArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::LongArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::ULongArray(v) => slice_display(v, |x| x, f),
+            PropertyValue::Long64Array(v) => slice_display(v, |x| x, f),
+            PropertyValue::ULong64Array(v) => slice_display(v, |x| x, f),
+            PropertyValue::FloatArray(v) => slice_upper_exp(v, |x| x, f),
+            PropertyValue::DoubleArray(v) => slice_upper_exp(v, |x| x, f),
+            PropertyValue::StringArray(v) => slice_display(v, |x| String::from_utf8_lossy(x), f),
+        }
+    }
+}
+
+
+macro_rules! impl_slice_fmter {
+    ($fn:ident, $tn:ident) => {
+        fn $fn<'a, T, D: fmt::$tn>(slice: &'a [T], mkdisp: impl Fn(&'a T) -> D,
+                                   f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "[")?;
+            for (i, item) in slice.iter().enumerate() {
+                if i != 0 {
+                    write!(f, ", ")?;
+                }
+                fmt::$tn::fmt(&mkdisp(item), f)?;
+            }
+            write!(f, "]")
+        }
+    }
+}
+
+impl_slice_fmter!(slice_display, Display);
+impl_slice_fmter!(slice_lower_hex, LowerHex);
+impl_slice_fmter!(slice_upper_hex, UpperHex);
+impl_slice_fmter!(slice_lower_exp, LowerExp);
+impl_slice_fmter!(slice_upper_exp, UpperExp);
