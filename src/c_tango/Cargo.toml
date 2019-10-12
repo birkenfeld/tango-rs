@@ -2,7 +2,7 @@
 name = "tango-client-sys"
 description = "C bindings for a client to the Tango control system."
 license = "GPL-3.0+"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Georg Brandl <g.brandl@fz-juelich.de>"]
 edition = "2018"
 

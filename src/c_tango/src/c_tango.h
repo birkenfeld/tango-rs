@@ -19,10 +19,20 @@
 #include <stdbool.h>
 #endif
 
+#ifdef RUST_BINDGEN
+/* Don't pull in tango.h for bindgen, these are the fixed sizes anyway. */
 typedef int32_t TangoDevLong;
 typedef uint32_t TangoDevULong;
 typedef int64_t TangoDevLong64;
 typedef uint64_t TangoDevULong64;
+#else
+#include <tango.h>
+typedef Tango::DevLong TangoDevLong;
+typedef Tango::DevULong TangoDevULong;
+typedef Tango::DevLong64 TangoDevLong64;
+typedef Tango::DevULong64 TangoDevULong64;
+#endif
+
 
 #define INIT_SEQ(seq, type, size)               \
     (seq).length = size;                        \

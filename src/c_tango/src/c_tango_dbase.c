@@ -11,7 +11,6 @@
  ******************************************************************************/
 
 #include "c_tango.h"
-#include <tango.h>
 
 ErrorStack *tango_translate_exception(Tango::DevFailed& tango_exception);
 static void convert_property_reading(Tango::DbDatum& tango_prop, DbDatum *prop);
@@ -425,10 +424,10 @@ static void convert_property_reading(Tango::DbDatum &tango_prop, DbDatum *prop) 
 
         case DEVVAR_SHORTARRAY:   EXTRACT_ARRAY(short_arr, int16_t);
         case DEVVAR_USHORTARRAY:  EXTRACT_ARRAY(ushort_arr, uint16_t);
-        case DEVVAR_LONGARRAY:    EXTRACT_ARRAY(long_arr, int32_t);
-        case DEVVAR_ULONGARRAY:   EXTRACT_ARRAY(ulong_arr, uint32_t);
-        case DEVVAR_LONG64ARRAY:  EXTRACT_ARRAY(long64_arr, int64_t);
-        case DEVVAR_ULONG64ARRAY: EXTRACT_ARRAY(ulong64_arr, uint64_t);
+        case DEVVAR_LONGARRAY:    EXTRACT_ARRAY(long_arr, Tango::DevLong);
+        case DEVVAR_ULONGARRAY:   EXTRACT_ARRAY(ulong_arr, Tango::DevULong);
+        case DEVVAR_LONG64ARRAY:  EXTRACT_ARRAY(long64_arr, Tango::DevLong64);
+        case DEVVAR_ULONG64ARRAY: EXTRACT_ARRAY(ulong64_arr, Tango::DevULong64);
         case DEVVAR_FLOATARRAY:   EXTRACT_ARRAY(float_arr, float);
         case DEVVAR_DOUBLEARRAY:  EXTRACT_ARRAY(double_arr, double);
 
@@ -526,10 +525,10 @@ static void convert_property_writing(DbDatum *prop, Tango::DbDatum& tango_prop) 
 
     case DEVVAR_SHORTARRAY:   INSERT_ARRAY(short_arr, int16_t);
     case DEVVAR_USHORTARRAY:  INSERT_ARRAY(ushort_arr, uint16_t);
-    case DEVVAR_LONGARRAY:    INSERT_ARRAY(long_arr, int32_t);
-    case DEVVAR_ULONGARRAY:   INSERT_ARRAY(ulong_arr, uint32_t);
-    case DEVVAR_LONG64ARRAY:  INSERT_ARRAY(long64_arr, int64_t);
-    case DEVVAR_ULONG64ARRAY: INSERT_ARRAY(ulong64_arr, uint64_t);
+    case DEVVAR_LONGARRAY:    INSERT_ARRAY(long_arr, Tango::DevLong);
+    case DEVVAR_ULONGARRAY:   INSERT_ARRAY(ulong_arr, Tango::DevULong);
+    case DEVVAR_LONG64ARRAY:  INSERT_ARRAY(long64_arr, Tango::DevLong64);
+    case DEVVAR_ULONG64ARRAY: INSERT_ARRAY(ulong64_arr, Tango::DevULong64);
     case DEVVAR_FLOATARRAY:   INSERT_ARRAY(float_arr, float);
     case DEVVAR_DOUBLEARRAY:  INSERT_ARRAY(double_arr, double);
 

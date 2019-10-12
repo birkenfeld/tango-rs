@@ -11,7 +11,6 @@
  ******************************************************************************/
 
 #include "c_tango.h"
-#include <tango.h>
 
 ErrorStack *tango_translate_exception(Tango::DevFailed &tango_exception);
 

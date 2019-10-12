@@ -11,7 +11,6 @@
  ******************************************************************************/
 
 #include "c_tango.h"
-#include <tango.h>
 
 ErrorStack *tango_translate_exception(Tango::DevFailed& tango_exception);
 static void convert_cmd_query(Tango::CommandInfo& tango_cmd_info, CommandInfo *cmd_info);
@@ -89,10 +88,10 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
         case DEVVAR_CHARARRAY:    INSERT_ARRAY(char_arr, uint8_t);
         case DEVVAR_SHORTARRAY:   INSERT_ARRAY(short_arr, int16_t);
         case DEVVAR_USHORTARRAY:  INSERT_ARRAY(ushort_arr, uint16_t);
-        case DEVVAR_LONGARRAY:    INSERT_ARRAY(long_arr, int32_t);
-        case DEVVAR_ULONGARRAY:   INSERT_ARRAY(ulong_arr, uint32_t);
-        case DEVVAR_LONG64ARRAY:  INSERT_ARRAY(long64_arr, int64_t);
-        case DEVVAR_ULONG64ARRAY: INSERT_ARRAY(ulong64_arr, uint64_t);
+        case DEVVAR_LONGARRAY:    INSERT_ARRAY(long_arr, Tango::DevLong);
+        case DEVVAR_ULONGARRAY:   INSERT_ARRAY(ulong_arr, Tango::DevULong);
+        case DEVVAR_LONG64ARRAY:  INSERT_ARRAY(long64_arr, Tango::DevLong64);
+        case DEVVAR_ULONG64ARRAY: INSERT_ARRAY(ulong64_arr, Tango::DevULong64);
         case DEVVAR_FLOATARRAY:   INSERT_ARRAY(float_arr, float);
         case DEVVAR_DOUBLEARRAY:  INSERT_ARRAY(double_arr, double);
 
@@ -285,7 +284,7 @@ ErrorStack *tango_command_inout(void *proxy, char *cmd_name, CommandData *argin,
             cmd_out.extract(long_vect, string_vect);
 
             nb_data = long_vect.size();
-            argout->cmd_data.long_string_arr.long_sequence = new int[nb_data];
+            argout->cmd_data.long_string_arr.long_sequence = new Tango::DevLong[nb_data];
             argout->cmd_data.long_string_arr.long_length = nb_data;
             for (int i = 0; i < nb_data; i++) {
                 argout->cmd_data.long_string_arr.long_sequence[i] = long_vect[i];

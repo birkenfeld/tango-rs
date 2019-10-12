@@ -11,7 +11,6 @@
  ******************************************************************************/
 
 #include "c_tango.h"
-#include <tango.h>
 
 ErrorStack *tango_translate_exception(Tango::DevFailed& tango_exception);
 static void convert_attribute_reading (Tango::DeviceAttribute& devattr, AttributeData *argout);
@@ -292,10 +291,10 @@ void convert_attribute_reading(Tango::DeviceAttribute& devattr, AttributeData *a
         case DEV_UCHAR:   EXTRACT_ARRAY(char_arr, DevVarCharArray, uint8_t);
         case DEV_SHORT:   EXTRACT_ARRAY(short_arr, DevVarShortArray, int16_t);
         case DEV_USHORT:  EXTRACT_ARRAY(ushort_arr, DevVarUShortArray, uint16_t);
-        case DEV_LONG:    EXTRACT_ARRAY(long_arr, DevVarLongArray, int32_t);
-        case DEV_ULONG:   EXTRACT_ARRAY(ulong_arr, DevVarULongArray, uint32_t);
-        case DEV_LONG64:  EXTRACT_ARRAY(long64_arr, DevVarLong64Array, int64_t);
-        case DEV_ULONG64: EXTRACT_ARRAY(ulong64_arr, DevVarULong64Array, uint64_t);
+        case DEV_LONG:    EXTRACT_ARRAY(long_arr, DevVarLongArray, Tango::DevLong);
+        case DEV_ULONG:   EXTRACT_ARRAY(ulong_arr, DevVarULongArray, Tango::DevULong);
+        case DEV_LONG64:  EXTRACT_ARRAY(long64_arr, DevVarLong64Array, Tango::DevLong64);
+        case DEV_ULONG64: EXTRACT_ARRAY(ulong64_arr, DevVarULong64Array, Tango::DevULong64);
         case DEV_FLOAT:   EXTRACT_ARRAY(float_arr, DevVarFloatArray, float);
         case DEV_DOUBLE:  EXTRACT_ARRAY(double_arr, DevVarDoubleArray, double);
 
@@ -401,10 +400,10 @@ void convert_attribute_writing(AttributeData *argin, Tango::DeviceAttribute& dev
     case DEV_UCHAR:   INSERT_ARRAY(char_arr, uint8_t);
     case DEV_SHORT:   INSERT_ARRAY(short_arr, int16_t);
     case DEV_USHORT:  INSERT_ARRAY(ushort_arr, uint16_t);
-    case DEV_LONG:    INSERT_ARRAY(long_arr, int32_t);
-    case DEV_ULONG:   INSERT_ARRAY(ulong_arr, uint32_t);
-    case DEV_LONG64:  INSERT_ARRAY(long64_arr, int64_t);
-    case DEV_ULONG64: INSERT_ARRAY(ulong64_arr, uint64_t);
+    case DEV_LONG:    INSERT_ARRAY(long_arr, Tango::DevLong);
+    case DEV_ULONG:   INSERT_ARRAY(ulong_arr, Tango::DevULong);
+    case DEV_LONG64:  INSERT_ARRAY(long64_arr, Tango::DevLong64);
+    case DEV_ULONG64: INSERT_ARRAY(ulong64_arr, Tango::DevULong64);
     case DEV_FLOAT:   INSERT_ARRAY(float_arr, float);
     case DEV_DOUBLE:  INSERT_ARRAY(double_arr, double);
 

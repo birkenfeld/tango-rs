@@ -1,12 +1,12 @@
 use std::ffi::{CStr, CString};
 use std::{fmt, mem, slice};
-use libc;
+use libc::{self, c_char, c_long};
 use time::{get_time, Timespec};
 
 use crate::c;
 
 
-pub unsafe fn string_from(ptr: *const i8) -> String {
+pub unsafe fn string_from(ptr: *const c_char) -> String {
     CStr::from_ptr(ptr).to_string_lossy().into_owned()
 }
 
@@ -636,7 +636,7 @@ impl CommandData {
                 for s in v.into_iter() {
                     vec.push(cstring_from(s).into_raw());
                 }
-                array.sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut i8;
+                array.sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut c_char;
                 TangoDataType::StringArray
             },
             CommandData::LongStringArray(vl, vs) => {
@@ -648,7 +648,7 @@ impl CommandData {
                 for s in vs.into_iter() {
                     vec.push(cstring_from(s).into_raw());
                 }
-                array.string_sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut i8;
+                array.string_sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut c_char;
                 TangoDataType::LongStringArray
             },
             CommandData::DoubleStringArray(vd, vs) => {
@@ -660,7 +660,7 @@ impl CommandData {
                 for s in vs.into_iter() {
                     vec.push(cstring_from(s).into_raw());
                 }
-                array.string_sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut i8;
+                array.string_sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut c_char;
                 TangoDataType::DoubleStringArray
             },
             CommandData::State(_) => panic!("Cannot send input argument of type State")
@@ -703,14 +703,14 @@ impl CommandData {
             TangoDataType::DoubleArray => drop(Box::from_raw(data.double_arr.sequence)),
             TangoDataType::StringArray => {
                 for i in 0..data.string_arr.length {
-                    drop(CString::from_raw(*data.string_arr.sequence.offset(i as isize) as *mut i8));
+                    drop(CString::from_raw(*data.string_arr.sequence.offset(i as isize) as *mut c_char));
                 }
                 drop(Box::from_raw(data.string_arr.sequence));
             }
             TangoDataType::LongStringArray => {
                 for i in 0..data.long_string_arr.string_length {
                     drop(CString::from_raw(*data.long_string_arr
-                                           .string_sequence.offset(i as isize) as *mut i8));
+                                           .string_sequence.offset(i as isize) as *mut c_char));
                 }
                 drop(Box::from_raw(data.long_string_arr.string_sequence));
                 drop(Box::from_raw(data.long_string_arr.long_sequence));
@@ -718,7 +718,7 @@ impl CommandData {
             TangoDataType::DoubleStringArray => {
                 for i in 0..data.double_string_arr.string_length {
                     drop(CString::from_raw(*data.double_string_arr
-                                           .string_sequence.offset(i as isize) as *mut i8));
+                                           .string_sequence.offset(i as isize) as *mut c_char));
                 }
                 drop(Box::from_raw(data.double_string_arr.string_sequence));
                 drop(Box::from_raw(data.double_string_arr.double_sequence));
@@ -956,7 +956,7 @@ impl AttributeData {
             name: string_from(attr_data.name),
             dim_x: attr_data.dim_x as usize,
             dim_y: attr_data.dim_y as usize,
-            time_stamp: Timespec::new(attr_data.time_stamp.tv_sec,
+            time_stamp: Timespec::new(attr_data.time_stamp.tv_sec.into(),
                                       1000 * attr_data.time_stamp.tv_usec as i32),
         };
         if free {
@@ -1007,7 +1007,7 @@ impl AttributeData {
                 array.length = 1;
                 let mut vec = Vec::with_capacity(1);
                 vec.push(cstring_from(v).into_raw());
-                array.sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut i8;
+                array.sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut c_char;
                 TangoDataType::String
             }
             AttrValue::Encoded((format, data)) => {
@@ -1041,7 +1041,7 @@ impl AttributeData {
                 for s in v.into_iter() {
                     vec.push(cstring_from(s).into_raw());
                 }
-                array.sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut i8;
+                array.sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut c_char;
                 TangoDataType::String
             }
             AttrValue::EncodedArray(v) => {
@@ -1069,8 +1069,8 @@ impl AttributeData {
             quality: self.quality as u32,
             dim_x: self.dim_x as i32,
             dim_y: self.dim_y as i32,
-            time_stamp: c::timeval { tv_sec: self.time_stamp.sec,
-                                     tv_usec: self.time_stamp.nsec as i64 / 1000 }
+            time_stamp: c::timeval { tv_sec: self.time_stamp.sec as c_long,
+                                     tv_usec: self.time_stamp.nsec as c_long / 1000 }
         }
     }
 
@@ -1091,14 +1091,14 @@ impl AttributeData {
             TangoDataType::State => drop(Box::from_raw(data.state_arr.sequence)),
             TangoDataType::String => {
                 for i in 0..data.string_arr.length {
-                    drop(CString::from_raw(*data.string_arr.sequence.offset(i as isize) as *mut i8));
+                    drop(CString::from_raw(*data.string_arr.sequence.offset(i as isize) as *mut c_char));
                 }
                 drop(Box::from_raw(data.string_arr.sequence));
             }
             TangoDataType::Encoded => {
                 for i in 0..data.encoded_arr.length {
                     let ptr = data.encoded_arr.sequence.offset(i as isize) as *mut c::TangoDevEncoded;
-                    drop(CString::from_raw((*ptr).encoded_format as *mut i8));
+                    drop(CString::from_raw((*ptr).encoded_format as *mut c_char));
                     drop(Box::from_raw((*ptr).encoded_data));
                 }
                 drop(Box::from_raw(data.encoded_arr.sequence));
@@ -1444,7 +1444,7 @@ impl DbDatum {
         // Since the property name string is sometimes overwritten, we have to store
         // a reference to it somewhere else to be able to free it.
         let name_string = cstring_from(self.name);
-        content.property_name = name_string.as_ptr() as *mut i8;
+        content.property_name = name_string.as_ptr() as *mut c_char;
 
         macro_rules! impl_array {
             ($val:ident, $alt:ident, $arr:ident, $ctype:ty) => {
@@ -1525,7 +1525,7 @@ impl DbDatum {
                     for s in v.into_iter() {
                         vec.push(cstring_from(s).into_raw());
                     }
-                    array.sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut i8;
+                    array.sequence = Box::into_raw(vec.into_boxed_slice()) as *mut *mut c_char;
                     TangoDataType::StringArray as u32
                 },
                 _ => panic!("Cannot send property value of type {:?}", self.data)
@@ -1564,7 +1564,7 @@ impl DbDatum {
             TangoDataType::DoubleArray => drop(Box::from_raw(data.double_arr.sequence)),
             TangoDataType::StringArray => {
                 for i in 0..data.string_arr.length {
-                    drop(CString::from_raw(*data.string_arr.sequence.offset(i as isize) as *mut i8));
+                    drop(CString::from_raw(*data.string_arr.sequence.offset(i as isize) as *mut c_char));
                 }
                 drop(Box::from_raw(data.string_arr.sequence));
             }

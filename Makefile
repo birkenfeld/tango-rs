@@ -1,5 +1,5 @@
 binding:
-	bindgen --ctypes-prefix libc --output src/c_tango/src/binding.rs src/c_tango/src/c_tango.h
+	bindgen --ctypes-prefix libc --output src/c_tango/src/binding.rs src/c_tango/src/c_tango.h -- -DRUST_BINDGEN
 
 # for testing
 
