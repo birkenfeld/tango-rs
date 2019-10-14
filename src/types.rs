@@ -130,7 +130,7 @@ impl TangoDevState {
             c::TangoDevState_ALARM => TangoDevState::Alarm,
             c::TangoDevState_DISABLE => TangoDevState::Disable,
             c::TangoDevState_UNKNOWN => TangoDevState::Unknown,
-            _ => unimplemented!()
+            _ => unreachable!("no TangoDevState for {}", val)
         }
     }
 }
@@ -174,7 +174,7 @@ impl AttrQuality {
             c::AttrQuality_ATTR_ALARM => AttrQuality::Alarm,
             c::AttrQuality_ATTR_CHANGING => AttrQuality::Changing,
             c::AttrQuality_ATTR_WARNING => AttrQuality::Warning,
-            _ => unimplemented!()
+            _ => unreachable!("no TangoAttrQuality for {}", val)
         }
     }
 }
@@ -195,7 +195,7 @@ impl AttrWriteType {
             c::AttrWriteType_READ_WITH_WRITE => AttrWriteType::ReadWithWrite,
             c::AttrWriteType_WRITE => AttrWriteType::Write,
             c::AttrWriteType_READ_WRITE => AttrWriteType::ReadWrite,
-            _ => unimplemented!()
+            _ => unreachable!("no TangoAttrWriteType for {}", val)
         }
     }
 }
@@ -214,7 +214,7 @@ impl AttrDataFormat {
             c::AttrDataFormat_SCALAR => AttrDataFormat::Scalar,
             c::AttrDataFormat_SPECTRUM => AttrDataFormat::Spectrum,
             c::AttrDataFormat_IMAGE => AttrDataFormat::Image,
-            _ => unimplemented!()
+            _ => unreachable!("no TangoAttrDataFormat for {}", val)
         }
     }
 }
@@ -231,7 +231,7 @@ impl DispLevel {
         match val {
             c::DispLevel_OPERATOR => DispLevel::Operator,
             c::DispLevel_EXPERT => DispLevel::Expert,
-            _ => unimplemented!()
+            _ => unreachable!("no TangoDispLevel for {}", val)
         }
     }
 }
@@ -250,7 +250,7 @@ impl ErrSeverity {
             c::ErrSeverity_WARN => ErrSeverity::Warn,
             c::ErrSeverity_ERR => ErrSeverity::Err,
             c::ErrSeverity_PANIC => ErrSeverity::Panic,
-            _ => unimplemented!()
+            _ => unreachable!("no TangoErrSeverity for {}", val)
         }
     }
 }
@@ -269,7 +269,7 @@ impl DevSource {
             c::DevSource_DEV => DevSource::Dev,
             c::DevSource_CACHE => DevSource::Cache,
             c::DevSource_CACHE_DEV => DevSource::CacheDev,
-            _ => unimplemented!()
+            _ => unreachable!("no TangoDevSource for {}", val)
         }
     }
 }
@@ -1011,7 +1011,11 @@ impl AttributeData {
                 ($alt:ident, $arr:ident) => {
                     {
                         let ptr = data.$arr;
-                        ($alt(*ptr.sequence), $alt(*ptr.sequence.offset(1)))
+                        if ptr.length == 1 {
+                            ($alt(*ptr.sequence), $alt(Default::default()))
+                        } else {
+                            ($alt(*ptr.sequence), $alt(*ptr.sequence.offset(1)))
+                        }
                     }
                 }
             }
@@ -1027,28 +1031,42 @@ impl AttributeData {
                 TangoDataType::Float => impl_simple!(Float, float_arr),
                 TangoDataType::Double => impl_simple!(Double, double_arr),
                 TangoDataType::Boolean => impl_simple!(Boolean, bool_arr),
-                TangoDataType::State =>
-                    (State(TangoDevState::from_c(*data.state_arr.sequence)),
-                     State(TangoDevState::from_c(*data.state_arr.sequence.offset(1)))),
+                TangoDataType::State => {
+                    let r = TangoDevState::from_c(*data.state_arr.sequence);
+                    let w = if data.string_arr.length == 1 {
+                        TangoDevState::Unknown
+                    } else {
+                        TangoDevState::from_c(*data.state_arr.sequence.offset(1))
+                    };
+                    (State(r), State(w))
+                }
                 TangoDataType::String => {
                     let rawr = *data.string_arr.sequence;
                     let lenr = libc::strlen(rawr);
-                    let raww = *data.string_arr.sequence.offset(1);
-                    let lenw = libc::strlen(raww);
-                    (String(Vec::from(slice::from_raw_parts(rawr as *mut u8, lenr))),
-                     String(Vec::from(slice::from_raw_parts(raww as *mut u8, lenw))))
+                    let r = Vec::from(slice::from_raw_parts(rawr as *mut u8, lenr));
+                    let w = if data.string_arr.length == 1 {
+                        Vec::new()
+                    } else {
+                        let raww = *data.string_arr.sequence.offset(1);
+                        let lenw = libc::strlen(raww);
+                        Vec::from(slice::from_raw_parts(raww as *mut u8, lenw))
+                    };
+                    (String(r), String(w))
                 },
                 TangoDataType::Encoded => {
                     let rawr = *data.encoded_arr.sequence;
-                    let raww = *data.encoded_arr.sequence.offset(1);
-                    (Encoded(
-                        (string_from(rawr.encoded_format),
-                         Vec::from(slice::from_raw_parts(rawr.encoded_data as *mut u8,
-                                                         rawr.encoded_length as usize)))),
-                     Encoded(
+                    let r = (string_from(rawr.encoded_format),
+                             Vec::from(slice::from_raw_parts(rawr.encoded_data as *mut u8,
+                                                             rawr.encoded_length as usize)));
+                    let w = if data.string_arr.length == 1 {
+                        ("".into(), Vec::new())
+                    } else {
+                        let raww = *data.encoded_arr.sequence.offset(1);
                         (string_from(raww.encoded_format),
                          Vec::from(slice::from_raw_parts(raww.encoded_data as *mut u8,
-                                                         raww.encoded_length as usize)))))
+                                                         raww.encoded_length as usize)))
+                    };
+                    (Encoded(r), Encoded(w))
                 },
                 _ => panic!("data type {:?} not allowed for attributes", tag)
             }
