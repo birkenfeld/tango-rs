@@ -2,7 +2,7 @@
 
 [package]
 name = "tango-client"
-version = "0.2.3"
+version = "0.3.0"
 description = "Client for the Tango control system."
 license = "GPL-3.0+"
 authors = ["Georg Brandl <g.brandl@fz-juelich.de>"]

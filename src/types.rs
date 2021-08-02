@@ -932,6 +932,7 @@ impl fmt::UpperExp for CommandData {
 pub struct AttributeInfo {
     pub name: String,
     pub writable: AttrWriteType,
+    pub data_type: TangoDataType,
     pub data_format: AttrDataFormat,
     pub max_dim_x: usize,
     pub max_dim_y: usize,
@@ -954,6 +955,7 @@ impl AttributeInfo {
         AttributeInfo {
             name: string_from(info.name),
             writable: AttrWriteType::from_c(info.writable),
+            data_type: TangoDataType::from_c(info.data_type),
             data_format: AttrDataFormat::from_c(info.data_format),
             max_dim_x: info.max_dim_x as usize,
             max_dim_y: info.max_dim_y as usize,
