@@ -28,7 +28,7 @@ impl fmt::Display for TangoError {
             write!(f, "DevFailed[\n")?;
             write!(f, "      desc = {}\n", fail.desc)?;
             write!(f, "    origin = {}\n", fail.origin)?;
-            write!(f, "    reason = {}[\n", fail.reason)?;
+            write!(f, "    reason = {}\n", fail.reason)?;
             write!(f, "  severity = {:?}]\n\n", fail.severity)?;
         }
         write!(f, "]\n")
